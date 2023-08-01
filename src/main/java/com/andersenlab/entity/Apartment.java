@@ -55,4 +55,6 @@ public class Apartment {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
 }
