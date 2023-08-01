@@ -1,5 +1,5 @@
 package com.andersenlab.entity;
 
-public enum ApartmentAvailability {
+public enum ApartmentStatus {
     AVAILABLE, UNAVAILABLE
 }

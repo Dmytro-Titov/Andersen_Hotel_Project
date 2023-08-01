@@ -1,18 +1,16 @@
 package com.andersenlab.entity;
 
-import java.util.List;
-
 public class Apartment {
     private int id;
     private int apartmentNumber;
     private ApartmentType apartmentType;
-    private ApartmentAvailability apartmentAvailability;
+    private ApartmentStatus apartmentStatus;
 
     public Apartment(int id, int apartmentNumber, ApartmentType apartmentType) {
         this.id = id;
         this.apartmentNumber = apartmentNumber;
         this.apartmentType = apartmentType;
-        apartmentAvailability = ApartmentAvailability.AVAILABLE;
+        apartmentStatus = ApartmentStatus.AVAILABLE;
     }
 
     public int getId() {
@@ -39,11 +37,11 @@ public class Apartment {
         this.apartmentType = apartmentType;
     }
 
-    public ApartmentAvailability getApartmentAvailability() {
-        return apartmentAvailability;
+    public ApartmentStatus getApartmentStatus() {
+        return apartmentStatus;
     }
 
-    public void setApartmentAvailability(ApartmentAvailability apartmentAvailability) {
-        this.apartmentAvailability = apartmentAvailability;
+    public void setApartmentStatus(ApartmentStatus apartmentStatus) {
+        this.apartmentStatus = apartmentStatus;
     }
 }
