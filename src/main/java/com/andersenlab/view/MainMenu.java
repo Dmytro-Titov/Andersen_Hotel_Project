@@ -30,6 +30,7 @@ public class MainMenu {
 
         switch (input) {
             case "1":
+                System.out.println("Please input the name");
                 inputDataUser(scanner.nextLine());
                 break;
             case "2":
@@ -51,7 +52,7 @@ public class MainMenu {
 
                 break;
             case "8":
-
+                getClients();
                 break;
             case "9":
 
@@ -79,5 +80,9 @@ public class MainMenu {
 
     private void inputDataUser(String input1){
         Factory.getInstance().getClientService().addClient(input1);
+    }
+
+    private void getClients(){
+        Factory.getInstance().getClientService().getClients();
     }
 }

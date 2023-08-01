@@ -13,6 +13,11 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void addClient(String name) {
-        //Some method add client to collection
+        dataSource.getClientDao().addClient(name);
+    }
+
+    @Override
+    public void getClients() {
+        dataSource.getClientDao().getClients().forEach(client -> System.out.println(client.getName() + " - " + client.getId()));
     }
 }
