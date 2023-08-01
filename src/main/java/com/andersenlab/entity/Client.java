@@ -1,14 +1,14 @@
 package com.andersenlab.entity;
 
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 public class Client {
     private final long id;
     private String name;
 
-    private Instant checkInDate;
-    private Instant checkOutDate;
+    private LocalDateTime checkInDate;
+    private LocalDateTime checkOutDate;
     private ClientStatus status;
 
     public Client(String name, long id) {
@@ -29,19 +29,19 @@ public class Client {
         this.name = name;
     }
 
-    public Instant getCheckInDate() {
+    public LocalDateTime getCheckInDate() {
         return checkInDate;
     }
 
-    public void setCheckInDate(Instant checkInDate) {
+    public void setCheckInDate(LocalDateTime checkInDate) {
         this.checkInDate = checkInDate;
     }
 
-    public Instant getCheckOutDate() {
+    public LocalDateTime getCheckOutDate() {
         return checkOutDate;
     }
 
-    public void setCheckOutDate(Instant checkOutDate) {
+    public void setCheckOutDate(LocalDateTime checkOutDate) {
         this.checkOutDate = checkOutDate;
     }
 
