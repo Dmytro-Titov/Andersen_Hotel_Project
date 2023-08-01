@@ -2,11 +2,15 @@ package com.andersenlab.entity;
 
 public abstract class BasicPerk {
     protected String name;
-    protected int id;
+    protected long id;
     protected double price;
 
-    public int getId() {
+    public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public double getPrice() {

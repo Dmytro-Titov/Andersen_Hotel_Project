@@ -1,11 +1,9 @@
 package com.andersenlab.entity;
 
 public class IroningPerk extends BasicPerk {
-    private static int currentId = 0;
 
-    public IroningPerk() {
-        currentId++;
-        this.id = currentId;
+    public IroningPerk(long id) {
+        this.id = id;
         this.price = 40.0;
         this.name = "Ironing";
     }

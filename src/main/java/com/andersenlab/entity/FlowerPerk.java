@@ -1,11 +1,9 @@
 package com.andersenlab.entity;
 
 public class FlowerPerk extends BasicPerk {
-    private static int currentId = 0;
 
-    public FlowerPerk() {
-        currentId++;
-        this.id = currentId;
+    public FlowerPerk(long id) {
+        this.id = id;
         this.price = 50.0;
         this.name = "Flower arrangement";
     }
