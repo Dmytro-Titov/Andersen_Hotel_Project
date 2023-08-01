@@ -36,6 +36,10 @@ public class ClientDao {
         clients.remove(client.getId());
     }
 
+    public boolean isClientExist(Long id) {
+        return clients.containsKey(id);
+    }
+
     public List<Client> sortByName() {
         return clients.values()
                 .stream()
