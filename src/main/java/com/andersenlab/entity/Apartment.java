@@ -6,18 +6,13 @@ public class Apartment {
     private int id;
     private int apartmentNumber;
     private ApartmentType apartmentType;
-    private ApartmentStatus apartmentStatus;
-    private List<Perk> perkList;
+    private ApartmentAvailability apartmentAvailability;
 
-    public Apartment() {
-    }
-
-    public Apartment(int id, int apartmentNumber, ApartmentType apartmentType, ApartmentStatus apartmentStatus, List<Perk> perkList) {
+    public Apartment(int id, int apartmentNumber, ApartmentType apartmentType) {
         this.id = id;
         this.apartmentNumber = apartmentNumber;
         this.apartmentType = apartmentType;
-        this.apartmentStatus = apartmentStatus;
-        this.perkList = perkList;
+        apartmentAvailability = ApartmentAvailability.AVAILABLE;
     }
 
     public int getId() {
@@ -44,30 +39,11 @@ public class Apartment {
         this.apartmentType = apartmentType;
     }
 
-    public ApartmentStatus getApartmentStatus() {
-        return apartmentStatus;
+    public ApartmentAvailability getApartmentAvailability() {
+        return apartmentAvailability;
     }
 
-    public void setApartmentStatus(ApartmentStatus apartmentStatus) {
-        this.apartmentStatus = apartmentStatus;
-    }
-
-    public List<Perk> getPerkList() {
-        return perkList;
-    }
-
-    public void setPerkList(List<Perk> perkList) {
-        this.perkList = perkList;
-    }
-
-    @Override
-    public String toString() {
-        return "Apartment{" +
-                "id=" + id +
-                ", apartmentNumber=" + apartmentNumber +
-                ", apartmentType=" + apartmentType +
-                ", apartmentStatus=" + apartmentStatus +
-                ", perkList=" + perkList +
-                '}';
+    public void setApartmentAvailability(ApartmentAvailability apartmentAvailability) {
+        this.apartmentAvailability = apartmentAvailability;
     }
 }

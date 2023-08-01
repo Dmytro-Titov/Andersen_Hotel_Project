@@ -2,18 +2,15 @@ package com.andersenlab.entity;
 
 public class ApartmentType {
     private int id;
+    private int capacity;
     private String type;
-    private int price;
-    private String description;
+    private double price;
 
-    public ApartmentType() {
-    }
-
-    public ApartmentType(int id, String type, int price, String description) {
+    public ApartmentType(int id, int capacity, String type, double price) {
         this.id = id;
+        this.capacity = capacity;
         this.type = type;
         this.price = price;
-        this.description = description;
     }
 
     public int getId() {
@@ -24,6 +21,14 @@ public class ApartmentType {
         this.id = id;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
     public String getType() {
         return type;
     }
@@ -32,29 +37,11 @@ public class ApartmentType {
         this.type = type;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "ApartmentType{" +
-                "id=" + id +
-                ", type='" + type + '\'' +
-                ", price=" + price +
-                ", description='" + description + '\'' +
-                '}';
     }
 }
