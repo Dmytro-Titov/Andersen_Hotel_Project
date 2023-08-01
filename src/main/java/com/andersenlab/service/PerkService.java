@@ -3,11 +3,9 @@ package com.andersenlab.service;
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.dao.ClientDao;
 import com.andersenlab.dao.PerkDao;
-import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.util.IdGenerator;
-
-import java.util.SortedMap;
+;
 
 public class PerkService {
 
@@ -28,7 +26,7 @@ public class PerkService {
         Perk perk = getPerk(id);
         if(perk != null) {
             perk.setPrice(newPrice);
-            System.out.println("The price has been successfully changed!");
+            System.out.println("The price was successfully changed!");
         }
     }
 }

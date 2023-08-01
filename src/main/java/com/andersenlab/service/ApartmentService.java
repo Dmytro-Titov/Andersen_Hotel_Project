@@ -38,7 +38,7 @@ public class ApartmentService {
         Apartment apartment = getApartment(id);
         if(apartment != null) {
             apartment.setPrice(newPrice);
-            System.out.println("The price has been successfully changed!");
+            System.out.println("The price was successfully changed!");
         }
     }
 
