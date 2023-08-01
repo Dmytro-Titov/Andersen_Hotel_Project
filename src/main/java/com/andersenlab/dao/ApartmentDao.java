@@ -1,7 +1,6 @@
 package com.andersenlab.dao;
 
 import com.andersenlab.entity.Apartment;
-
 import java.util.*;
 import java.util.stream.Collectors;
 

@@ -1,8 +1,7 @@
 package com.andersenlab.dao;
 
-import com.andersenlab.entity.Client;
-import com.andersenlab.entity.Perk;
 
+import com.andersenlab.entity.Perk;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,10 +24,12 @@ public class PerkDao {
         return newPerk.getId();
     }
 
-    public Optional<Perk> getPerkById(Long id) {
+    public Perk getPerkById(Long id) {
         return perkSet.stream()
                 .filter(perk -> perk.getId().equals(id))
-                .findFirst();
+                .findFirst().orElse(null);
+
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
     public Collection<Perk> getAllPerks() {
