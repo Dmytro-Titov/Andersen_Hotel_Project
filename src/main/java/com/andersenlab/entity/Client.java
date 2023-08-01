@@ -16,7 +16,7 @@ public class Client {
     private Apartment apartment;
     private Set<Perk> perks;
 
-    private int currentPriceToPay;
+    private double currentPriceToPay;
 
     public Client(Long id, String name) {
         this.id = id;
@@ -69,11 +69,11 @@ public class Client {
         perks.add(perk);
     }
 
-    public int getCurrentPriceToPay() {
+    public double getCurrentPriceToPay() {
         return currentPriceToPay;
     }
 
-    public void setCurrentPriceToPay(int currentPriceToPay) {
+    public void setCurrentPriceToPay(double currentPriceToPay) {
         this.currentPriceToPay = currentPriceToPay;
     }
 

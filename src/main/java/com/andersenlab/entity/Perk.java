@@ -1,6 +1,5 @@
 package com.andersenlab.entity;
 
-
 import java.util.Objects;
 
 public class Perk {
