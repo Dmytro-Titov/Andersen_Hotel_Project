@@ -1,7 +1,10 @@
 package com.andersenlab;
 
+import com.andersenlab.controller.Controller;
+
 public class AdministratorApp {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        Controller controller = new Controller();
+        controller.run();
     }
 }

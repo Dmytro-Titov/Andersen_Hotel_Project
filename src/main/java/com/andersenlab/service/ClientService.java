@@ -1,4 +1,6 @@
 package com.andersenlab.service;
 
-public class ClientService {
+public interface ClientService {
+
+    void addClient(String name);
 }
