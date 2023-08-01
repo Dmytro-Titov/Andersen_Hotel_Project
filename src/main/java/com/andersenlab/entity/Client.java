@@ -2,9 +2,11 @@ package com.andersenlab.entity;
 
 
 public class Client {
+    private final Long id;
     private String name;
 
-    public Client(String name) {
+    public Client(String name, Long id) {
+        this.id = id;
         this.name = name;
     }
 
