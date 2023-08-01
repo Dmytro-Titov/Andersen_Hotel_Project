@@ -9,12 +9,12 @@ public class Client {
 
     private Instant checkInDate;
     private Instant checkOutDate;
-    private boolean status;
+    private ClientStatus status;
 
     public Client(String name, long id) {
         this.id = id;
         this.name = name;
-        status = false;
+        status = ClientStatus.CHECKED_OUT;
     }
 
     public long getId() {
@@ -45,11 +45,11 @@ public class Client {
         this.checkOutDate = checkOutDate;
     }
 
-    public boolean isStatus() {
+    public ClientStatus getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(ClientStatus status) {
         this.status = status;
     }
 }
