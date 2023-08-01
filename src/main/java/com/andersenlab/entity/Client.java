@@ -1,23 +1,26 @@
 package com.andersenlab.entity;
 
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
 
 public class Client {
-    private final long id;
+    private final int id;
     private String name;
+    private LocalDate checkOutDay;
+    private boolean status;
+    private Apartment apartment;
+    private List<Perk> perks;
 
-    private LocalDateTime checkInDate;
-    private LocalDateTime checkOutDate;
-    private ClientStatus status;
-
-    public Client(String name, long id) {
+    public Client(int id, String name, LocalDate checkOutDay, List<Perk> perks) {
         this.id = id;
         this.name = name;
-        status = ClientStatus.CHECKED_OUT;
+        this.checkOutDay = checkOutDay;
+        this.perks = perks;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -29,27 +32,60 @@ public class Client {
         this.name = name;
     }
 
-    public LocalDateTime getCheckInDate() {
-        return checkInDate;
+    public LocalDate getCheckOutDay() {
+        return checkOutDay;
     }
 
-    public void setCheckInDate(LocalDateTime checkInDate) {
-        this.checkInDate = checkInDate;
+    public void setCheckOutDay(LocalDate checkOutDay) {
+        this.checkOutDay = checkOutDay;
     }
 
-    public LocalDateTime getCheckOutDate() {
-        return checkOutDate;
-    }
-
-    public void setCheckOutDate(LocalDateTime checkOutDate) {
-        this.checkOutDate = checkOutDate;
-    }
-
-    public ClientStatus getStatus() {
+    public boolean hasStatus() {
         return status;
     }
 
-    public void setStatus(ClientStatus status) {
+    public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public Apartment getApartment() {
+        return apartment;
+    }
+
+    public void setApartment(Apartment apartment) {
+        this.apartment = apartment;
+    }
+
+    public List<Perk> getPerks() {
+        return perks;
+    }
+
+    public void setPerks(List<Perk> perks) {
+        this.perks = perks;
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", checkOutDay=" + checkOutDay +
+                ", status=" + status +
+                ", apartment=" + apartment +
+                ", perks=" + perks +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return id == client.id && status == client.status && Objects.equals(name, client.name) && Objects.equals(checkOutDay, client.checkOutDay) && Objects.equals(apartment, client.apartment) && Objects.equals(perks, client.perks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, checkOutDay, status, apartment, perks);
     }
 }
