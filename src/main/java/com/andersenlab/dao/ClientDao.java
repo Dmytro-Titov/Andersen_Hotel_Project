@@ -19,7 +19,7 @@ public class ClientDao {
         return instance;
     }
 
-    public long addClient(Client newClient) {
+    public Long addClient(Client newClient) {
         clients.put(newClient.getId(), newClient);
         return newClient.getId();
     }

@@ -20,7 +20,7 @@ public class ApartmentDao {
         return instance;
     }
 
-    public long addApartment(Apartment newApartment) {
+    public Long addApartment(Apartment newApartment) {
         apartments.put(newApartment.getId(), newApartment);
         return newApartment.getId();
     }
