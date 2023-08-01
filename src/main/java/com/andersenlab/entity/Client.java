@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Client {
-    private final long id;
+    private final Long id;
     private String name;
 
     private LocalDateTime checkOutDate;
@@ -25,7 +25,7 @@ public class Client {
         perks = new HashSet<>();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
