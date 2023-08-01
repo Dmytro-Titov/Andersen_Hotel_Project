@@ -33,6 +33,7 @@ public class ClientService {
                 client.setCheckOutDate(LocalDateTime.now().plusDays(7));
                 client.setCurrentPriceToPay(client.getCurrentPriceToPay() + apartment.getPrice());
                 apartment.setAvailability(false);
+                System.out.println("You have successfully checked into the hotel, your apartment is under the number" + apartmentId);
             }
     }
 
@@ -44,6 +45,7 @@ public class ClientService {
             client.setLives(false);
             client.setCheckOutDate(null);
             apartment.setAvailability(true);
+            System.out.println("You have successfully checked out the hotel!");
         }
 
     }

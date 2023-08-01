@@ -34,7 +34,21 @@ public class ApartmentService {
         }
     }
 
+    public void changePriceOfApartment(Long id, double newPrice) {
+        Apartment apartment = getApartment(id);
+        if(apartment != null) {
+            apartment.setPrice(newPrice);
+            System.out.println("The price has been successfully changed!");
+        }
+    }
 
+    public void reverseStatus(Long id) {
+        Apartment apartment = getApartment(id);
+        if(apartment != null) {
+            apartment.setAvailability(!apartment.isAvailable());
+            System.out.println("Status was successfully changed!");
+        }
+    }
 
 
 
