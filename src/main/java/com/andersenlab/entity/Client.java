@@ -18,7 +18,7 @@ public class Client {
 
     private int currentPriceToPay;
 
-    public Client(String name, long id) {
+    public Client(Long id, String name) {
         this.id = id;
         this.name = name;
         isLives = false;

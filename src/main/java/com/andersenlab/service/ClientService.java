@@ -10,7 +10,7 @@ public class ClientService {
     private final ApartmentDao apartmentDao = ApartmentDao.getInstance();
 
     public long createAndAddNewClient(String name) {
-        return clientDao.addClient(new Client(name, IdGenerator.generateClientId()));
+        return clientDao.addClient(new Client(IdGenerator.generateClientId(), name));
     }
 
     public Client getClient(long id){
