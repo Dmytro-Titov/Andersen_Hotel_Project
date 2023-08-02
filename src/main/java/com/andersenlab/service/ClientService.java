@@ -8,30 +8,25 @@ import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.util.IdGenerator;
-
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * ClientService(ClientDAO, ApartmentDAO, PerkDAO)
- *
- *    long          save( String clientName ) Сохраняет клиента в Базу, возвращает его ID
- *    Client        getClient( long id )   Возвращает клиента
- *    double        getCurrentPriceToPay( long id ) Возвращает сумму которую должен оплатить клиент
- *    List<Client>  sortByName() Возвращает список клиентов отсортированый по имени
- *    List<Client>  sortByCheckOutDate() Возвращает список клиентов отсортированый по дате выезда
- *    List<Client>  sortByStatus() Возвращает список клиентов отсортированый по дате выезда
- *    boolean       checkInApartment( long clientId, long apartmentId ) Возвращает TRUE если клиент успешно заселился в номер отеля
- *    boolean       checkOutApartment( long clientId ) Возвращает TRUE если клиент успешно сйехал с номера отеля
- *    boolean       orderPerks( long clientId, long perkId ) Возвращает TRUE если клиент успешно заказал услугу
- *    List<Perk>    showClientsPerks( long clientId ) Возвращает списуг услуг или пустой список
- *
+ * <p>
+ * long          save( String clientName ) Сохраняет клиента в Базу, возвращает его ID
+ * Client        getClient( long id )   Возвращает клиента
+ * double        getCurrentPriceToPay( long id ) Возвращает сумму которую должен оплатить клиент
+ * List<Client>  sortByName() Возвращает список клиентов отсортированый по имени
+ * List<Client>  sortByCheckOutDate() Возвращает список клиентов отсортированый по дате выезда
+ * List<Client>  sortByStatus() Возвращает список клиентов отсортированый по дате выезда
+ * boolean       checkInApartment( long clientId, long apartmentId ) Возвращает TRUE если клиент успешно заселился в номер отеля
+ * boolean       checkOutApartment( long clientId ) Возвращает TRUE если клиент успешно сйехал с номера отеля
+ * boolean       orderPerks( long clientId, long perkId ) Возвращает TRUE если клиент успешно заказал услугу
+ * List<Perk>    showClientsPerks( long clientId ) Возвращает списуг услуг или пустой список
  */
-
-
 
 
 public class ClientService {
