@@ -5,17 +5,17 @@ import com.andersenlab.entity.Perk;
 import java.util.*;
 
 public class PerkDao {
-    Set<Perk> perks;
+    List<Perk> perks;
 
     public PerkDao() {
-        this.perks = new HashSet<>();
+        this.perks = new ArrayList<>();
     }
 
     public void save(Perk perk) {
         perks.add(perk);
     }
 
-    public Set<Perk> getAll() {
+    public List<Perk> getAll() {
         return perks;
     }
 }
