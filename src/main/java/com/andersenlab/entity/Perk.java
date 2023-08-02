@@ -49,4 +49,13 @@ public class Perk {
     public int hashCode() {
         return Objects.hash(id, name, price);
     }
+
+    @Override
+    public String toString() {
+        return "Perk{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }
