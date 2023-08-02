@@ -23,7 +23,7 @@ public class ClientService {
         this.perkDao = perkDao;
     }
 
-    //Передав Long щоб консоль вивела: "ВИ успішно зареєструвались... Вас ID: 'id'"
+    //Передав long щоб консоль вивела: "ВИ успішно зареєструвались... Вас ID: 'id'"
     public long createAndAddNewClient(String name) {
         return clientDao.addClient(new Client(IdGenerator.generateClientId(), name));
     }
@@ -76,16 +76,17 @@ public class ClientService {
         return false;
     }
 
-    public void orderPerks(long clientId, long perkId) {
+    public boolean orderPerks(long clientId, long perkId) {
         Client client = getClient(clientId);
-        Perk perk = perkDao.getPerkById(perkId);
+        Perk perk = perkDao.get(perkId);
 
         if (perk != null && client != null) {
             client.addPerk(perk);
             client.setCurrentPriceToPay(client.getCurrentPriceToPay() + perk.getPrice());
 
-            System.out.println("You have successfully ordered a perk!");
+            return true;
         }
+        return false;
     }
 
 }
