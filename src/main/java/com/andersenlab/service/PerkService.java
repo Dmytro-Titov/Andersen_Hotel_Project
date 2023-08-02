@@ -2,7 +2,6 @@ package com.andersenlab.service;
 
 import com.andersenlab.dao.PerkDao;
 import com.andersenlab.entity.Perk;
-import com.andersenlab.util.IdGenerator;
 
 import java.util.*;
 
@@ -13,12 +12,17 @@ public class PerkService {
         this.perkDao = perkDao;
     }
 
-    public void save(String name, double price) {
-        perkDao.save(new Perk (IdGenerator.generatePerkId(), name, price));
+    public void save(long id, String perkName, double perkPrice) {
+        Perk newPerk = new Perk();
+        newPerk.setId(id);
+        newPerk.setName(perkName);
+        newPerk.setPrice(perkPrice);
+        perkDao.save(newPerk);
     }
 
+
     public void setPrice(String perkName, double newPrice) {
-        Set<Perk> perks = perkDao.getAll();
+        List<Perk> perks = perkDao.getAll();
         for (Perk perk : perks) {
             if (perk.getName().equals(perkName)) {
                 perk.setPrice(newPrice);
