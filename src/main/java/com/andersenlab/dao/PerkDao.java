@@ -2,35 +2,21 @@ package com.andersenlab.dao;
 
 import com.andersenlab.entity.Perk;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class PerkDao {
-    List<Perk> perks;
+    Set<Perk> perks;
 
     public PerkDao() {
-        this.perks = new ArrayList<>();
+        this.perks = new HashSet<>();
     }
-    public Perk add(Perk perk) {
+
+    public Perk save(Perk perk) {
         perks.add(perk);
-        return perks.get(perks.size() - 1);
+        return perk;
     }
-    public void setPrice(Perk perkToBeChanged, double newPrice) {
-        for (Perk perk : perks) {
-            if (perk.equals(perkToBeChanged)) {
-                perk.setPrice(newPrice);
-            }
-        }
-    }
-    public List<Perk> sortByName() {
-        List<Perk> sortedByName = new ArrayList<>(perks);
-        sortedByName.sort(Comparator.comparing(Perk::getName));
-        return sortedByName;
-    }
-    public List<Perk> sortByPrice() {
-        List<Perk> sortedByPrice = new ArrayList<>(perks);
-        sortedByPrice.sort(Comparator.comparing(Perk::getPrice));
-        return sortedByPrice;
+
+    public Set<Perk> getAll() {
+        return perks;
     }
 }
