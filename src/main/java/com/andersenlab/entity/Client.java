@@ -2,9 +2,10 @@ package com.andersenlab.entity;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class Client {
     private final long id;
@@ -14,7 +15,7 @@ public class Client {
     private boolean isLives;
 
     private Apartment apartment;
-    private Set<Perk> perks;
+    private List<Perk> perks;
 
     private double currentPriceToPay;
 
@@ -22,7 +23,7 @@ public class Client {
         this.id = id;
         this.name = name;
         isLives = false;
-        perks = new HashSet<>();
+        perks = new ArrayList<>();
     }
 
     public Long getId() {
@@ -61,7 +62,7 @@ public class Client {
         this.apartment = apartment;
     }
 
-    public Set<Perk> getPerks() {
+    public List<Perk> getPerks() {
         return perks;
     }
 
