@@ -1,7 +1,6 @@
 package com.andersenlab.dao;
 
 import com.andersenlab.entity.Apartment;
-import com.andersenlab.entity.ApartmentStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,7 @@ public class ApartmentDao {
         this.apartments = new ArrayList<>();
     }
 
-    public Apartment get(int id) {
+    public Apartment get(long id) {
         for (Apartment apartment: apartments) {
             if (apartment.getId() == id)
                 return apartment;
@@ -21,11 +20,11 @@ public class ApartmentDao {
         return null;
     }
 
-    public void add(Apartment apartment) {
+    public void save(Apartment apartment) {
         apartments.add(apartment);
     }
 
-    public void update(int id, Apartment updatedApartment){
+    public void update(long id, Apartment updatedApartment){
         Apartment apartment = get(id);
         apartment.setApartmentNumber(updatedApartment.getApartmentNumber());
         apartment.setApartmentCapacity(updatedApartment.getApartmentCapacity());

@@ -3,7 +3,7 @@ package com.andersenlab.entity;
 import java.util.Objects;
 
 public class Apartment {
-    private int id;
+    private long id;
     private int apartmentNumber;
     private int apartmentCapacity;
     private long apartmentPrice;
@@ -12,7 +12,7 @@ public class Apartment {
     public Apartment() {
     }
 
-    public Apartment(int id, int apartmentNumber, int apartmentCapacity, long apartmentPrice, ApartmentStatus apartmentStatus) {
+    public Apartment(long id, int apartmentNumber, int apartmentCapacity, long apartmentPrice, ApartmentStatus apartmentStatus) {
         this.id = id;
         this.apartmentNumber = apartmentNumber;
         this.apartmentCapacity = apartmentCapacity;
@@ -20,11 +20,11 @@ public class Apartment {
         this.apartmentStatus = apartmentStatus;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

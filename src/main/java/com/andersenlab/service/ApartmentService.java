@@ -18,7 +18,7 @@ public class ApartmentService {
         apartment.setApartmentNumber(apartmentNumber);
         apartment.setApartmentCapacity(apartmentCapacity);
         apartment.setApartmentStatus(ApartmentStatus.AVAILABLE);
-        apartmentDao.add(apartment);
+        apartmentDao.save(apartment);
     }
 
     public void changeApartmentPrice(int id, long newPrice) {
