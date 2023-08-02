@@ -6,7 +6,11 @@ import com.andersenlab.entity.Perk;
 import java.util.*;
 
 public class PerkService {
-    private final PerkDao perkDao = new PerkDao();
+    private final PerkDao perkDao;
+
+    public PerkService(PerkDao perkDao) {
+        this.perkDao = perkDao;
+    }
 
     public void save(Perk perk) {
         perkDao.save(perk);
