@@ -6,11 +6,12 @@ import com.andersenlab.entity.Perk;
 import java.util.*;
 
 public class PerkService {
-    private final PerkDao perkDao;
+    private final PerkDao perkDao = new PerkDao();
 
-    public PerkService(PerkDao perkDao) {
-        this.perkDao = perkDao;
+    public void save(Perk perk) {
+        perkDao.save(perk);
     }
+
     public void setPrice(String perkName, double newPrice) {
         Set<Perk> perks = perkDao.getAll();
         for (Perk perk : perks) {

@@ -11,9 +11,8 @@ public class PerkDao {
         this.perks = new HashSet<>();
     }
 
-    public Perk save(Perk perk) {
+    public void save(Perk perk) {
         perks.add(perk);
-        return perk;
     }
 
     public Set<Perk> getAll() {
