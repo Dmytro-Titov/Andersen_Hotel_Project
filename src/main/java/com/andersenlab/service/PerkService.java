@@ -20,6 +20,9 @@ public class PerkService {
         perkDao.save(newPerk);
     }
 
+    public Perk getById(long id) {
+        return perkDao.get(id);
+    }
 
     public void setPrice(String perkName, double newPrice) {
         List<Perk> perks = perkDao.getAll();
