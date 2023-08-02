@@ -10,6 +10,9 @@ import com.andersenlab.entity.Perk;
 import com.andersenlab.util.IdGenerator;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClientService {
     private final ClientDao clientDao;
@@ -36,7 +39,28 @@ public class ClientService {
         Client client = getClient(id);
         if (client != null)
             return client.getCurrentPriceToPay();
-    return 0;
+        return 0;
+    }
+
+    public List<Client> sortByName() {
+        return clientDao.getAllClients().stream()
+                .sorted(Comparator.comparing(Client::getName))
+                .collect(Collectors.toList());
+
+    }
+
+    public List<Client> sortByCheckOutDate() {
+        return clientDao.getAllClients().stream()
+                .sorted(Comparator.comparing(Client::getCheckOutDate))
+                .collect(Collectors.toList());
+
+    }
+
+    public List<Client> sortByStatus() {
+        return clientDao.getAllClients().stream()
+                .sorted(Comparator.comparing(Client::isLives))
+                .collect(Collectors.toList());
+
     }
 
 

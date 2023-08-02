@@ -29,25 +29,4 @@ public class ClientDao {
         return clients.containsKey(id);
     }
 
-    public List<Client> sortByName() {
-        return clients.values()
-                .stream()
-                .sorted(Comparator.comparing(Client::getName))
-                .collect(Collectors.toList());
-    }
-
-    public List<Client> sortByCheckOutDate() {
-        return clients.values()
-                .stream()
-                .sorted(Comparator.comparing(Client::getCheckOutDate))
-                .collect(Collectors.toList());
-    }
-
-    public List<Client> sortByStatus() {
-        return clients.values()
-                .stream()
-                .sorted(Comparator.comparing(Client::isLives))
-                .collect(Collectors.toList());
-    }
-
 }
