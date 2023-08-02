@@ -24,7 +24,6 @@ public class PerkService {
         return perkDao.get(id);
     }
 
-
     public void setPrice(String perkName, double newPrice) {
         List<Perk> perks = perkDao.getAll();
         for (Perk perk : perks) {

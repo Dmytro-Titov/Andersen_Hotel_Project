@@ -2,22 +2,31 @@ package com.andersenlab.entity;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 
 public class Client {
     private final long id;
     private String name;
 
-    private LocalDateTime checkInDate;
     private LocalDateTime checkOutDate;
-    private ClientStatus status;
+    private boolean isLives;
 
-    public Client(String name, long id) {
+    private Apartment apartment;
+    private List<Perk> perks;
+
+    private double currentPriceToPay;
+
+    public Client(Long id, String name) {
         this.id = id;
         this.name = name;
-        status = ClientStatus.CHECKED_OUT;
+        isLives = false;
+        perks = new ArrayList<>();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -29,14 +38,6 @@ public class Client {
         this.name = name;
     }
 
-    public LocalDateTime getCheckInDate() {
-        return checkInDate;
-    }
-
-    public void setCheckInDate(LocalDateTime checkInDate) {
-        this.checkInDate = checkInDate;
-    }
-
     public LocalDateTime getCheckOutDate() {
         return checkOutDate;
     }
@@ -45,11 +46,61 @@ public class Client {
         this.checkOutDate = checkOutDate;
     }
 
-    public ClientStatus getStatus() {
-        return status;
+    public boolean isLives() {
+        return isLives;
     }
 
-    public void setStatus(ClientStatus status) {
-        this.status = status;
+    public void setLives(boolean lives) {
+        isLives = lives;
+    }
+
+    public Apartment getApartment() {
+        return apartment;
+    }
+
+    public void setApartment(Apartment apartment) {
+        this.apartment = apartment;
+    }
+
+    public List<Perk> getPerks() {
+        return perks;
+    }
+
+    public void addPerk(Perk perk) {
+        perks.add(perk);
+    }
+
+    public double getCurrentPriceToPay() {
+        return currentPriceToPay;
+    }
+
+    public void setCurrentPriceToPay(double currentPriceToPay) {
+        this.currentPriceToPay = currentPriceToPay;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return id == client.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", checkOutDate=" + checkOutDate +
+                ", isLives=" + isLives +
+                ", apartment=" + apartment +
+                ", perks=" + perks +
+                ", currentPriceToPay=" + currentPriceToPay +
+                '}';
     }
 }
