@@ -12,12 +12,17 @@ public class PerkService {
         this.perkDao = perkDao;
     }
 
-    public void save(Perk perk) {
-        perkDao.save(perk);
+    public void save(long id, String perkName, double perkPrice) {
+        Perk newPerk = new Perk();
+        newPerk.setId(id);
+        newPerk.setName(perkName);
+        newPerk.setPrice(perkPrice);
+        perkDao.save(newPerk);
     }
 
+
     public void setPrice(String perkName, double newPrice) {
-        Set<Perk> perks = perkDao.getAll();
+        List<Perk> perks = perkDao.getAll();
         for (Perk perk : perks) {
             if (perk.getName().equals(perkName)) {
                 perk.setPrice(newPrice);

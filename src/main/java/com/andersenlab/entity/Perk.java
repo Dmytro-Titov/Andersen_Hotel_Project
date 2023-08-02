@@ -13,6 +13,9 @@ public class Perk {
         this.price = price;
     }
 
+    public Perk() {
+    }
+
     public long getId() {
         return id;
     }
