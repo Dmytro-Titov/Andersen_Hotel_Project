@@ -7,12 +7,12 @@ import java.util.stream.Collectors;
 public class ClientDao {
     private Map<Long, Client> clients = new HashMap<>();
 
-    public Long addClient(Client newClient) {
+    public long addClient(Client newClient) {
         clients.put(newClient.getId(), newClient);
         return newClient.getId();
     }
 
-    public Client getClientById(Long id) {
+    public Client getClientById(long id) {
         return clients.get(id);
     }
 
@@ -24,7 +24,7 @@ public class ClientDao {
         clients.remove(client.getId());
     }
 
-    public boolean isClientExist(Long id) {
+    public boolean isClientExist(long id) {
         return clients.containsKey(id);
     }
 

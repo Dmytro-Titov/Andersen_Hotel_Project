@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Client {
-    private final Long id;
+    private final long id;
     private String name;
 
     private LocalDateTime checkOutDate;

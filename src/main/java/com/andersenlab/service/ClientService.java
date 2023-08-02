@@ -19,15 +19,15 @@ public class ClientService {
     }
 
     //Передав Long щоб консоль вивела: "ВИ успішно зареєструвались... Вас ID: 'id'"
-    public Long createAndAddNewClient(String name) {
+    public long createAndAddNewClient(String name) {
         return clientDao.addClient(new Client(IdGenerator.generateClientId(), name));
     }
 
-    public Client getClient(Long id) {
+    public Client getClient(long id) {
         return clientDao.getClientById(id);
     }
 
-    public void getCurrentPriceToPay(Long id) {
+    public void getCurrentPriceToPay(long id) {
         Client client = getClient(id);
         if (client != null)
             System.out.println("Client " + client.getName() + " must to pay: " + client.getCurrentPriceToPay());
@@ -37,7 +37,7 @@ public class ClientService {
     //Методи які взаємодіють з матодами інших дао
 
 
-/*    public void checkInApartment(Long clientId, Long apartmentId) {
+/*    public void checkInApartment(long clientId, long apartmentId) {
         Client client = getClient(clientId);
         Apartment apartment = apartmentDao.getApartmentById(apartmentId);
 
@@ -52,7 +52,7 @@ public class ClientService {
             }
     }*/
 
-/*    public void checkOutApartment(Long clientId) {
+/*    public void checkOutApartment(long clientId) {
         Client client = getClient(clientId);
 
         if (client != null) {
@@ -68,7 +68,7 @@ public class ClientService {
         }
     }*/
 
- /*   public void orderPerks(Long clientId, Long perkId) {
+ /*   public void orderPerks(long clientId, long perkId) {
         Client client = getClient(clientId);
         Perk perk = perkDao.getPerkById(perkId);
 
