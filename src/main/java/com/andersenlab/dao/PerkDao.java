@@ -1,29 +1,17 @@
 package com.andersenlab.dao;
 
-import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Perk;
 
 import java.util.*;
 
-public class PerkDao {
-    List<Perk> perks;
+public interface PerkDao {
+    Perk getById(long id);
 
-    public PerkDao() {
-        this.perks = new ArrayList<>();
-    }
+    List<Perk> getAll();
 
-    public void save(Perk perk) {
-        perks.add(perk);
-    }
+    void save(Perk perk);
 
-    public List<Perk> getAll() {
-        return perks;
-    }
-    public Perk get(long id) {
-        for (Perk perk: perks) {
-            if (perk.getId() == id)
-                return perk;
-        }
-        return null;
-    }
+    void update(Perk perk);
+
+    void remove(long id);
 }

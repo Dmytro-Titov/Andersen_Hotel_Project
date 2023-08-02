@@ -13,6 +13,11 @@ public class Perk {
         this.price = price;
     }
 
+    public Perk(long id, double price) {
+        this.id = id;
+        this.price = price;
+    }
+
     public Perk() {
     }
 

@@ -1,33 +1,31 @@
 package com.andersenlab.entity;
 
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
 public class Client {
-    private final long id;
+    private long id;
     private String name;
-
     private LocalDateTime checkOutDate;
-    private boolean isLives;
-
+    private ClientStatus status;
     private Apartment apartment;
     private List<Perk> perks;
 
-    private double currentPriceToPay;
-
-    public Client(Long id, String name) {
+    public Client(long id, String name) {
         this.id = id;
         this.name = name;
-        isLives = false;
+        status = ClientStatus.NEW;
         perks = new ArrayList<>();
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -46,12 +44,12 @@ public class Client {
         this.checkOutDate = checkOutDate;
     }
 
-    public boolean isLives() {
-        return isLives;
+    public ClientStatus getStatus() {
+        return status;
     }
 
-    public void setLives(boolean lives) {
-        isLives = lives;
+    public void setStatus(ClientStatus status) {
+        this.status = status;
     }
 
     public Apartment getApartment() {
@@ -66,16 +64,8 @@ public class Client {
         return perks;
     }
 
-    public void addPerk(Perk perk) {
-        perks.add(perk);
-    }
-
-    public double getCurrentPriceToPay() {
-        return currentPriceToPay;
-    }
-
-    public void setCurrentPriceToPay(double currentPriceToPay) {
-        this.currentPriceToPay = currentPriceToPay;
+    public void setPerks(List<Perk> perks) {
+        this.perks = perks;
     }
 
     @Override
@@ -97,10 +87,9 @@ public class Client {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", checkOutDate=" + checkOutDate +
-                ", isLives=" + isLives +
+                ", status=" + status +
                 ", apartment=" + apartment +
                 ", perks=" + perks +
-                ", currentPriceToPay=" + currentPriceToPay +
                 '}';
     }
 }

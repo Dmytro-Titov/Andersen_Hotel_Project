@@ -1,51 +1,19 @@
 package com.andersenlab.service;
 
-import com.andersenlab.dao.PerkDao;
 import com.andersenlab.entity.Perk;
 
 import java.util.*;
 
-public class PerkService {
-    private final PerkDao perkDao;
+public interface PerkService {
+    Perk getById(long id);
 
-    public PerkService(PerkDao perkDao) {
-        this.perkDao = perkDao;
-    }
+    void save(String name, double price);
 
-    public void save(long id, String perkName, double perkPrice) {
-        Perk newPerk = new Perk();
-        newPerk.setId(id);
-        newPerk.setName(perkName);
-        newPerk.setPrice(perkPrice);
-        perkDao.save(newPerk);
-    }
+    void changePrice(long id, double price);
 
-    public Perk getById(long id) {
-        return perkDao.get(id);
-    }
+    List<Perk> sortByName();
 
-    public void setPrice(String perkName, double newPrice) {
-        List<Perk> perks = perkDao.getAll();
-        for (Perk perk : perks) {
-            if (perk.getName().equals(perkName)) {
-                perk.setPrice(newPrice);
-            }
-        }
-    }
-    public List<Perk> sortByName() {
-        if (perkDao.getAll() == null || perkDao.getAll().isEmpty()) {
-            return null;
-        }
-        List<Perk> sortedByName = new ArrayList<>(perkDao.getAll());
-        sortedByName.sort(Comparator.comparing(Perk::getName));
-        return sortedByName;
-    }
-    public List<Perk> sortByPrice() {
-        if (perkDao.getAll() == null || perkDao.getAll().isEmpty()) {
-            return null;
-        }
-        List<Perk> sortedByPrice = new ArrayList<>(perkDao.getAll());
-        sortedByPrice.sort(Comparator.comparing(Perk::getPrice));
-        return sortedByPrice;
-    }
+    List<Perk> sortByPrice();
+
+
 }

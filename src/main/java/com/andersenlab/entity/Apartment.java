@@ -5,19 +5,29 @@ import java.util.Objects;
 public class Apartment {
     private long id;
     private int apartmentNumber;
-    private int apartmentCapacity;
-    private long apartmentPrice;
-    private ApartmentStatus apartmentStatus;
+    private int capacity;
+    private double price;
+    private ApartmentStatus status;
 
     public Apartment() {
     }
 
-    public Apartment(long id, int apartmentNumber, int apartmentCapacity, long apartmentPrice, ApartmentStatus apartmentStatus) {
+    public Apartment(long id, double price) {
+        this.id = id;
+        this.price = price;
+    }
+
+    public Apartment(long id, ApartmentStatus status) {
+        this.id = id;
+        this.status = status;
+    }
+
+    public Apartment(long id, int apartmentNumber, int capacity, double price, ApartmentStatus status) {
         this.id = id;
         this.apartmentNumber = apartmentNumber;
-        this.apartmentCapacity = apartmentCapacity;
-        this.apartmentPrice = apartmentPrice;
-        this.apartmentStatus = apartmentStatus;
+        this.capacity = capacity;
+        this.price = price;
+        this.status = status;
     }
 
     public long getId() {
@@ -36,28 +46,28 @@ public class Apartment {
         this.apartmentNumber = apartmentNumber;
     }
 
-    public int getApartmentCapacity() {
-        return apartmentCapacity;
+    public int getCapacity() {
+        return capacity;
     }
 
-    public void setApartmentCapacity(int apartmentCapacity) {
-        this.apartmentCapacity = apartmentCapacity;
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
     }
 
-    public long getApartmentPrice() {
-        return apartmentPrice;
+    public double getPrice() {
+        return price;
     }
 
-    public void setApartmentPrice(long apartmentPrice) {
-        this.apartmentPrice = apartmentPrice;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
-    public ApartmentStatus getApartmentStatus() {
-        return apartmentStatus;
+    public ApartmentStatus getStatus() {
+        return status;
     }
 
-    public void setApartmentStatus(ApartmentStatus apartmentStatus) {
-        this.apartmentStatus = apartmentStatus;
+    public void setStatus(ApartmentStatus status) {
+        this.status = status;
     }
 
     @Override
@@ -65,12 +75,12 @@ public class Apartment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Apartment apartment = (Apartment) o;
-        return id == apartment.id && apartmentNumber == apartment.apartmentNumber && apartmentCapacity == apartment.apartmentCapacity;
+        return id == apartment.id && apartmentNumber == apartment.apartmentNumber && capacity == apartment.capacity;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, apartmentNumber, apartmentCapacity);
+        return Objects.hash(id, apartmentNumber, capacity);
     }
 
     @Override
@@ -78,9 +88,9 @@ public class Apartment {
         return "Apartment{" +
                 "id=" + id +
                 ", apartmentNumber=" + apartmentNumber +
-                ", apartmentCapacity=" + apartmentCapacity +
-                ", apartmentPrice=" + apartmentPrice +
-                ", apartmentStatus=" + apartmentStatus +
+                ", capacity=" + capacity +
+                ", price=" + price +
+                ", status=" + status +
                 '}';
     }
 }

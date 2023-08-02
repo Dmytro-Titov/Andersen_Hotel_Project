@@ -3,30 +3,15 @@ package com.andersenlab.dao;
 import com.andersenlab.entity.Client;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class ClientDao {
-    private Map<Long, Client> clients = new HashMap<>();
+public interface ClientDao {
+    Client getById(long id);
 
-    public long addClient(Client newClient) {
-        clients.put(newClient.getId(), newClient);
-        return newClient.getId();
-    }
+    List<Client> getAll();
 
-    public Client getClientById(long id) {
-        return clients.get(id);
-    }
+    void save(Client client);
 
-    public List<Client> getAllClients() {
-        return clients.values().stream().toList();
-    }
+    void update(Client client);
 
-    public void removeClient(Client client) {
-        clients.remove(client.getId());
-    }
-
-    public boolean isClientExist(long id) {
-        return clients.containsKey(id);
-    }
-
+    void remove(long id);
 }
