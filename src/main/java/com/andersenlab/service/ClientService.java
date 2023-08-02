@@ -3,8 +3,13 @@ package com.andersenlab.service;
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.dao.ClientDao;
 import com.andersenlab.dao.PerkDao;
+import com.andersenlab.entity.Apartment;
+import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.entity.Client;
+import com.andersenlab.entity.Perk;
 import com.andersenlab.util.IdGenerator;
+
+import java.time.LocalDateTime;
 
 public class ClientService {
     private final ClientDao clientDao;
@@ -37,22 +42,23 @@ public class ClientService {
     //Методи які взаємодіють з матодами інших дао
 
 
-/*    public void checkInApartment(long clientId, long apartmentId) {
+    public boolean checkInApartment(long clientId, long apartmentId) {
         Client client = getClient(clientId);
-        Apartment apartment = apartmentDao.getApartmentById(apartmentId);
+        Apartment apartment = apartmentDao.get(apartmentId);
 
         if (client != null && apartment != null)
-            if (apartment.isAvailable()) {
+            if (apartment.getApartmentStatus() == ApartmentStatus.AVAILABLE) {
                 client.setApartment(apartment);
                 client.setLives(true);
                 client.setCheckOutDate(LocalDateTime.now().plusDays(7));
-                client.setCurrentPriceToPay(client.getCurrentPriceToPay() + apartment.getPrice());
-                apartment.setAvailability(false);
-                System.out.println("You have successfully checked into the hotel, your apartment is under the number" + apartmentId);
+                client.setCurrentPriceToPay(client.getCurrentPriceToPay() + apartment.getApartmentPrice());
+                apartment.setApartmentStatus(ApartmentStatus.UNAVAILABLE);
+                return true;
             }
-    }*/
+        return false;
+    }
 
-/*    public void checkOutApartment(long clientId) {
+    public boolean checkOutApartment(long clientId) {
         Client client = getClient(clientId);
 
         if (client != null) {
@@ -62,13 +68,14 @@ public class ClientService {
                 client.setApartment(null);
                 client.setLives(false);
                 client.setCheckOutDate(null);
-                apartment.setAvailability(true);
-                System.out.println("You have successfully checked out the hotel!");
+                apartment.setApartmentStatus(ApartmentStatus.AVAILABLE);
+                return true;
             }
         }
-    }*/
+        return false;
+    }
 
- /*   public void orderPerks(long clientId, long perkId) {
+    public void orderPerks(long clientId, long perkId) {
         Client client = getClient(clientId);
         Perk perk = perkDao.getPerkById(perkId);
 
@@ -78,6 +85,6 @@ public class ClientService {
 
             System.out.println("You have successfully ordered a perk!");
         }
-    }*/
+    }
 
 }

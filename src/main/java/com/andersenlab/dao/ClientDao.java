@@ -1,6 +1,7 @@
 package com.andersenlab.dao;
 
 import com.andersenlab.entity.Client;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,8 +17,8 @@ public class ClientDao {
         return clients.get(id);
     }
 
-    public Collection<Client> getAllClients() {
-        return clients.values();
+    public List<Client> getAllClients() {
+        return clients.values().stream().toList();
     }
 
     public void removeClient(Client client) {
