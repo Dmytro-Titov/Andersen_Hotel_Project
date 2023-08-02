@@ -5,18 +5,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClientDao {
-    private static ClientDao instance;
     private Map<Long, Client> clients = new HashMap<>();
-
-    private ClientDao() {
-    }
-
-    public static ClientDao getInstance() {
-        if (instance == null) {
-            instance = new ClientDao();
-        }
-        return instance;
-    }
 
     public Long addClient(Client newClient) {
         clients.put(newClient.getId(), newClient);
