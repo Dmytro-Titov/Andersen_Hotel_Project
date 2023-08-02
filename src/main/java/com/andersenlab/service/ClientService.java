@@ -32,10 +32,11 @@ public class ClientService {
         return clientDao.getClientById(id);
     }
 
-    public void getCurrentPriceToPay(long id) {
+    public double getCurrentPriceToPay(long id) {
         Client client = getClient(id);
         if (client != null)
-            System.out.println("Client " + client.getName() + " must to pay: " + client.getCurrentPriceToPay());
+            return client.getCurrentPriceToPay();
+    return 0;
     }
 
 
