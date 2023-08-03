@@ -8,6 +8,7 @@ target/
 *.iws
 *.iml
 *.ipr
+*out/artifacts/AndersenHotelProject_jar
 
 ### Eclipse ###
 .apt_generated
