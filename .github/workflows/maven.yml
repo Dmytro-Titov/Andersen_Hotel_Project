@@ -14,12 +14,7 @@ on:
   pull_request:
     branches: [ "master" ]
 
-permissions:
-  id-token: write
-  contents: read
-  issues: write
-  pull-requests: write
-
+permissions: {}
 
 jobs:
   build:
