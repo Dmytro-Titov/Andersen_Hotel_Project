@@ -4,18 +4,14 @@ import com.andersenlab.entity.Perk;
 
 import java.util.*;
 
-public class PerkDao {
-    Set<Perk> perks;
+public interface PerkDao {
+    Perk getById(long id);
 
-    public PerkDao() {
-        this.perks = new HashSet<>();
-    }
+    List<Perk> getAll();
 
-    public void save(Perk perk) {
-        perks.add(perk);
-    }
+    void save(Perk perk);
 
-    public Set<Perk> getAll() {
-        return perks;
-    }
+    void update(Perk perk);
+
+    void remove(long id);
 }

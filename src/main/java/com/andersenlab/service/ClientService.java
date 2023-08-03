@@ -1,11 +1,29 @@
 package com.andersenlab.service;
 
-import com.andersenlab.dao.ClientDao;
+import com.andersenlab.entity.Client;
+import com.andersenlab.entity.Perk;
 
-public class ClientService {
-    private final ClientDao clientDao = new ClientDao();
+import java.util.List;
 
-    public void run(String command) {
-        //logic
-    }
+public interface ClientService {
+    Client getById(long id);
+
+    void save(String name);
+
+    double getStayCost(long id);
+
+    boolean checkInApartment(long clientId, long apartmentId, int stayDuration);
+
+    boolean checkOutApartment(long clientId);
+
+    boolean addPerk(long clientId, long perkId);
+
+    List<Perk> getAllPerks(long clientId);
+
+    List<Client> sortByName();
+
+    List<Client> sortByCheckOutDate();
+
+    List<Client> sortByStatus();
+
 }

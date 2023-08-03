@@ -2,31 +2,16 @@ package com.andersenlab.dao;
 
 import com.andersenlab.entity.Apartment;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ApartmentDao {
+public interface ApartmentDao {
+    Apartment getById(long id);
 
-    List<Apartment> apartmentList = new ArrayList<>();
+    List<Apartment> getAll();
 
-    public long save(Apartment apartment){
-        apartment.setId(1); //your id generator
-        apartmentList.add(apartment);
-        return apartment.getId();
-    }
+    void save(Apartment apartment);
 
-    public Apartment getApartment(long id) {
+    void update(Apartment apartment);
 
-        for (Apartment apartment : apartmentList) {
-            if (apartment.getId() == id) {
-                return apartment;
-            }
-        }
-
-        return null;
-    }
-
-    public List<Apartment> getAllApartments() {
-        return apartmentList;
-    }
+    void remove(long id);
 }

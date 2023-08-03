@@ -1,24 +1,31 @@
 package com.andersenlab.entity;
 
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class Client {
-    private final long id;
+    private long id;
     private String name;
-
-    private LocalDateTime checkInDate;
     private LocalDateTime checkOutDate;
     private ClientStatus status;
+    private Apartment apartment;
+    private List<Perk> perks;
 
-    public Client(String name, long id) {
+    public Client(long id, String name) {
         this.id = id;
         this.name = name;
-        status = ClientStatus.CHECKED_OUT;
+        status = ClientStatus.NEW;
+        perks = new ArrayList<>();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -27,14 +34,6 @@ public class Client {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public LocalDateTime getCheckInDate() {
-        return checkInDate;
-    }
-
-    public void setCheckInDate(LocalDateTime checkInDate) {
-        this.checkInDate = checkInDate;
     }
 
     public LocalDateTime getCheckOutDate() {
@@ -51,5 +50,46 @@ public class Client {
 
     public void setStatus(ClientStatus status) {
         this.status = status;
+    }
+
+    public Apartment getApartment() {
+        return apartment;
+    }
+
+    public void setApartment(Apartment apartment) {
+        this.apartment = apartment;
+    }
+
+    public List<Perk> getPerks() {
+        return perks;
+    }
+
+    public void setPerks(List<Perk> perks) {
+        this.perks = perks;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return id == client.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", checkOutDate=" + checkOutDate +
+                ", status=" + status +
+                ", apartment=" + apartment +
+                ", perks=" + perks +
+                '}';
     }
 }
