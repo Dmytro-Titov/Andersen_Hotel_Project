@@ -15,7 +15,6 @@ on:
   pull_request:
 
 
-
 permissions:
   id-token: write
   contents: read
