@@ -124,7 +124,7 @@ public class ClientServiceImpl implements ClientService {
         List<Client> sortedByCheckOutDate = new ArrayList<>(clientDao.getAll());
         return sortedByCheckOutDate.stream()
                 .filter(client -> client.getStatus() != ClientStatus.NEW)
-                .sorted(Comparator.comparing(Client::getStatus))
+                .sorted(Comparator.comparing(Client::getCheckOutDate))
                 .collect(Collectors.toList());
     }
 

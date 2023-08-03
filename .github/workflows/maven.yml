@@ -10,9 +10,14 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "master" ]
+    branches-ignore:
+      - 'dependabot/**'
   pull_request:
-    branches: [ "master" ]
+
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   build:

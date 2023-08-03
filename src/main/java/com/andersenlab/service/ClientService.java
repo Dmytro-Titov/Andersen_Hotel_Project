@@ -25,5 +25,4 @@ public interface ClientService {
     List<Client> sortByCheckOutDate();
 
     List<Client> sortByStatus();
-
 }
