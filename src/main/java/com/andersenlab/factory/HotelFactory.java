@@ -1,14 +1,19 @@
 package com.andersenlab.factory;
 
-import com.andersenlab.service.ApartmentService;
-import com.andersenlab.service.ClientService;
-import com.andersenlab.service.PerkService;
+import com.andersenlab.dao.*;
+import com.andersenlab.dao.impl.*;
+import com.andersenlab.service.*;
+import com.andersenlab.service.impl.*;
 
 public class HotelFactory {
 
-    private ApartmentService apartmentService = new ApartmentService();
-    private ClientService clientService = new ClientService();
-    private PerkService perkService = new PerkService();
+    private ApartmentDao apartmentDao = new ApartmentDaoImpl();
+    private ApartmentService apartmentService = new ApartmentServiceImpl(apartmentDao);
+    private PerkDao perkDao = new PerkDaoImpl();
+    private PerkService perkService = new PerkServiceImpl(perkDao);
+    private ClientDao clientDao = new ClientDaoImpl();
+    private ClientService clientService = new ClientServiceImpl(clientDao, perkDao, apartmentDao);
+
     private static HotelFactory instance;
 
     public static HotelFactory getInstance(){
