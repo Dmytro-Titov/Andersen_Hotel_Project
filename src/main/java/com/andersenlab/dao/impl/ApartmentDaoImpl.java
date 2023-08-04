@@ -53,7 +53,6 @@ public class ApartmentDaoImpl implements ApartmentDao {
         } else {
             return Optional.empty();
         }
-
     }
 
     @Override

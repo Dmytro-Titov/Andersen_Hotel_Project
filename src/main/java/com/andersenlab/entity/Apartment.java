@@ -75,7 +75,9 @@ public class Apartment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Apartment apartment = (Apartment) o;
-        return id == apartment.id && apartmentNumber == apartment.apartmentNumber && capacity == apartment.capacity && Double.compare(apartment.price, price) == 0 && status == apartment.status;
+        return id == apartment.id && apartmentNumber == apartment.apartmentNumber
+                && capacity == apartment.capacity && Double.compare(apartment.price, price) == 0
+                && status == apartment.status;
     }
 
     @Override

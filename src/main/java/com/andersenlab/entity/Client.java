@@ -101,12 +101,17 @@ public class Client {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Client client = (Client) o;
-        return id == client.id && Objects.equals(name, client.name) && Objects.equals(checkOutDate, client.checkOutDate) && status == client.status && Objects.equals(apartment, client.apartment) && Objects.equals(perks, client.perks);
+        return id == client.id && Double.compare(client.stayCost, stayCost) == 0
+                && quantityOfPeople == client.quantityOfPeople && Objects.equals(name, client.name)
+                && Objects.equals(checkOutDate, client.checkOutDate)
+                && Objects.equals(checkInDate, client.checkInDate)
+                && status == client.status && Objects.equals(apartment, client.apartment)
+                && Objects.equals(perks, client.perks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, checkOutDate, status, apartment, perks);
+        return Objects.hash(id, name, checkOutDate, checkInDate, status, apartment, perks, stayCost, quantityOfPeople);
     }
 
     @Override
@@ -115,9 +120,12 @@ public class Client {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", checkOutDate=" + checkOutDate +
+                ", checkInDate=" + checkInDate +
                 ", status=" + status +
                 ", apartment=" + apartment +
                 ", perks=" + perks +
+                ", stayCost=" + stayCost +
+                ", quantityOfPeople=" + quantityOfPeople +
                 '}';
     }
 }

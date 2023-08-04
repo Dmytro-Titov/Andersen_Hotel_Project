@@ -53,7 +53,8 @@ public class ClientServiceImpl implements ClientService {
         Apartment apartment = apartmentDao.getById(apartmentId)
                 .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + apartmentId));
         if (ClientStatus.CHECKED_IN == client.getStatus()) {
-            throw new RuntimeException("This client is already checked in. Apartment id: " + client.getApartment().getId());
+            throw new RuntimeException("This client is already checked in. Apartment id: "
+                    + client.getApartment().getId());
         }
         if (ApartmentStatus.AVAILABLE == apartment.getStatus()
                 && apartment.getCapacity() >= client.getQuantityOfPeople()) {
@@ -69,7 +70,8 @@ public class ClientServiceImpl implements ClientService {
         Client client = getById(clientId);
         List<Apartment> apartments = apartmentDao.getAll();
         if (ClientStatus.CHECKED_IN == client.getStatus()) {
-            throw new RuntimeException("This client is already checked in. Apartment id: " + client.getApartment().getId());
+            throw new RuntimeException("This client is already checked in. Apartment id: "
+                    + client.getApartment().getId());
         }
         Optional<Apartment> availableApartment = apartments.stream()
                 .filter(apartment -> apartment.getCapacity() >= client.getQuantityOfPeople())
