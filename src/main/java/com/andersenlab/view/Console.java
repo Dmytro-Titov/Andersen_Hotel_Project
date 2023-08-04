@@ -2,6 +2,7 @@ package com.andersenlab.view;
 
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
+import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
@@ -194,9 +195,9 @@ public class Console {
 
         switch (commandArray.length) {
             case 2 -> {
-                if (commandArray[1].equals("list")) {
+                if (commandArray[1].equals("list") || commandArray[1].equals("getall")) {
                     ConsolePrinter.printList(apartmentService.getAll());
-                }
+                } else throw new IllegalArgumentException();
             }
             case 3 -> {
                 switch (commandArray[1]) {
@@ -219,6 +220,7 @@ public class Console {
                     case "changestatus" -> {
                         ConsolePrinter.printApartmentStatusChange(apartmentService.changeStatus(Long.parseLong(commandArray[2])));
                     }
+                    default -> throw new IllegalArgumentException();
                 }
             }
             case 4 -> {
@@ -231,14 +233,73 @@ public class Console {
                         ConsolePrinter.printApartmentPriceChange(apartmentService.changePrice(
                                 Long.parseLong(commandArray[2]), Double.parseDouble(commandArray[3])));
                     }
+                    default -> throw new IllegalArgumentException();
                 }
             }
             default -> ConsolePrinter.syntaxError();
         }
     }
 
+
+    /*  perk command list:
+            perk list / perk getall
+
+            perk price *perk-id*
+            perk get *perk-id*
+            perk list *sort-type* / perk getall *sort-type*
+
+            perk add *name* *price*
+            perk price *perk-id* *new-price*
+     */
+
+
     private void perkCommand(String[] commandArray) {
-        System.out.println("perk command");
+        if (commandArray.length < 2) {
+            ConsolePrinter.insufficientArguments();
+            return;
+        }
+
+        switch (commandArray.length) {
+            case 2 -> {
+                if (commandArray[1].equals("list") || commandArray[1].equals("getall")) {
+                    ConsolePrinter.printList(perkService.getAll());
+                } else throw new IllegalArgumentException();
+            }
+            case 3 -> {
+                switch (commandArray[1]) {
+                    case "get" -> {
+                        ConsolePrinter.printEntity(perkService.getById(Long.parseLong(commandArray[2])));
+                    }
+                    case "price" -> {
+                        ConsolePrinter.printPerkPrice(perkService.getById(Long.parseLong(commandArray[2])));
+                    }
+                    case "list", "getall" -> {
+                        List<Perk> list = switch (commandArray[2]) {
+                            case "id" -> perkService.getSorted(PerkService.PerkSortType.ID);
+                            case "name" -> perkService.getSorted(PerkService.PerkSortType.NAME);
+                            case "price" -> perkService.getSorted(PerkService.PerkSortType.PRICE);
+                            default -> throw new IllegalArgumentException();
+                        };
+                        ConsolePrinter.printList(list);
+                    }
+                    default -> throw new IllegalArgumentException();
+                }
+            }
+            case 4 -> {
+                switch (commandArray[1]) {
+                    case "add" -> {
+                        ConsolePrinter.printAddedPerk(perkService.save(commandArray[2], Double.parseDouble(commandArray[3])));
+                    }
+                    case "price" -> {
+                        ConsolePrinter.printPerkPriceChange(perkService.changePrice(
+                                Long.parseLong(commandArray[2]), Double.parseDouble(commandArray[3])
+                        ));
+                    }
+                    default -> throw new IllegalArgumentException();
+                }
+            }
+            default -> ConsolePrinter.syntaxError();
+        }
     }
 
     private boolean checkArgument(String argument, ArgumentType argumentType) {

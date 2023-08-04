@@ -27,6 +27,15 @@ public class ConsolePrinter {
                 apartment.getId(), apartment.getCapacity(), apartment.getPrice());
     }
 
+    public static void printAddedPerk(Perk perk) {
+        System.out.printf("You added new perk! id: %s, name: %s, price: %s\n",
+                perk.getId(), perk.getName(), perk.getPrice());
+    }
+
+    public static void printPerkPriceChange(Perk perk) {
+        System.out.printf("You changed price for perk '%s' to %s\n", perk.getName(), perk.getPrice());
+    }
+
     public static void printClientDebt(double debt) {
         if (debt == 0) {
             System.out.println("This client has no debt yet!");
@@ -49,6 +58,10 @@ public class ConsolePrinter {
 
     public static void printServedPerk(Perk perk) {
         System.out.printf("You served perk '%s' for the client!\n", perk.getName());
+    }
+
+    public static void printPerkPrice(Perk perk) {
+        System.out.printf("Current price for perk '%s' is %s\n", perk.getName(), perk.getPrice());
     }
 
     public static void printClientPerks(List<Perk> list) {
