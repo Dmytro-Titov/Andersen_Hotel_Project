@@ -40,9 +40,9 @@ public class ApartmentDaoImpl implements ApartmentDao {
             if (apartment.getPrice() != 0.0) {
                 existingApartment.get().setPrice(apartment.getPrice());
             }
-            if (apartment.getApartmentNumber() != 0) {
+            /*if (apartment.getApartmentNumber() != 0) {
                 existingApartment.get().setApartmentNumber(apartment.getApartmentNumber());
-            }
+            }*/
             if (apartment.getCapacity() != 0) {
                 existingApartment.get().setCapacity(apartment.getCapacity());
             }

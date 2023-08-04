@@ -25,9 +25,14 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public Apartment save(int apartmentNumber, int capacity, double price) {
+    public List<Apartment> getAll() {
+        return apartmentDao.getAll();
+    }
+
+    @Override
+    public Apartment save(/*int apartmentNumber,*/ int capacity, double price) {
         Apartment apartment = new Apartment(IdGenerator.generateApartmentId(),
-                apartmentNumber, capacity, price, ApartmentStatus.AVAILABLE);
+                /*apartmentNumber,*/ capacity, price, ApartmentStatus.AVAILABLE);
         return apartmentDao.save(apartment);
     }
 
@@ -38,9 +43,22 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public Apartment changeStatus(long id, ApartmentStatus status) {
-        return apartmentDao.update(new Apartment(id, status))
+    public Apartment changeStatus(long id) {
+        Apartment apartment = getById(id);
+        ApartmentStatus newStatus = apartment.getStatus() == ApartmentStatus.AVAILABLE ?
+                ApartmentStatus.UNAVAILABLE : ApartmentStatus.AVAILABLE;
+        return apartmentDao.update(new Apartment(id, newStatus))
                 .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + id));
+    }
+
+    @Override
+    public List<Apartment> getSorted(ApartmentSortType type) {
+        return switch (type) {
+            case ID -> getAll();
+            case PRICE -> sortByPrice();
+            case CAPACITY -> sortByCapacity();
+            case STATUS -> sortByStatus();
+        };
     }
 
     @Override

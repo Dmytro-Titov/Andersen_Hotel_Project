@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Apartment {
     private long id;
-    private int apartmentNumber;
+    /*private int apartmentNumber;*/
     private int capacity;
     private double price;
     private ApartmentStatus status;
@@ -22,9 +22,9 @@ public class Apartment {
         this.status = status;
     }
 
-    public Apartment(long id, int apartmentNumber, int capacity, double price, ApartmentStatus status) {
+    public Apartment(long id, /*int apartmentNumber,*/ int capacity, double price, ApartmentStatus status) {
         this.id = id;
-        this.apartmentNumber = apartmentNumber;
+        /*this.apartmentNumber = apartmentNumber;*/
         this.capacity = capacity;
         this.price = price;
         this.status = status;
@@ -38,13 +38,13 @@ public class Apartment {
         this.id = id;
     }
 
-    public int getApartmentNumber() {
+    /*public int getApartmentNumber() {
         return apartmentNumber;
     }
 
     public void setApartmentNumber(int apartmentNumber) {
         this.apartmentNumber = apartmentNumber;
-    }
+    }*/
 
     public int getCapacity() {
         return capacity;
@@ -75,21 +75,21 @@ public class Apartment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Apartment apartment = (Apartment) o;
-        return id == apartment.id && apartmentNumber == apartment.apartmentNumber
+        return id == apartment.id /*&& apartmentNumber == apartment.apartmentNumber*/
                 && capacity == apartment.capacity && Double.compare(apartment.price, price) == 0
                 && status == apartment.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, apartmentNumber, capacity, price, status);
+        return Objects.hash(id, /*apartmentNumber,*/ capacity, price, status);
     }
 
     @Override
     public String toString() {
         return "Apartment{" +
                 "id=" + id +
-                ", apartmentNumber=" + apartmentNumber +
+                ", apartmentNumber=" + /*apartmentNumber +*/
                 ", capacity=" + capacity +
                 ", price=" + price +
                 ", status=" + status +

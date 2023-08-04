@@ -1,5 +1,6 @@
 package com.andersenlab.view;
 
+import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
 
@@ -11,8 +12,8 @@ public class ConsolePrinter {
         System.out.print("Exiting program...");
     }
 
-    public static void printClient(Client client) {
-        System.out.println(client);
+    public static void printEntity(Object object) {
+        System.out.println(object);
 
     }
 
@@ -21,12 +22,29 @@ public class ConsolePrinter {
                 client.getName(), client.getId(), client.getQuantityOfPeople());
     }
 
+    public static void printAddedApartment(Apartment apartment) {
+        System.out.printf("You added new apartment! id: %s, capacity: %s, price: %s\n",
+                apartment.getId(), apartment.getCapacity(), apartment.getPrice());
+    }
+
     public static void printClientDebt(double debt) {
         if (debt == 0) {
             System.out.println("This client has no debt yet!");
         } else {
             System.out.printf("Current debt for this client is %s\n", debt);
         }
+    }
+
+    public static void printApartmentPrice(Apartment apartment) {
+        System.out.printf("Current price for the apartment '%s' is - %s\n", apartment.getId(), apartment.getPrice());
+    }
+
+    public static void printApartmentStatusChange(Apartment apartment) {
+        System.out.printf("You changed status of apartment '%s' to %s\n", apartment.getId(), apartment.getStatus());
+    }
+
+    public static void printApartmentPriceChange(Apartment apartment) {
+        System.out.printf("You changed price for apartment '%s' to %s\n", apartment.getId(), apartment.getPrice());
     }
 
     public static void printServedPerk(Perk perk) {
@@ -44,18 +62,18 @@ public class ConsolePrinter {
     }
 
 
-    public static void printClients(List<Client> clientList) {
-        if (clientList.size() == 0) {
-            System.out.println("There are no clients yet!");
+    public static void printList(List<?> list) {
+        if (list.size() == 0) {
+            System.out.println("Requested list is empty! :(");
         } else {
-            for (Client client : clientList) {
-                System.out.println(client);
+            for (Object object : list) {
+                System.out.println(object);
             }
         }
     }
 
     public static void printCheckIn(Client client) {
-        System.out.printf("Client with id: %s was successfully checked-in in apartment %s!",
+        System.out.printf("Client '%s' was successfully checked-in in apartment %s!\n",
                 client.getId(), client.getApartment().getId());
     }
 

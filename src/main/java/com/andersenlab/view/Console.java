@@ -1,5 +1,6 @@
 package com.andersenlab.view;
 
+import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
@@ -92,7 +93,7 @@ public class Console {
         }
 
         if ((commandArray[1].equals("list") || commandArray[1].equals("getall")) && commandArray.length == 2) {
-            ConsolePrinter.printClients(clientService.getAll());
+            ConsolePrinter.printList(clientService.getAll());
             return;
         }
 
@@ -104,7 +105,7 @@ public class Console {
         switch (commandArray[1]) {
             case "get" -> {
                 Client client = clientService.getById(Long.parseLong(commandArray[2]));
-                ConsolePrinter.printClient(client);
+                ConsolePrinter.printEntity(client);
                 return;
             }
             case "debt" -> {
@@ -128,7 +129,7 @@ public class Console {
                     case "status" -> clientService.getSorted(ClientService.ClientSortType.STATUS);
                     default -> throw new IllegalArgumentException();
                 };
-                ConsolePrinter.printClients(list);
+                ConsolePrinter.printList(list);
                 return;
             }
         }
@@ -166,13 +167,74 @@ public class Console {
                     Long.parseLong(commandArray[2]),
                     Integer.parseInt(commandArray[3]),
                     Long.parseLong(commandArray[4])));
+            return;
         }
 
         ConsolePrinter.syntaxError();
     }
 
+    /*
+     *   apartment command list:
+     *      apartment list / apartment getall
+     *
+     *      apartment get *client-id*
+     *      apartment list *sort-type* / apartment getall *sort-type*
+     *      apartment price *apartment-id*
+     *      apartment changestatus *apartment-id*
+     *
+     *      apartment add *capacity* *price*
+     *      apartment price *apartment-id* *new-price*
+     */
+
     private void apartmentCommand(String[] commandArray) {
-        System.out.println("apartment command");
+        if (commandArray.length < 2) {
+            ConsolePrinter.insufficientArguments();
+            return;
+        }
+
+        switch (commandArray.length) {
+            case 2 -> {
+                if (commandArray[1].equals("list")) {
+                    ConsolePrinter.printList(apartmentService.getAll());
+                }
+            }
+            case 3 -> {
+                switch (commandArray[1]) {
+                    case "get" -> {
+                        ConsolePrinter.printEntity(apartmentService.getById(Long.parseLong(commandArray[2])));
+                    }
+                    case "getall", "list" -> {
+                        List<Apartment> list = switch (commandArray[2]) {
+                            case "id" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.ID);
+                            case "price" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.PRICE);
+                            case "capacity" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.CAPACITY);
+                            case "status" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.STATUS);
+                            default -> throw new IllegalArgumentException();
+                        };
+                        ConsolePrinter.printList(list);
+                    }
+                    case "price" -> {
+                        ConsolePrinter.printApartmentPrice(apartmentService.getById(Long.parseLong(commandArray[2])));
+                    }
+                    case "changestatus" -> {
+                        ConsolePrinter.printApartmentStatusChange(apartmentService.changeStatus(Long.parseLong(commandArray[2])));
+                    }
+                }
+            }
+            case 4 -> {
+                switch (commandArray[1]) {
+                    case "add" -> {
+                        ConsolePrinter.printAddedApartment(apartmentService.save(
+                                Integer.parseInt(commandArray[2]), Double.parseDouble(commandArray[3])));
+                    }
+                    case "price" -> {
+                        ConsolePrinter.printApartmentPriceChange(apartmentService.changePrice(
+                                Long.parseLong(commandArray[2]), Double.parseDouble(commandArray[3])));
+                    }
+                }
+            }
+            default -> ConsolePrinter.syntaxError();
+        }
     }
 
     private void perkCommand(String[] commandArray) {
