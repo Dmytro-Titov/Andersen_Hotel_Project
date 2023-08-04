@@ -1,10 +1,8 @@
 package com.andersenlab.view;
 
 import com.andersenlab.entity.Client;
-import com.sun.jdi.PathSearchingVirtualMachine;
 
 import java.util.List;
-import java.util.Optional;
 
 public class ConsolePrinter {
 
@@ -44,8 +42,8 @@ public class ConsolePrinter {
         typeHelp();
     }
 
-    public static void negativeArgument() {
-        System.out.print("Argument cannot be negative.\s");
+    public static void lowArgumentValue() {
+        System.out.print("Argument value cannot be so low.\s");
         typeHelp();
     }
 
@@ -55,7 +53,7 @@ public class ConsolePrinter {
     }
 
     public static void commands() {
-        System.out.println("full list of commands");
+        System.out.println("full list of commands yet to be implemented");
 
     }
 
@@ -70,6 +68,6 @@ public class ConsolePrinter {
     }
 
     public static void typeHelp() {
-        System.out.println("Type 'help' for instructions");
+        System.out.println("Type 'help' for instructions.");
     }
 }
