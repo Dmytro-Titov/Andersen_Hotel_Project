@@ -9,11 +9,11 @@ public interface ApartmentService {
 
     Apartment getById(long id);
 
-    void save(int apartmentNumber, int capacity, double price);
+    Apartment save(int apartmentNumber, int capacity, double price);
 
-    void changePrice(long id, double price);
+    Apartment changePrice(long id, double price);
 
-    void changeStatus(long id, ApartmentStatus status);
+    Apartment changeStatus(long id, ApartmentStatus status);
 
     List<Apartment> sortByPrice();
 

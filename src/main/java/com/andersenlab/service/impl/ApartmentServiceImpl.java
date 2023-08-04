@@ -20,24 +20,27 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public Apartment getById(long id) {
-        return apartmentDao.getById(id);
+        return apartmentDao.getById(id)
+                .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + id));
     }
 
     @Override
-    public void save(int apartmentNumber, int capacity, double price) {
+    public Apartment save(int apartmentNumber, int capacity, double price) {
         Apartment apartment = new Apartment(IdGenerator.generateApartmentId(),
                 apartmentNumber, capacity, price, ApartmentStatus.AVAILABLE);
-        apartmentDao.save(apartment);
+        return apartmentDao.save(apartment);
     }
 
     @Override
-    public void changePrice(long id, double price) {
-        apartmentDao.update(new Apartment(id, price));
+    public Apartment changePrice(long id, double price) {
+        return apartmentDao.update(new Apartment(id, price))
+                .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + id));
     }
 
     @Override
-    public void changeStatus(long id, ApartmentStatus status) {
-        apartmentDao.update(new Apartment(id, status));
+    public Apartment changeStatus(long id, ApartmentStatus status) {
+        return apartmentDao.update(new Apartment(id, status))
+                .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + id));
     }
 
     @Override

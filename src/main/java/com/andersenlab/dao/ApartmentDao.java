@@ -3,15 +3,16 @@ package com.andersenlab.dao;
 import com.andersenlab.entity.Apartment;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ApartmentDao {
-    Apartment getById(long id);
+    Optional<Apartment> getById(long id);
 
     List<Apartment> getAll();
 
-    void save(Apartment apartment);
+    Apartment save(Apartment apartment);
 
-    void update(Apartment apartment);
+    Optional<Apartment> update(Apartment apartment);
 
-    void remove(long id);
+    boolean remove(long id);
 }
