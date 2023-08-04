@@ -5,13 +5,13 @@ import com.andersenlab.entity.Client;
 import java.util.*;
 
 public interface ClientDao {
-    Client getById(long id);
+    Optional<Client> getById(long id);
 
     List<Client> getAll();
 
-    void save(Client client);
+    Client save(Client client);
 
-    void update(Client client);
+    Optional<Client> update(Client client);
 
-    void remove(long id);
+    boolean remove(long id);
 }

@@ -5,22 +5,21 @@ import com.andersenlab.entity.Client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ClientDaoImpl implements ClientDao {
 
-    private List<Client> clients;
+    private final List<Client> clients;
 
     public ClientDaoImpl() {
         this.clients = new ArrayList<>();
     }
 
     @Override
-    public Client getById(long id) {
-        for (Client client : clients) {
-            if (client.getId() == id)
-                return client;
-        }
-        return null;
+    public Optional<Client> getById(long id) {
+        return clients.stream()
+                .filter(client -> client.getId() == id)
+                .findFirst();
     }
 
     @Override
@@ -29,22 +28,28 @@ public class ClientDaoImpl implements ClientDao {
     }
 
     @Override
-    public void save(Client client) {
+    public Client save(Client client) {
         clients.add(client);
+        return client;
     }
 
     @Override
-    public void update(Client client) {
-        Client existingClient = getById(client.getId());
-        existingClient.setName(client.getName());
-        existingClient.setCheckOutDate(client.getCheckOutDate());
-        existingClient.setStatus(client.getStatus());
-        existingClient.setApartment(client.getApartment());
-        existingClient.setPerks(client.getPerks());
+    public Optional<Client> update(Client client) {
+        Optional<Client> existingClient = getById(client.getId());
+        if (existingClient.isPresent()) {
+            existingClient.get().setName(client.getName());
+            existingClient.get().setCheckOutDate(client.getCheckOutDate());
+            existingClient.get().setStatus(client.getStatus());
+            existingClient.get().setApartment(client.getApartment());
+            existingClient.get().setPerks(client.getPerks());
+            return existingClient;
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public void remove(long id) {
-        clients.removeIf(client -> client.getId() == id);
+    public boolean remove(long id) {
+        return clients.removeIf(client -> client.getId() == id);
     }
 }

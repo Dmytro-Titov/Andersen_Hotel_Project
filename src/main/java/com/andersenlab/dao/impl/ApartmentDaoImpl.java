@@ -5,22 +5,21 @@ import com.andersenlab.entity.Apartment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ApartmentDaoImpl implements ApartmentDao {
 
-    private List<Apartment> apartments;
+    private final List<Apartment> apartments;
 
     public ApartmentDaoImpl() {
         this.apartments = new ArrayList<>();
     }
 
     @Override
-    public Apartment getById(long id) {
-        for (Apartment apartment : apartments) {
-            if (apartment.getId() == id)
-                return apartment;
-        }
-        return null;
+    public Optional<Apartment> getById(long id) {
+        return apartments.stream()
+                .filter(apartment -> apartment.getId() == id)
+                .findFirst();
     }
 
     @Override
@@ -29,29 +28,35 @@ public class ApartmentDaoImpl implements ApartmentDao {
     }
 
     @Override
-    public void save(Apartment apartment) {
+    public Apartment save(Apartment apartment) {
         apartments.add(apartment);
+        return apartment;
     }
 
     @Override
-    public void update(Apartment apartment) {
-        Apartment existingApartment = getById(apartment.getId());
-        if (apartment.getPrice() != 0.0) {
-            existingApartment.setPrice(apartment.getPrice());
-        }
-        if (apartment.getApartmentNumber() != 0) {
-            existingApartment.setApartmentNumber(apartment.getApartmentNumber());
-        }
-        if (apartment.getCapacity() != 0) {
-            existingApartment.setCapacity(apartment.getCapacity());
-        }
-        if (apartment.getStatus() != null) {
-            existingApartment.setStatus(apartment.getStatus());
+    public Optional<Apartment> update(Apartment apartment) {
+        Optional<Apartment> existingApartment = getById(apartment.getId());
+        if (existingApartment.isPresent()) {
+            if (apartment.getPrice() != 0.0) {
+                existingApartment.get().setPrice(apartment.getPrice());
+            }
+            if (apartment.getApartmentNumber() != 0) {
+                existingApartment.get().setApartmentNumber(apartment.getApartmentNumber());
+            }
+            if (apartment.getCapacity() != 0) {
+                existingApartment.get().setCapacity(apartment.getCapacity());
+            }
+            if (apartment.getStatus() != null) {
+                existingApartment.get().setStatus(apartment.getStatus());
+            }
+            return existingApartment;
+        } else {
+            return Optional.empty();
         }
     }
 
     @Override
-    public void remove(long id) {
-        apartments.removeIf(apartment -> apartment.getId() == id);
+    public boolean remove(long id) {
+        return apartments.removeIf(apartment -> apartment.getId() == id);
     }
 }

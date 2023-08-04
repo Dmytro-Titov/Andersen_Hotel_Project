@@ -5,22 +5,21 @@ import com.andersenlab.entity.Perk;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class PerkDaoImpl implements PerkDao {
 
-    private List<Perk> perks;
+    private final List<Perk> perks;
 
     public PerkDaoImpl() {
         this.perks = new ArrayList<>();
     }
 
     @Override
-    public Perk getById(long id) {
-        for (Perk perk : perks) {
-            if (perk.getId() == id)
-                return perk;
-        }
-        return null;
+    public Optional<Perk> getById(long id) {
+        return perks.stream()
+                .filter(perk -> perk.getId() == id)
+                .findFirst();
     }
 
     @Override
@@ -29,21 +28,27 @@ public class PerkDaoImpl implements PerkDao {
     }
 
     @Override
-    public void save(Perk perk) {
+    public Perk save(Perk perk) {
         perks.add(perk);
+        return perk;
     }
 
     @Override
-    public void update(Perk perk) {
-        Perk existingPerk = getById(perk.getId());
-        if (perk.getName() != null) {
-            existingPerk.setName(perk.getName());
+    public Optional<Perk> update(Perk perk) {
+        Optional<Perk> existingPerk = getById(perk.getId());
+        if (existingPerk.isPresent()) {
+            if (perk.getName() != null) {
+                existingPerk.get().setName(perk.getName());
+            }
+            existingPerk.get().setPrice(perk.getPrice());
+            return existingPerk;
+        } else {
+            return Optional.empty();
         }
-        existingPerk.setPrice(perk.getPrice());
     }
 
     @Override
-    public void remove(long id) {
-        perks.removeIf(perk -> perk.getId() == id);
+    public boolean remove(long id) {
+        return perks.removeIf(perk -> perk.getId() == id);
     }
 }

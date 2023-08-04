@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ClientServiceImpl implements ClientService {
@@ -27,80 +28,104 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client getById(long id) {
-        return clientDao.getById(id);
+        return clientDao.getById(id)
+                .orElseThrow(() -> new RuntimeException("Client with this id doesn't exist. Id: " + id));
     }
 
     @Override
-    public void save(String name) {
-        Client client = new Client(IdGenerator.generateClientId(), name);
-        clientDao.save(client);
+    public Client save(String name, int quantityOfPeople) {
+        Client client = new Client(IdGenerator.generateClientId(), name, quantityOfPeople);
+        return clientDao.save(client);
     }
 
     @Override
     public double getStayCost(long id) {
-        double result = 0.0;
         Client client = getById(id);
-        if (client != null) {
-            if (client.getApartment() != null) {
-                result = client.getApartment().getPrice();
-            }
-            if (!client.getPerks().isEmpty()) {
-                for (Perk perk : client.getPerks()) {
-                    result += perk.getPrice();
-                }
-            }
+        if (client == null) {
+            return 0.0;
         }
-        return result;
+        return client.getStayCost();
     }
 
     @Override
     public boolean checkInApartment(long clientId, long apartmentId, int stayDuration) {
         Client client = getById(clientId);
-        Apartment apartment = apartmentDao.getById(apartmentId);
-        if (client != null && apartment != null)
-            if (apartment.getStatus() == ApartmentStatus.AVAILABLE) {
-                client.setApartment(apartment);
-                client.setStatus(ClientStatus.CHECKED_IN);
-                client.setCheckOutDate(LocalDateTime.now().plusDays(stayDuration));
-                apartment.setStatus(ApartmentStatus.UNAVAILABLE);
-                clientDao.update(client);
-                apartmentDao.update(apartment);
-                return true;
-            }
-        return false;
+        Apartment apartment = apartmentDao.getById(apartmentId)
+                .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + apartmentId));
+        if (ClientStatus.CHECKED_IN == client.getStatus()) {
+            throw new RuntimeException("This client is already checked in. Apartment id: "
+                    + client.getApartment().getId());
+        }
+        if (ApartmentStatus.AVAILABLE == apartment.getStatus()
+                && apartment.getCapacity() >= client.getQuantityOfPeople()) {
+            checkInProcedure(stayDuration, client, apartment);
+            return true;
+        } else {
+            throw new RuntimeException("No available apartment in the hotel");
+        }
+    }
+
+    @Override
+    public boolean checkInAnyFreeApartment(long clientId, int stayDuration) {
+        Client client = getById(clientId);
+        List<Apartment> apartments = apartmentDao.getAll();
+        if (ClientStatus.CHECKED_IN == client.getStatus()) {
+            throw new RuntimeException("This client is already checked in. Apartment id: "
+                    + client.getApartment().getId());
+        }
+        Optional<Apartment> availableApartment = apartments.stream()
+                .filter(apartment -> apartment.getCapacity() >= client.getQuantityOfPeople())
+                .filter(apartment -> ApartmentStatus.AVAILABLE == apartment.getStatus())
+                .findFirst();
+        if (availableApartment.isPresent()) {
+            Apartment apartment = availableApartment.get();
+            checkInProcedure(stayDuration, client, apartment);
+            return true;
+        } else {
+            throw new RuntimeException("No available apartment in the hotel");
+        }
+    }
+
+    private void checkInProcedure(int stayDuration, Client client, Apartment apartment) {
+        client.setApartment(apartment);
+        client.setStatus(ClientStatus.CHECKED_IN);
+        client.setCheckOutDate(LocalDateTime.now().plusDays(stayDuration));
+        client.setCheckInDate(LocalDateTime.now());
+        apartment.setStatus(ApartmentStatus.UNAVAILABLE);
+        client.setStayCost(client.getStayCost() + (apartment.getPrice() * stayDuration));
+        clientDao.update(client);
+        apartmentDao.update(apartment);
     }
 
     @Override
     public boolean checkOutApartment(long clientId) {
         Client client = getById(clientId);
-        if (client != null) {
-            Apartment apartment = client.getApartment();
-            if (apartment != null) {
-                client.setApartment(null);
-                client.setStatus(ClientStatus.CHECKED_OUT);
-                client.setCheckOutDate(LocalDateTime.now());
-                client.setPerks(new ArrayList<>());
-                apartment.setStatus(ApartmentStatus.AVAILABLE);
-                clientDao.update(client);
-                apartmentDao.update(apartment);
-                return true;
-            }
+        Apartment apartment = client.getApartment();
+        if (apartment != null) {
+            client.setApartment(new Apartment());
+            client.setStatus(ClientStatus.CHECKED_OUT);
+            client.setPerks(new ArrayList<>());
+            client.setStayCost(0.0);
+            apartment.setStatus(ApartmentStatus.AVAILABLE);
+            clientDao.update(client);
+            apartmentDao.update(apartment);
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     @Override
-    public boolean addPerk(long clientId, long perkId) {
+    public Perk addPerk(long clientId, long perkId) {
         Client client = getById(clientId);
-        Perk perk = perkDao.getById(perkId);
-        if (perk != null && client != null) {
-            List<Perk> clientPerks = client.getPerks();
-            clientPerks.add(perk);
-            client.setPerks(clientPerks);
-            clientDao.update(client);
-            return true;
-        }
-        return false;
+        Perk perk = perkDao.getById(perkId)
+                .orElseThrow(() -> new RuntimeException("Perk with this id doesn't exist. Id: " + perkId));
+        List<Perk> clientPerks = client.getPerks();
+        clientPerks.add(perk);
+        client.setPerks(clientPerks);
+        client.setStayCost(client.getStayCost() + perk.getPrice());
+        clientDao.update(client);
+        return perk;
     }
 
     @Override
@@ -124,7 +149,7 @@ public class ClientServiceImpl implements ClientService {
         List<Client> sortedByCheckOutDate = new ArrayList<>(clientDao.getAll());
         return sortedByCheckOutDate.stream()
                 .filter(client -> client.getStatus() != ClientStatus.NEW)
-                .sorted(Comparator.comparing(Client::getStatus))
+                .sorted(Comparator.comparing(Client::getCheckOutDate))
                 .collect(Collectors.toList());
     }
 
