@@ -9,9 +9,11 @@ public class Client {
     private long id;
     private String name;
     private LocalDateTime checkOutDate;
+    private LocalDateTime checkInDate;
     private ClientStatus status;
     private Apartment apartment;
     private List<Perk> perks;
+    private double stayCost;
 
     public Client(long id, String name) {
         this.id = id;
@@ -44,6 +46,14 @@ public class Client {
         this.checkOutDate = checkOutDate;
     }
 
+    public LocalDateTime getCheckInDate() {
+        return checkInDate;
+    }
+
+    public void setCheckInDate(LocalDateTime checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
     public ClientStatus getStatus() {
         return status;
     }
@@ -68,17 +78,25 @@ public class Client {
         this.perks = perks;
     }
 
+    public double getStayCost() {
+        return stayCost;
+    }
+
+    public void setStayCost(double stayCost) {
+        this.stayCost = stayCost;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Client client = (Client) o;
-        return id == client.id;
+        return id == client.id && Objects.equals(name, client.name) && Objects.equals(checkOutDate, client.checkOutDate) && status == client.status && Objects.equals(apartment, client.apartment) && Objects.equals(perks, client.perks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, name, checkOutDate, status, apartment, perks);
     }
 
     @Override

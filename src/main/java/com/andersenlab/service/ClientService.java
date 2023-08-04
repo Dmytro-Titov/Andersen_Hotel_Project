@@ -8,7 +8,7 @@ import java.util.List;
 public interface ClientService {
     Client getById(long id);
 
-    void save(String name);
+    Client save(String name);
 
     double getStayCost(long id);
 
@@ -16,7 +16,7 @@ public interface ClientService {
 
     boolean checkOutApartment(long clientId);
 
-    boolean addPerk(long clientId, long perkId);
+    Perk addPerk(long clientId, long perkId);
 
     List<Perk> getAllPerks(long clientId);
 

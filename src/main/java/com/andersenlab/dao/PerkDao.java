@@ -5,13 +5,13 @@ import com.andersenlab.entity.Perk;
 import java.util.*;
 
 public interface PerkDao {
-    Perk getById(long id);
+    Optional<Perk> getById(long id);
 
     List<Perk> getAll();
 
-    void save(Perk perk);
+    Perk save(Perk perk);
 
-    void update(Perk perk);
+    Optional<Perk> update(Perk perk);
 
-    void remove(long id);
+    boolean remove(long id);
 }

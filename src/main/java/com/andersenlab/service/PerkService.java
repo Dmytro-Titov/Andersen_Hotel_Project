@@ -7,13 +7,11 @@ import java.util.*;
 public interface PerkService {
     Perk getById(long id);
 
-    void save(String name, double price);
+    Perk save(String name, double price);
 
-    void changePrice(long id, double price);
+    Perk changePrice(long id, double price);
 
     List<Perk> sortByName();
 
     List<Perk> sortByPrice();
-
-
 }

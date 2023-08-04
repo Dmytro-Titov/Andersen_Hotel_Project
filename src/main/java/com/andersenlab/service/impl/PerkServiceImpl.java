@@ -8,6 +8,7 @@ import com.andersenlab.util.IdGenerator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class PerkServiceImpl implements PerkService {
     private final PerkDao perkDao;
@@ -18,18 +19,20 @@ public class PerkServiceImpl implements PerkService {
 
     @Override
     public Perk getById(long id) {
-        return perkDao.getById(id);
+        return perkDao.getById(id)
+                .orElseThrow(() -> new RuntimeException("Perk with this id doesn't exist. Id: " + id));
     }
 
     @Override
-    public void save(String name, double price) {
+    public Perk save(String name, double price) {
         Perk perk = new Perk(IdGenerator.generatePerkId(), name, price);
-        perkDao.save(perk);
+        return perkDao.save(perk);
     }
 
     @Override
-    public void changePrice(long id, double price) {
-        perkDao.update(new Perk(id, price));
+    public Perk changePrice(long id, double price) {
+        return perkDao.update(new Perk(id, price))
+                .orElseThrow(() -> new RuntimeException("Perk with this id doesn't exist. Id: " + id));
     }
 
     @Override
