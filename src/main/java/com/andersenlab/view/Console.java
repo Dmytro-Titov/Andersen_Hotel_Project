@@ -2,21 +2,30 @@ package com.andersenlab.view;
 
 import com.andersenlab.entity.Client;
 import com.andersenlab.factory.HotelFactory;
+import com.andersenlab.service.ApartmentService;
+import com.andersenlab.service.ClientService;
+import com.andersenlab.service.PerkService;
 
-import java.nio.file.OpenOption;
 import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
 import java.util.Scanner;
 
 public class Console {
 
     private final Scanner scanner = new Scanner(System.in);
     private final HotelFactory hotelFactory = HotelFactory.getInstance();
+    private final ClientService clientService = hotelFactory.getClientService();
+    private final ApartmentService apartmentService = hotelFactory.getApartmentService();
+    private final PerkService perkService = hotelFactory.getPerkService();
 
     public void start() {
 
         System.out.println("Hotel Administrator Alpha v0.1");
         System.out.println("Print 'help' for the list of commands");
+
+        clientService.save("John", 1);
+        clientService.save("Anny", 3);
+        clientService.save("Demeter", 2);
 
         loop:
         while (true) {
@@ -30,27 +39,50 @@ public class Console {
                 continue;
             }
 
-            switch (commandArray[0]) {
-                case "exit":
-                    ConsolePrinter.exit();
-                    break loop;
-                case "help":
-                    ConsolePrinter.commands();
-                    continue;
-                case "client":
-                    clientCommand(commandArray);
-                    continue;
-                case "apartment":
-                    apartmentCommand(commandArray);
-                    continue;
-                case "perk":
-                    perkCommand(commandArray);
-                    continue;
-                default:
-                    ConsolePrinter.unknownCommand(command);
+            try {
+                switch (commandArray[0]) {
+                    case "exit":
+                        ConsolePrinter.exit();
+                        break loop;
+                    case "help":
+                        ConsolePrinter.commands();
+                        continue;
+                    case "client":
+                        clientCommand(commandArray);
+                        continue;
+                    case "apartment":
+                        apartmentCommand(commandArray);
+                        continue;
+                    case "perk":
+                        perkCommand(commandArray);
+                        continue;
+                    default:
+                        ConsolePrinter.unknownCommand(command);
+                }
+            } catch (IllegalArgumentException e) {
+                ConsolePrinter.illegalArgument();
+            } catch (RuntimeException e) {
+                ConsolePrinter.printError(e.getMessage());
             }
         }
     }
+
+    /*
+    *   client command list:
+    *       client list / client getall
+    *
+    *       client get *client-id* +
+    *       client debt *client-id* +
+    *       client checkout *client-id* +
+    *       client getperks *client-id* +
+    *       client list *sort-type* / client getall *sort-type* +
+    *
+    *       client add *name* *quantity* +
+    *       client serve *client-id* *perk-id* +
+    *       client checkin *client-id* *stay-duration* +
+    *
+    *       client checkin *client-id* *stay-duration* *apartment-id*
+    */
 
     private void clientCommand(String[] commandArray) {
 
@@ -59,10 +91,8 @@ public class Console {
             return;
         }
 
-        if (commandArray[1].equals("list") && commandArray.length == 2) {
-            // need no sort getter or id sort getter
-            // TODO: 03.08.2023 change request when service is fixed
-            ConsolePrinter.printClients(hotelFactory.getClientService().sortByName());
+        if ((commandArray[1].equals("list") || commandArray[1].equals("getall")) && commandArray.length == 2) {
+            ConsolePrinter.printClients(clientService.getAll());
             return;
         }
 
@@ -72,55 +102,73 @@ public class Console {
         }
 
         switch (commandArray[1]) {
-            case "get":
-                if (checkArgument(commandArray[2], ArgumentType.ID)) {
-                    Client client = hotelFactory.getClientService().getById(Long.parseLong(commandArray[2]));
-                    ConsolePrinter.printClient(client);
-                }
+            case "get" -> {
+                Client client = clientService.getById(Long.parseLong(commandArray[2]));
+                ConsolePrinter.printClient(client);
                 return;
-            case "add":
-                if (checkArgument(commandArray[2], ArgumentType.NAME)) {
-                    // TODO: 03.08.2023 change request when service is fixed
-                    /*Client client =*/ hotelFactory.getClientService().save(commandArray[2]);
-                    //print message when client is returned
-                }
+            }
+            case "debt" -> {
+                double debt = clientService.getStayCost(Long.parseLong(commandArray[2]));
+                ConsolePrinter.printClientDebt(debt);
                 return;
-            case "debt":
-                if (checkArgument(commandArray[2], ArgumentType.ID)) {
-                    double debt = hotelFactory.getClientService().getStayCost(Long.parseLong(commandArray[2]));
-                    ConsolePrinter.printClientDebt(debt);
-                }
+            }
+            case "checkout" -> {
+                ConsolePrinter.printCheckout(clientService.checkOutApartment(Long.parseLong(commandArray[2])));
                 return;
-            case "checkout":
+            }
+            case "getperks" -> {
+                ConsolePrinter.printClientPerks(clientService.getAllPerks(Long.parseLong(commandArray[2])));
                 return;
-            case "getperks":
+            }
+            case "getall", "list" -> {
+                List<Client> list = switch (commandArray[2]) {
+                    case "id" -> clientService.getSorted(ClientService.ClientSortType.ID);
+                    case "name" -> clientService.getSorted(ClientService.ClientSortType.NAME);
+                    case "checkout" -> clientService.getSorted(ClientService.ClientSortType.CHECK_OUT_DATE);
+                    case "status" -> clientService.getSorted(ClientService.ClientSortType.STATUS);
+                    default -> throw new IllegalArgumentException();
+                };
+                ConsolePrinter.printClients(list);
                 return;
-            case "getall":
-            case "list":
-                if (commandArray[2] == null) {
-
-                }
-
-                if (checkArgument(commandArray[2], ArgumentType.CLIENT_SORT_TYPE)) {
-                    //need one sort getter with argument
-                    // TODO: 03.08.2023 change request when service is fixed
-                    ConsolePrinter.printClients(hotelFactory.getClientService().sortByName());
-                }
-                return;
+            }
         }
 
         if (commandArray.length < 4) {
-            ConsolePrinter.syntaxError();
+            ConsolePrinter.insufficientArguments();
             return;
         }
 
-        if (commandArray[1].equals("serve")) {
-
+        switch (commandArray[1]) {
+            case "add" -> {
+                ConsolePrinter.printAddedClient(clientService.save(
+                        commandArray[2],
+                        Integer.parseInt(commandArray[3])));
+                return;
+            }
+            case "serve" -> {
+                ConsolePrinter.printServedPerk(clientService.addPerk(
+                        Long.parseLong(commandArray[2]),
+                        Long.parseLong(commandArray[3])));
+                return;
+            }
+            case "checkin" -> {
+                if (commandArray.length > 4) break;
+                ConsolePrinter.printCheckIn(clientService.checkInApartment(
+                        Long.parseLong(commandArray[2]),
+                        Integer.parseInt(commandArray[3]),
+                        0));
+                return;
+            }
         }
 
-        if (commandArray.length < 5) {
-
+        if (commandArray[1].equals("checkin") && commandArray.length == 5) {
+            ConsolePrinter.printCheckIn(clientService.checkInApartment(
+                    Long.parseLong(commandArray[2]),
+                    Integer.parseInt(commandArray[3]),
+                    Long.parseLong(commandArray[4])));
         }
+
+        ConsolePrinter.syntaxError();
     }
 
     private void apartmentCommand(String[] commandArray) {
@@ -134,11 +182,12 @@ public class Console {
     private boolean checkArgument(String argument, ArgumentType argumentType) {
         if (argumentType.equals(ArgumentType.ID) ||
                 argumentType.equals(ArgumentType.DURATION) ||
-                argumentType.equals(ArgumentType.CAPACITY)) {
+                argumentType.equals(ArgumentType.CAPACITY) ||
+                argumentType.equals(ArgumentType.QUANTITY)) {
 
             if (!argument.matches("-?\\d+")) {
                 ConsolePrinter.illegalArgument();
-                return false;
+                throw new IllegalArgumentException("Argument type isn't valid");
             }
 
             if (Integer.parseInt(argument) < 1) {
@@ -165,23 +214,39 @@ public class Console {
         }
 
         if (argumentType.equals(ArgumentType.CLIENT_SORT_TYPE)) {
-            return argument.equals("id") ||
-                    argument.equals("name") ||
-                    argument.equals("checkout") ||
-                    argument.equals("status");
+            if (argument.equals("id") ||
+                argument.equals("name") ||
+                argument.equals("checkout") ||
+                argument.equals("status")) {
+                return true;
+            } else {
+                ConsolePrinter.illegalArgument();
+                return false;
+            }
+
         }
 
         if (argumentType.equals(ArgumentType.APARTMENT_SORT_TYPE)) {
-            return argument.equals("id") ||
-                    argument.equals("price") ||
-                    argument.equals("capacity") ||
-                    argument.equals("status");
+            if (argument.equals("id") ||
+                argument.equals("price") ||
+                argument.equals("capacity") ||
+                argument.equals("status")) {
+                return true;
+            } else {
+                ConsolePrinter.illegalArgument();
+                return false;
+            }
         }
 
         if (argumentType.equals(ArgumentType.PERK_SORT_TYPE)) {
-            return argument.equals("id") ||
-                    argument.equals("name") ||
-                    argument.equals("price");
+            if (argument.equals("id") ||
+                argument.equals("name") ||
+                argument.equals("price")) {
+                return true;
+            } else {
+                ConsolePrinter.illegalArgument();
+                return false;
+            }
         }
 
         if (argumentType.equals(ArgumentType.NAME)) {
@@ -193,6 +258,6 @@ public class Console {
     }
 
     private enum ArgumentType {
-        NAME, ID, PRICE, CAPACITY, DURATION, CLIENT_SORT_TYPE, APARTMENT_SORT_TYPE, PERK_SORT_TYPE
+        NAME, ID, PRICE, CAPACITY, QUANTITY, DURATION, CLIENT_SORT_TYPE, APARTMENT_SORT_TYPE, PERK_SORT_TYPE
     }
 }

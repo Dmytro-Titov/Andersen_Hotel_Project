@@ -8,22 +8,24 @@ import java.util.List;
 public interface ClientService {
     Client getById(long id);
 
+    List<Client> getAll();
+
     Client save(String name, int quantityOfPeople);
 
     double getStayCost(long id);
 
-    boolean checkInApartment(long clientId, long apartmentId, int stayDuration);
-    boolean checkInAnyFreeApartment(long clientId, int stayDuration);
+    Client checkInApartment(long clientId, int stayDuration, long apartmentId);
+    Client checkInAnyFreeApartment(long clientId, int stayDuration);
 
-    boolean checkOutApartment(long clientId);
+    double checkOutApartment(long clientId);
 
     Perk addPerk(long clientId, long perkId);
 
     List<Perk> getAllPerks(long clientId);
 
-    List<Client> sortByName();
+    List<Client> getSorted(ClientSortType type);
 
-    List<Client> sortByCheckOutDate();
-
-    List<Client> sortByStatus();
+    enum ClientSortType {
+        ID, NAME, CHECK_OUT_DATE, STATUS
+    }
 }
