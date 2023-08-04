@@ -14,10 +14,12 @@ public class Client {
     private Apartment apartment;
     private List<Perk> perks;
     private double stayCost;
+    private int quantityOfPeople;
 
-    public Client(long id, String name) {
+    public Client(long id, String name, int quantityOfPeople) {
         this.id = id;
         this.name = name;
+        this.quantityOfPeople = quantityOfPeople;
         status = ClientStatus.NEW;
         perks = new ArrayList<>();
     }
@@ -84,6 +86,14 @@ public class Client {
 
     public void setStayCost(double stayCost) {
         this.stayCost = stayCost;
+    }
+
+    public int getQuantityOfPeople() {
+        return quantityOfPeople;
+    }
+
+    public void setQuantityOfPeople(int quantityOfPeople) {
+        this.quantityOfPeople = quantityOfPeople;
     }
 
     @Override

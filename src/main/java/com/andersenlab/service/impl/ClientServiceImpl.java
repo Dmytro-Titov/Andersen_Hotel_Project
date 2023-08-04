@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ClientServiceImpl implements ClientService {
@@ -32,8 +33,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client save(String name) {
-        Client client = new Client(IdGenerator.generateClientId(), name);
+    public Client save(String name, int quantityOfPeople) {
+        Client client = new Client(IdGenerator.generateClientId(), name, quantityOfPeople);
         return clientDao.save(client);
     }
 
@@ -51,6 +52,39 @@ public class ClientServiceImpl implements ClientService {
         Client client = getById(clientId);
         Apartment apartment = apartmentDao.getById(apartmentId)
                 .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + apartmentId));
+        if (ClientStatus.CHECKED_IN == client.getStatus()) {
+            throw new RuntimeException("This client is already checked in. Apartment id: " + client.getApartment().getId());
+        }
+        if (ApartmentStatus.AVAILABLE == apartment.getStatus()
+                && apartment.getCapacity() >= client.getQuantityOfPeople()) {
+            checkInProcedure(stayDuration, client, apartment);
+            return true;
+        } else {
+            throw new RuntimeException("No available apartment in the hotel");
+        }
+    }
+
+    @Override
+    public boolean checkInAnyFreeApartment(long clientId, int stayDuration) {
+        Client client = getById(clientId);
+        List<Apartment> apartments = apartmentDao.getAll();
+        if (ClientStatus.CHECKED_IN == client.getStatus()) {
+            throw new RuntimeException("This client is already checked in. Apartment id: " + client.getApartment().getId());
+        }
+        Optional<Apartment> availableApartment = apartments.stream()
+                .filter(apartment -> apartment.getCapacity() >= client.getQuantityOfPeople())
+                .filter(apartment -> ApartmentStatus.AVAILABLE == apartment.getStatus())
+                .findFirst();
+        if (availableApartment.isPresent()) {
+            Apartment apartment = availableApartment.get();
+            checkInProcedure(stayDuration, client, apartment);
+            return true;
+        } else {
+            throw new RuntimeException("No available apartment in the hotel");
+        }
+    }
+
+    private void checkInProcedure(int stayDuration, Client client, Apartment apartment) {
         client.setApartment(apartment);
         client.setStatus(ClientStatus.CHECKED_IN);
         client.setCheckOutDate(LocalDateTime.now().plusDays(stayDuration));
@@ -59,7 +93,6 @@ public class ClientServiceImpl implements ClientService {
         client.setStayCost(client.getStayCost() + (apartment.getPrice() * stayDuration));
         clientDao.update(client);
         apartmentDao.update(apartment);
-        return true;
     }
 
     @Override
