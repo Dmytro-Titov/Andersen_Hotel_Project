@@ -27,19 +27,23 @@ public class ClientServiceTest {
         clientService = new ClientServiceImpl(clientDao, perkDao, apartmentDao);
         ApartmentService apartmentService = new ApartmentServiceImpl(apartmentDao);
         PerkService perkService = new PerkServiceImpl(perkDao);
-        clientService.save("Oleg");
-        clientService.save("Alex");
-        clientService.save("Petr");
-        clientService.save("Lola");
-        clientService.save("Ivan");
-        clientService.save("Evgen");
+        clientService.save("Oleg", 4);
+        clientService.save("Alex", 2);
+        clientService.save("Petr", 3);
+        clientService.save("Lola", 2);
+        clientService.save("Ivan", 1);
+        clientService.save("Evgen", 4);
+        clientService.save("Olga", 2);
+        clientService.save("Valera", 5);
         apartmentService.save(1, 4, 500.0);
         apartmentService.save(2, 2, 350.0);
         apartmentService.save(3, 4, 500.0);
-        apartmentService.save(4, 1, 200.0);
+        apartmentService.save(4, 2, 200.0);
         apartmentService.save(5, 1, 200.0);
         apartmentService.save(6, 4, 500.0);
         apartmentService.save(7, 2, 350.0);
+        apartmentService.save(8, 2, 200.0);
+        apartmentService.save(9, 5, 550.0);
         perkService.save("ironing", 100);
         perkService.save("laundry", 100);
     }
@@ -56,6 +60,10 @@ public class ClientServiceTest {
         assertTrue(clientService.checkInApartment(5, 5, 3));
     }
 
+    @Test
+    void checkInAnyFreeApartmentsTest() {
+        assertTrue(clientService.checkInAnyFreeApartment(8, 1));
+    }
 
     @Test
     void checkOutTest() {
@@ -75,25 +83,25 @@ public class ClientServiceTest {
 
     @Test
     void sortedByStatusTest() {
-        clientService.checkInApartment(2, 4, 5);
-        clientService.checkInApartment(4, 2, 1);
-        clientService.checkOutApartment(2);
-        assertEquals("Alex", clientService.sortByCheckOutDate().stream().findFirst().get().getName());
+        clientService.checkInApartment(1, 1, 5);
+        clientService.checkInApartment(7, 8, 10);
+        clientService.checkOutApartment(7);
+        assertEquals("Oleg", clientService.sortByCheckOutDate().stream().findFirst().get().getName());
     }
 
 
     @Test
     void getStayCoastTest() {
         clientService.checkInApartment(6, 6, 5);
-        clientService.addPerk(1, 1);
-        clientService.addPerk(1, 2);
+        clientService.addPerk(6, 1);
+        clientService.addPerk(6, 2);
         assertEquals(2700, clientService.getStayCost(6));
     }
 
 
     @Test
     void getAllPerksTest() {
-        clientService.checkInApartment(1, 7, 7);
+        clientService.checkInApartment(7, 7, 7);
         clientService.addPerk(1, 1);
         clientService.addPerk(1, 2);
         assertEquals(2, clientService.getAllPerks(1).size());
