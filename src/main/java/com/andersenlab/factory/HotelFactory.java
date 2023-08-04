@@ -7,12 +7,12 @@ import com.andersenlab.service.impl.*;
 
 public class HotelFactory {
 
-    private ApartmentDao apartmentDao = new ApartmentDaoImpl();
-    private ApartmentService apartmentService = new ApartmentServiceImpl(apartmentDao);
-    private PerkDao perkDao = new PerkDaoImpl();
-    private PerkService perkService = new PerkServiceImpl(perkDao);
-    private ClientDao clientDao = new ClientDaoImpl();
-    private ClientService clientService = new ClientServiceImpl(clientDao, perkDao, apartmentDao);
+    private final ApartmentDao apartmentDao = new ApartmentDaoImpl();
+    private final ApartmentService apartmentService = new ApartmentServiceImpl(apartmentDao);
+    private final PerkDao perkDao = new PerkDaoImpl();
+    private final PerkService perkService = new PerkServiceImpl(perkDao);
+    private final ClientDao clientDao = new ClientDaoImpl();
+    private final ClientService clientService = new ClientServiceImpl(clientDao, perkDao, apartmentDao);
 
     private static HotelFactory instance;
 

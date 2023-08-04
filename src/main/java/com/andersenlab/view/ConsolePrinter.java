@@ -14,7 +14,6 @@ public class ConsolePrinter {
 
     public static void printEntity(Object object) {
         System.out.println(object);
-
     }
 
     public static void printAddedClient(Client client) {

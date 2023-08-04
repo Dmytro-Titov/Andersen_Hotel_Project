@@ -8,7 +8,6 @@ import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
 import com.andersenlab.service.PerkService;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,16 +24,10 @@ public class Console {
         System.out.println("Hotel Administrator Alpha v0.1");
         System.out.println("Print 'help' for the list of commands");
 
-        clientService.save("John", 1);
-        clientService.save("Anny", 3);
-        clientService.save("Demeter", 2);
-
         loop:
         while (true) {
             String command = scanner.nextLine().toLowerCase().trim();
             String[] commandArray = command.split("\s+");
-            // TODO: 04.08.2023 remove debug "command to console" vvv
-            System.out.println(Arrays.toString(commandArray));
 
             if (commandArray.length < 1) {
                 ConsolePrinter.insufficientArguments();
@@ -300,87 +293,5 @@ public class Console {
             }
             default -> ConsolePrinter.syntaxError();
         }
-    }
-
-    private boolean checkArgument(String argument, ArgumentType argumentType) {
-        if (argumentType.equals(ArgumentType.ID) ||
-                argumentType.equals(ArgumentType.DURATION) ||
-                argumentType.equals(ArgumentType.CAPACITY) ||
-                argumentType.equals(ArgumentType.QUANTITY)) {
-
-            if (!argument.matches("-?\\d+")) {
-                ConsolePrinter.illegalArgument();
-                throw new IllegalArgumentException("Argument type isn't valid");
-            }
-
-            if (Integer.parseInt(argument) < 1) {
-                ConsolePrinter.lowArgumentValue();
-                return false;
-            }
-
-            return true;
-        }
-
-        if (argumentType.equals(ArgumentType.PRICE)) {
-
-            if (!argument.matches("-?\\d+\\.\\d+")) {
-                ConsolePrinter.illegalArgument();
-                return false;
-            }
-
-            if (Double.parseDouble(argument) < 0) {
-                ConsolePrinter.lowArgumentValue();
-                return false;
-            }
-
-            return true;
-        }
-
-        if (argumentType.equals(ArgumentType.CLIENT_SORT_TYPE)) {
-            if (argument.equals("id") ||
-                argument.equals("name") ||
-                argument.equals("checkout") ||
-                argument.equals("status")) {
-                return true;
-            } else {
-                ConsolePrinter.illegalArgument();
-                return false;
-            }
-
-        }
-
-        if (argumentType.equals(ArgumentType.APARTMENT_SORT_TYPE)) {
-            if (argument.equals("id") ||
-                argument.equals("price") ||
-                argument.equals("capacity") ||
-                argument.equals("status")) {
-                return true;
-            } else {
-                ConsolePrinter.illegalArgument();
-                return false;
-            }
-        }
-
-        if (argumentType.equals(ArgumentType.PERK_SORT_TYPE)) {
-            if (argument.equals("id") ||
-                argument.equals("name") ||
-                argument.equals("price")) {
-                return true;
-            } else {
-                ConsolePrinter.illegalArgument();
-                return false;
-            }
-        }
-
-        if (argumentType.equals(ArgumentType.NAME)) {
-            return true;
-        }
-
-        ConsolePrinter.syntaxError();
-        return false;
-    }
-
-    private enum ArgumentType {
-        NAME, ID, PRICE, CAPACITY, QUANTITY, DURATION, CLIENT_SORT_TYPE, APARTMENT_SORT_TYPE, PERK_SORT_TYPE
     }
 }
