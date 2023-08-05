@@ -71,13 +71,13 @@ public class Console {
 
     /*
     *   client command list:
-    *       client list / client getall
+    *       client list
     *
     *       client get *client-id* +
     *       client debt *client-id* +
     *       client checkout *client-id* +
     *       client getperks *client-id* +
-    *       client list *sort-type* / client getall *sort-type* +
+    *       client list *sort-type* +
     *
     *       client add *name* *quantity* +
     *       client serve *client-id* *perk-id* +
@@ -94,7 +94,7 @@ public class Console {
 
         switch (commandArray.length) {
             case 2 -> {
-                if ((commandArray[1].equals("list") || commandArray[1].equals("getall"))) {
+                if (commandArray[1].equals("list")) {
                     ConsolePrinter.printList(clientService.getAll());
                 }
             }
@@ -108,7 +108,7 @@ public class Console {
                         ConsolePrinter.printCheckout(clientService.checkOutApartment(Long.parseLong(commandArray[2])));
                     case "getperks" ->
                         ConsolePrinter.printClientPerks(clientService.getAllPerks(Long.parseLong(commandArray[2])));
-                    case "getall", "list" -> {
+                    case "list" -> {
                         List<Client> list = switch (commandArray[2]) {
                             case "id" -> clientService.getSorted(ClientService.ClientSortType.ID);
                             case "name" -> clientService.getSorted(ClientService.ClientSortType.NAME);
@@ -153,10 +153,10 @@ public class Console {
 
     /*
      *   apartment command list:
-     *      apartment list / apartment getall
+     *      apartment list
      *
      *      apartment get *client-id*
-     *      apartment list *sort-type* / apartment getall *sort-type*
+     *      apartment list *sort-type*
      *      apartment price *apartment-id*
      *      apartment changestatus *apartment-id*
      *
@@ -172,7 +172,7 @@ public class Console {
 
         switch (commandArray.length) {
             case 2 -> {
-                if (commandArray[1].equals("list") || commandArray[1].equals("getall")) {
+                if (commandArray[1].equals("list")) {
                     ConsolePrinter.printList(apartmentService.getAll());
                 } else throw new IllegalArgumentException();
             }
@@ -180,7 +180,7 @@ public class Console {
                 switch (commandArray[1]) {
                     case "get" ->
                         ConsolePrinter.printEntity(apartmentService.getById(Long.parseLong(commandArray[2])));
-                    case "getall", "list" -> {
+                    case "list" -> {
                         List<Apartment> list = switch (commandArray[2]) {
                             case "id" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.ID);
                             case "price" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.PRICE);
@@ -213,11 +213,11 @@ public class Console {
     }
 
     /*  perk command list:
-            perk list / perk getall
+            perk list
 
             perk price *perk-id*
             perk get *perk-id*
-            perk list *sort-type* / perk getall *sort-type*
+            perk list *sort-type*
 
             perk add *name* *price*
             perk price *perk-id* *new-price*
@@ -231,7 +231,7 @@ public class Console {
 
         switch (commandArray.length) {
             case 2 -> {
-                if (commandArray[1].equals("list") || commandArray[1].equals("getall")) {
+                if (commandArray[1].equals("list")) {
                     ConsolePrinter.printList(perkService.getAll());
                 } else throw new IllegalArgumentException();
             }
@@ -241,7 +241,7 @@ public class Console {
                         ConsolePrinter.printEntity(perkService.getById(Long.parseLong(commandArray[2])));
                     case "price" ->
                         ConsolePrinter.printPerkPrice(perkService.getById(Long.parseLong(commandArray[2])));
-                    case "list", "getall" -> {
+                    case "list" -> {
                         List<Perk> list = switch (commandArray[2]) {
                             case "id" -> perkService.getSorted(PerkService.PerkSortType.ID);
                             case "name" -> perkService.getSorted(PerkService.PerkSortType.NAME);

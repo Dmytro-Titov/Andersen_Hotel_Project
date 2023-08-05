@@ -61,19 +61,19 @@ public class ApartmentServiceImpl implements ApartmentService {
         };
     }
 
-    public List<Apartment> sortByPrice() {
+    private List<Apartment> sortByPrice() {
         List<Apartment> sortedByPrice = new ArrayList<>(apartmentDao.getAll());
         sortedByPrice.sort(Comparator.comparing(Apartment::getPrice));
         return sortedByPrice;
     }
 
-    public List<Apartment> sortByCapacity() {
+    private List<Apartment> sortByCapacity() {
         List<Apartment> sortedByCapacity = new ArrayList<>(apartmentDao.getAll());
         sortedByCapacity.sort(Comparator.comparing(Apartment::getCapacity));
         return sortedByCapacity;
     }
 
-    public List<Apartment> sortByStatus() {
+    private List<Apartment> sortByStatus() {
         List<Apartment> sortedByStatus = new ArrayList<>(apartmentDao.getAll());
         sortedByStatus.sort(Comparator.comparing(Apartment::getStatus));
         return sortedByStatus;

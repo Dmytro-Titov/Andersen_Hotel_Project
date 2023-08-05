@@ -122,6 +122,9 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Perk addPerk(long clientId, long perkId) {
         Client client = getById(clientId);
+        if (ClientStatus.CHECKED_OUT == client.getStatus()) {
+            throw new RuntimeException("This client is already checked out, you cannot add him/her new perks");
+        }
         Perk perk = perkDao.getById(perkId)
                 .orElseThrow(() -> new RuntimeException("Perk with this id doesn't exist. Id: " + perkId));
         List<Perk> clientPerks = client.getPerks();
@@ -147,13 +150,13 @@ public class ClientServiceImpl implements ClientService {
         };
     }
 
-    public List<Client> sortByName() {
+    private List<Client> sortByName() {
         List<Client> sortedByName = new ArrayList<>(clientDao.getAll());
         sortedByName.sort(Comparator.comparing(Client::getName));
         return sortedByName;
     }
 
-    public List<Client> sortByCheckOutDate() {
+    private List<Client> sortByCheckOutDate() {
         List<Client> sortedByCheckOutDate = new ArrayList<>(clientDao.getAll());
         return sortedByCheckOutDate.stream()
                 .filter(client -> client.getStatus() != ClientStatus.NEW)
@@ -161,7 +164,7 @@ public class ClientServiceImpl implements ClientService {
                 .collect(Collectors.toList());
     }
 
-    public List<Client> sortByStatus() {
+    private List<Client> sortByStatus() {
         List<Client> sortedByStatus = new ArrayList<>(clientDao.getAll());
         sortedByStatus.sort(Comparator.comparing(Client::getStatus));
         return sortedByStatus;
