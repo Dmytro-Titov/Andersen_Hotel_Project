@@ -10,12 +10,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PerkServiceTest {
 
-    private static PerkService perkService;
+    //private static PerkService perkService;
+    protected static PerkDao perkDao = new PerkDaoImpl();
+    protected static PerkService perkService = new PerkServiceImpl(perkDao);
 
     @BeforeAll
     static void setup() {
-        PerkDao perkDao = new PerkDaoImpl();
-        perkService = new PerkServiceImpl(perkDao);
+        //PerkDao perkDao = new PerkDaoImpl();
+        //perkService = new PerkServiceImpl(perkDao);
         perkService.save("ironing", 100);
         perkService.save("laundry", 100);
         perkService.save("massage", 300);
