@@ -34,6 +34,13 @@ public class Console {
                 continue;
             }
 
+            for (String s : commandArray) {
+                if (negativeCheck(s)) {
+                    ConsolePrinter.negativeArgumentValue();
+                    continue loop;
+                }
+            }
+
             try {
                 switch (commandArray[0]) {
                     case "exit":
@@ -80,91 +87,68 @@ public class Console {
     */
 
     private void clientCommand(String[] commandArray) {
-
         if (commandArray.length < 2) {
             ConsolePrinter.insufficientArguments();
             return;
         }
 
-        if ((commandArray[1].equals("list") || commandArray[1].equals("getall")) && commandArray.length == 2) {
-            ConsolePrinter.printList(clientService.getAll());
-            return;
-        }
-
-        if (commandArray.length < 3) {
-            ConsolePrinter.insufficientArguments();
-            return;
-        }
-
-        switch (commandArray[1]) {
-            case "get" -> {
-                Client client = clientService.getById(Long.parseLong(commandArray[2]));
-                ConsolePrinter.printEntity(client);
-                return;
+        switch (commandArray.length) {
+            case 2 -> {
+                if ((commandArray[1].equals("list") || commandArray[1].equals("getall"))) {
+                    ConsolePrinter.printList(clientService.getAll());
+                }
             }
-            case "debt" -> {
-                double debt = clientService.getStayCost(Long.parseLong(commandArray[2]));
-                ConsolePrinter.printClientDebt(debt);
-                return;
-            }
-            case "checkout" -> {
-                ConsolePrinter.printCheckout(clientService.checkOutApartment(Long.parseLong(commandArray[2])));
-                return;
-            }
-            case "getperks" -> {
-                ConsolePrinter.printClientPerks(clientService.getAllPerks(Long.parseLong(commandArray[2])));
-                return;
-            }
-            case "getall", "list" -> {
-                List<Client> list = switch (commandArray[2]) {
-                    case "id" -> clientService.getSorted(ClientService.ClientSortType.ID);
-                    case "name" -> clientService.getSorted(ClientService.ClientSortType.NAME);
-                    case "checkout" -> clientService.getSorted(ClientService.ClientSortType.CHECK_OUT_DATE);
-                    case "status" -> clientService.getSorted(ClientService.ClientSortType.STATUS);
+            case 3 -> {
+                switch (commandArray[1]) {
+                    case "get" ->
+                        ConsolePrinter.printEntity(clientService.getById(Long.parseLong(commandArray[2])));
+                    case "debt" ->
+                        ConsolePrinter.printClientDebt(clientService.getStayCost(Long.parseLong(commandArray[2])));
+                    case "checkout" ->
+                        ConsolePrinter.printCheckout(clientService.checkOutApartment(Long.parseLong(commandArray[2])));
+                    case "getperks" ->
+                        ConsolePrinter.printClientPerks(clientService.getAllPerks(Long.parseLong(commandArray[2])));
+                    case "getall", "list" -> {
+                        List<Client> list = switch (commandArray[2]) {
+                            case "id" -> clientService.getSorted(ClientService.ClientSortType.ID);
+                            case "name" -> clientService.getSorted(ClientService.ClientSortType.NAME);
+                            case "checkout" -> clientService.getSorted(ClientService.ClientSortType.CHECK_OUT_DATE);
+                            case "status" -> clientService.getSorted(ClientService.ClientSortType.STATUS);
+                            default -> throw new IllegalArgumentException();
+                        };
+                        ConsolePrinter.printList(list);
+                    }
                     default -> throw new IllegalArgumentException();
-                };
-                ConsolePrinter.printList(list);
-                return;
+                }
             }
-        }
-
-        if (commandArray.length < 4) {
-            ConsolePrinter.insufficientArguments();
-            return;
-        }
-
-        switch (commandArray[1]) {
-            case "add" -> {
-                ConsolePrinter.printAddedClient(clientService.save(
-                        commandArray[2],
-                        Integer.parseInt(commandArray[3])));
-                return;
+            case 4 -> {
+                switch (commandArray[1]) {
+                    case "add" ->
+                        ConsolePrinter.printAddedClient(clientService.save(
+                                commandArray[2],
+                                Integer.parseInt(commandArray[3])));
+                    case "serve" ->
+                        ConsolePrinter.printServedPerk(clientService.addPerk(
+                                Long.parseLong(commandArray[2]),
+                                Long.parseLong(commandArray[3])));
+                    case "checkin" ->
+                        ConsolePrinter.printCheckIn(clientService.checkInApartment(
+                                Long.parseLong(commandArray[2]),
+                                Integer.parseInt(commandArray[3]),
+                                0));
+                    default -> throw new IllegalArgumentException();
+                }
             }
-            case "serve" -> {
-                ConsolePrinter.printServedPerk(clientService.addPerk(
-                        Long.parseLong(commandArray[2]),
-                        Long.parseLong(commandArray[3])));
-                return;
+            case 5 -> {
+                if (commandArray[1].equals("checkin")) {
+                    ConsolePrinter.printCheckIn(clientService.checkInApartment(
+                            Long.parseLong(commandArray[2]),
+                            Integer.parseInt(commandArray[3]),
+                            Long.parseLong(commandArray[4])));
+                }
             }
-            case "checkin" -> {
-                if (commandArray.length > 4) break;
-                ConsolePrinter.printCheckIn(clientService.checkInApartment(
-                        Long.parseLong(commandArray[2]),
-                        Integer.parseInt(commandArray[3]),
-                        0));
-                return;
-            }
+            default -> ConsolePrinter.syntaxError();
         }
-
-        if (commandArray[1].equals("checkin") && commandArray.length == 5) {
-            ConsolePrinter.printCheckIn(clientService.checkInApartment(
-                    Long.parseLong(commandArray[2]),
-                    Integer.parseInt(commandArray[3]),
-                    Long.parseLong(commandArray[4])));
-            return;
-        }
-
-        ConsolePrinter.syntaxError();
     }
 
     /*
@@ -194,9 +178,8 @@ public class Console {
             }
             case 3 -> {
                 switch (commandArray[1]) {
-                    case "get" -> {
+                    case "get" ->
                         ConsolePrinter.printEntity(apartmentService.getById(Long.parseLong(commandArray[2])));
-                    }
                     case "getall", "list" -> {
                         List<Apartment> list = switch (commandArray[2]) {
                             case "id" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.ID);
@@ -207,32 +190,27 @@ public class Console {
                         };
                         ConsolePrinter.printList(list);
                     }
-                    case "price" -> {
+                    case "price" ->
                         ConsolePrinter.printApartmentPrice(apartmentService.getById(Long.parseLong(commandArray[2])));
-                    }
-                    case "changestatus" -> {
+                    case "changestatus" ->
                         ConsolePrinter.printApartmentStatusChange(apartmentService.changeStatus(Long.parseLong(commandArray[2])));
-                    }
                     default -> throw new IllegalArgumentException();
                 }
             }
             case 4 -> {
                 switch (commandArray[1]) {
-                    case "add" -> {
+                    case "add" ->
                         ConsolePrinter.printAddedApartment(apartmentService.save(
                                 Integer.parseInt(commandArray[2]), Double.parseDouble(commandArray[3])));
-                    }
-                    case "price" -> {
+                    case "price" ->
                         ConsolePrinter.printApartmentPriceChange(apartmentService.changePrice(
                                 Long.parseLong(commandArray[2]), Double.parseDouble(commandArray[3])));
-                    }
                     default -> throw new IllegalArgumentException();
                 }
             }
             default -> ConsolePrinter.syntaxError();
         }
     }
-
 
     /*  perk command list:
             perk list / perk getall
@@ -244,7 +222,6 @@ public class Console {
             perk add *name* *price*
             perk price *perk-id* *new-price*
      */
-
 
     private void perkCommand(String[] commandArray) {
         if (commandArray.length < 2) {
@@ -260,12 +237,10 @@ public class Console {
             }
             case 3 -> {
                 switch (commandArray[1]) {
-                    case "get" -> {
+                    case "get" ->
                         ConsolePrinter.printEntity(perkService.getById(Long.parseLong(commandArray[2])));
-                    }
-                    case "price" -> {
+                    case "price" ->
                         ConsolePrinter.printPerkPrice(perkService.getById(Long.parseLong(commandArray[2])));
-                    }
                     case "list", "getall" -> {
                         List<Perk> list = switch (commandArray[2]) {
                             case "id" -> perkService.getSorted(PerkService.PerkSortType.ID);
@@ -280,18 +255,20 @@ public class Console {
             }
             case 4 -> {
                 switch (commandArray[1]) {
-                    case "add" -> {
+                    case "add" ->
                         ConsolePrinter.printAddedPerk(perkService.save(commandArray[2], Double.parseDouble(commandArray[3])));
-                    }
-                    case "price" -> {
+                    case "price" ->
                         ConsolePrinter.printPerkPriceChange(perkService.changePrice(
                                 Long.parseLong(commandArray[2]), Double.parseDouble(commandArray[3])
                         ));
-                    }
                     default -> throw new IllegalArgumentException();
                 }
             }
             default -> ConsolePrinter.syntaxError();
         }
+    }
+
+    private boolean negativeCheck(String element) {
+        return element.matches("-\\d+");
     }
 }

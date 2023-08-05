@@ -98,8 +98,8 @@ public class ConsolePrinter {
         typeHelp();
     }
 
-    public static void lowArgumentValue() {
-        System.out.print("Argument value cannot be so low.\s");
+    public static void negativeArgumentValue() {
+        System.out.print("Argument value cannot be negative.\s");
         typeHelp();
     }
 

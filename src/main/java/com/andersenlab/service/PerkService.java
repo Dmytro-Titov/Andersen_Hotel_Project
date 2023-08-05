@@ -15,10 +15,6 @@ public interface PerkService {
 
     List<Perk> getSorted(PerkSortType type);
 
-    List<Perk> sortByName();
-
-    List<Perk> sortByPrice();
-
     enum PerkSortType {
         ID, NAME, PRICE
     }

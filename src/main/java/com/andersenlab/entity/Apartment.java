@@ -89,7 +89,7 @@ public class Apartment {
     public String toString() {
         return "Apartment{" +
                 "id=" + id +
-                ", apartmentNumber=" + /*apartmentNumber +*/
+                /*", apartmentNumber=" + apartmentNumber +*/
                 ", capacity=" + capacity +
                 ", price=" + price +
                 ", status=" + status +

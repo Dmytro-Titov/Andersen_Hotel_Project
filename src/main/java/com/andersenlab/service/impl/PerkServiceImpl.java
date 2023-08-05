@@ -48,14 +48,12 @@ public class PerkServiceImpl implements PerkService {
         };
     }
 
-    @Override
     public List<Perk> sortByName() {
         List<Perk> sortedByName = new ArrayList<>(perkDao.getAll());
         sortedByName.sort(Comparator.comparing(Perk::getName));
         return sortedByName;
     }
 
-    @Override
     public List<Perk> sortByPrice() {
         List<Perk> sortedByPrice = new ArrayList<>(perkDao.getAll());
         sortedByPrice.sort(Comparator.comparing(Perk::getPrice));

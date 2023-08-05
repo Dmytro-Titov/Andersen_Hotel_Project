@@ -18,12 +18,6 @@ public interface ApartmentService {
 
     List<Apartment> getSorted(ApartmentSortType type);
 
-    List<Apartment> sortByPrice();
-
-    List<Apartment> sortByCapacity();
-
-    List<Apartment> sortByStatus();
-
     enum ApartmentSortType {
         ID, PRICE, CAPACITY, STATUS
     }

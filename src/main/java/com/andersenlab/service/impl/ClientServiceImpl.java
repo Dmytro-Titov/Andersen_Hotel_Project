@@ -69,7 +69,6 @@ public class ClientServiceImpl implements ClientService {
         }
     }
 
-    @Override
     public Client checkInAnyFreeApartment(long clientId, int stayDuration) {
         Client client = getById(clientId);
         List<Apartment> apartments = apartmentDao.getAll();
