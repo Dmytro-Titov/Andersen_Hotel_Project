@@ -33,6 +33,11 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    public List<Client> getAll() {
+        return clientDao.getAll();
+    }
+
+    @Override
     public Client save(String name, int quantityOfPeople) {
         Client client = new Client(IdGenerator.generateClientId(), name, quantityOfPeople);
         return clientDao.save(client);
@@ -40,15 +45,14 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public double getStayCost(long id) {
-        Client client = getById(id);
-        if (client == null) {
-            return 0.0;
-        }
-        return client.getStayCost();
+        return getById(id).getStayCost();
     }
 
     @Override
-    public boolean checkInApartment(long clientId, long apartmentId, int stayDuration) {
+    public Client checkInApartment(long clientId, int stayDuration, long apartmentId) {
+        if (apartmentId == 0) {
+            return checkInAnyFreeApartment(clientId, stayDuration);
+        }
         Client client = getById(clientId);
         Apartment apartment = apartmentDao.getById(apartmentId)
                 .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + apartmentId));
@@ -59,14 +63,13 @@ public class ClientServiceImpl implements ClientService {
         if (ApartmentStatus.AVAILABLE == apartment.getStatus()
                 && apartment.getCapacity() >= client.getQuantityOfPeople()) {
             checkInProcedure(stayDuration, client, apartment);
-            return true;
+            return client;
         } else {
             throw new RuntimeException("No available apartment in the hotel");
         }
     }
 
-    @Override
-    public boolean checkInAnyFreeApartment(long clientId, int stayDuration) {
+    public Client checkInAnyFreeApartment(long clientId, int stayDuration) {
         Client client = getById(clientId);
         List<Apartment> apartments = apartmentDao.getAll();
         if (ClientStatus.CHECKED_IN == client.getStatus()) {
@@ -80,7 +83,7 @@ public class ClientServiceImpl implements ClientService {
         if (availableApartment.isPresent()) {
             Apartment apartment = availableApartment.get();
             checkInProcedure(stayDuration, client, apartment);
-            return true;
+            return client;
         } else {
             throw new RuntimeException("No available apartment in the hotel");
         }
@@ -98,10 +101,11 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public boolean checkOutApartment(long clientId) {
+    public double checkOutApartment(long clientId) {
         Client client = getById(clientId);
         Apartment apartment = client.getApartment();
         if (apartment != null) {
+            double stayCost = client.getStayCost();
             client.setApartment(new Apartment());
             client.setStatus(ClientStatus.CHECKED_OUT);
             client.setPerks(new ArrayList<>());
@@ -109,9 +113,9 @@ public class ClientServiceImpl implements ClientService {
             apartment.setStatus(ApartmentStatus.AVAILABLE);
             clientDao.update(client);
             apartmentDao.update(apartment);
-            return true;
+            return stayCost;
         } else {
-            return false;
+            throw new RuntimeException("This client isn't checked in in any apartment yet! Id: " + client.getId());
         }
     }
 
@@ -130,21 +134,25 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public List<Perk> getAllPerks(long clientId) {
-        Client client = getById(clientId);
-        if (client != null) {
-            return client.getPerks();
-        }
-        return List.of();
+        return getById(clientId).getPerks();
     }
 
     @Override
+    public List<Client> getSorted(ClientSortType type) {
+        return switch (type) {
+            case ID -> getAll();
+            case CHECK_OUT_DATE -> sortByCheckOutDate();
+            case NAME -> sortByName();
+            case STATUS -> sortByStatus();
+        };
+    }
+
     public List<Client> sortByName() {
         List<Client> sortedByName = new ArrayList<>(clientDao.getAll());
         sortedByName.sort(Comparator.comparing(Client::getName));
         return sortedByName;
     }
 
-    @Override
     public List<Client> sortByCheckOutDate() {
         List<Client> sortedByCheckOutDate = new ArrayList<>(clientDao.getAll());
         return sortedByCheckOutDate.stream()
@@ -153,7 +161,6 @@ public class ClientServiceImpl implements ClientService {
                 .collect(Collectors.toList());
     }
 
-    @Override
     public List<Client> sortByStatus() {
         List<Client> sortedByStatus = new ArrayList<>(clientDao.getAll());
         sortedByStatus.sort(Comparator.comparing(Client::getStatus));
