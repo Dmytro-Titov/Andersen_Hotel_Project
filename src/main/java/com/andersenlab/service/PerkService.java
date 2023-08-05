@@ -11,7 +11,11 @@ public interface PerkService {
 
     Perk changePrice(long id, double price);
 
-    List<Perk> sortByName();
+    List<Perk> getAll();
 
-    List<Perk> sortByPrice();
+    List<Perk> getSorted(PerkSortType type);
+
+    enum PerkSortType {
+        ID, NAME, PRICE
+    }
 }

@@ -25,9 +25,14 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public Apartment save(int apartmentNumber, int capacity, double price) {
+    public List<Apartment> getAll() {
+        return apartmentDao.getAll();
+    }
+
+    @Override
+    public Apartment save(/*int apartmentNumber,*/ int capacity, double price) {
         Apartment apartment = new Apartment(IdGenerator.generateApartmentId(),
-                apartmentNumber, capacity, price, ApartmentStatus.AVAILABLE);
+                /*apartmentNumber,*/ capacity, price, ApartmentStatus.AVAILABLE);
         return apartmentDao.save(apartment);
     }
 
@@ -38,27 +43,37 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public Apartment changeStatus(long id, ApartmentStatus status) {
-        return apartmentDao.update(new Apartment(id, status))
+    public Apartment changeStatus(long id) {
+        Apartment apartment = getById(id);
+        ApartmentStatus newStatus = apartment.getStatus() == ApartmentStatus.AVAILABLE ?
+                ApartmentStatus.UNAVAILABLE : ApartmentStatus.AVAILABLE;
+        return apartmentDao.update(new Apartment(id, newStatus))
                 .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + id));
     }
 
     @Override
-    public List<Apartment> sortByPrice() {
+    public List<Apartment> getSorted(ApartmentSortType type) {
+        return switch (type) {
+            case ID -> getAll();
+            case PRICE -> sortByPrice();
+            case CAPACITY -> sortByCapacity();
+            case STATUS -> sortByStatus();
+        };
+    }
+
+    private List<Apartment> sortByPrice() {
         List<Apartment> sortedByPrice = new ArrayList<>(apartmentDao.getAll());
         sortedByPrice.sort(Comparator.comparing(Apartment::getPrice));
         return sortedByPrice;
     }
 
-    @Override
-    public List<Apartment> sortByCapacity() {
+    private List<Apartment> sortByCapacity() {
         List<Apartment> sortedByCapacity = new ArrayList<>(apartmentDao.getAll());
         sortedByCapacity.sort(Comparator.comparing(Apartment::getCapacity));
         return sortedByCapacity;
     }
 
-    @Override
-    public List<Apartment> sortByStatus() {
+    private List<Apartment> sortByStatus() {
         List<Apartment> sortedByStatus = new ArrayList<>(apartmentDao.getAll());
         sortedByStatus.sort(Comparator.comparing(Apartment::getStatus));
         return sortedByStatus;
