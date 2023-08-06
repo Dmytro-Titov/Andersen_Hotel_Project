@@ -34,6 +34,8 @@ public class ApartmentServiceTest {
         apartmentService.changeStatus(3);
         apartmentService.changeStatus(4);
         apartmentService.changeStatus(5);
+        apartmentService.getSorted(ApartmentService.ApartmentSortType.ID).forEach(apartment ->
+                System.out.println(apartment.getId() + "-"+ apartment.getCapacity() + " - " + apartment.getPrice()));
         apartmentService.getSorted(ApartmentService.ApartmentSortType.CAPACITY).forEach(apartment ->
                 System.out.println(apartment.getId() + "-"+ apartment.getCapacity() + " - " + apartment.getPrice()));
         assertEquals(1, apartmentService.getSorted(ApartmentService.ApartmentSortType.ID)
