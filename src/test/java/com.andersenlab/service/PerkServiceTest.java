@@ -15,7 +15,7 @@ public class PerkServiceTest {
 
 
     @BeforeAll
-    synchronized static void setup() {
+    static void setup() {
         perkService.save("ironing", 150);
         perkService.save("laundry", 100);
         perkService.save("massage", 300);

@@ -19,7 +19,7 @@ public class ApartmentServiceTest {
         apartmentService.save(1, 200.0);
         apartmentService.save(2, 350.0);
         apartmentService.save(4, 500.0);
-        apartmentService.save(0, 200.0);
+        apartmentService.save(1, 200.0);
         apartmentService.save(1, 200.0);
         apartmentService.save(4, 500.0);
         apartmentService.save(2, 350.0);
@@ -27,7 +27,7 @@ public class ApartmentServiceTest {
 
 
     @Test
-    synchronized void getSortedTest() {
+    void getSortedTest() {
         apartmentService.changePrice(5, 150.0);
         apartmentService.changeStatus(1);
         apartmentService.changeStatus(2);
@@ -36,8 +36,8 @@ public class ApartmentServiceTest {
         apartmentService.changeStatus(5);
         assertEquals(1, apartmentService.getSorted(ApartmentService.ApartmentSortType.ID)
                 .stream().findFirst().get().getId());
-//        assertEquals(4, apartmentService.getSorted(ApartmentService.ApartmentSortType.CAPACITY)
-//                .stream().findFirst().get().getId());
+        assertEquals(1, apartmentService.getSorted(ApartmentService.ApartmentSortType.CAPACITY)
+                .stream().findFirst().get().getId());
         assertEquals(5, apartmentService.getSorted(ApartmentService.ApartmentSortType.PRICE)
                 .stream().findFirst().get().getId());
         assertEquals(6, apartmentService.getSorted(ApartmentService.ApartmentSortType.STATUS)
