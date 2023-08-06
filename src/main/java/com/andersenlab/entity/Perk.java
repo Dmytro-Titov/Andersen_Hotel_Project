@@ -60,10 +60,10 @@ public class Perk {
 
     @Override
     public String toString() {
-        return "Perk{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("id: ").append(id)
+                .append(", name: ").append(name)
+                .append(", price: ").append(price);
+        return builder.toString();
     }
 }

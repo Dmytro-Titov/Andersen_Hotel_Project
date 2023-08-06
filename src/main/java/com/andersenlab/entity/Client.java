@@ -1,6 +1,7 @@
 package com.andersenlab.entity;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -116,16 +117,37 @@ public class Client {
 
     @Override
     public String toString() {
-        return "Client{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", checkOutDate=" + checkOutDate +
-                ", checkInDate=" + checkInDate +
-                ", status=" + status +
-                ", apartment=" + apartment +
-                ", perks=" + perks +
-                ", stayCost=" + stayCost +
-                ", quantityOfPeople=" + quantityOfPeople +
-                '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("id: ").append(id)
+                .append(", name: ").append(name)
+                .append(", quantity of people: ").append(quantityOfPeople)
+                .append(", status: ").append(status);
+        if (apartment != null) {
+            builder.append(", apartment id: ")
+                    .append(apartment.getId());
+        }
+        if (checkInDate != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+            builder.append(", checking date: ")
+                    .append(checkInDate.format(formatter));
+        }
+        if (checkOutDate != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+            builder.append(", checkout date: ")
+                    .append(checkOutDate.format(formatter));
+        }
+        if (!perks.isEmpty()) {
+            builder.append(", extra services: [");
+            for (int i = 0; i < perks.size(); i++) {
+                builder.append(perks.get(i).getName());
+                if (i != perks.size() - 1) {
+                    builder.append(", ");
+                } else {
+                    builder.append("]");
+                }
+            }
+        }
+        builder.append(", current stay cost: ").append(stayCost);
+        return builder.toString();
     }
 }

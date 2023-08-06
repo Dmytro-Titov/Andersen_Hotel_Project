@@ -17,8 +17,8 @@ public class ConsolePrinter {
     }
 
     public static void printAddedClient(Client client) {
-        System.out.printf("You added new client! Name: %s, id: %s, Quantity: %s\n",
-                client.getName(), client.getId(), client.getQuantityOfPeople());
+        System.out.printf("You added new client! id: %s, name: %s, quantity: %s\n",
+                client.getId(), client.getName(), client.getQuantityOfPeople());
     }
 
     public static void printAddedApartment(Apartment apartment) {

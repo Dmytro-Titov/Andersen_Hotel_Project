@@ -77,11 +77,11 @@ public class Apartment {
 
     @Override
     public String toString() {
-        return "Apartment{" +
-                "id=" + id +
-                ", capacity=" + capacity +
-                ", price=" + price +
-                ", status=" + status +
-                '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("id: ").append(id)
+                .append(", apartment for ").append(capacity)
+                .append(" person(s), price: ").append(price)
+                .append(", current status: ").append(status);
+        return builder.toString();
     }
 }
