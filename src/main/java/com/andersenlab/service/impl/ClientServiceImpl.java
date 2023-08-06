@@ -106,7 +106,7 @@ public class ClientServiceImpl implements ClientService {
         Apartment apartment = client.getApartment();
         if (apartment != null) {
             double stayCost = client.getStayCost();
-            client.setApartment(new Apartment());
+            client.setApartment(null);
             client.setStatus(ClientStatus.CHECKED_OUT);
             client.setPerks(new ArrayList<>());
             client.setStayCost(0.0);

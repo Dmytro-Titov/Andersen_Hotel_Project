@@ -10,7 +10,7 @@ public interface ApartmentService {
 
     List<Apartment> getAll();
 
-    Apartment save(/*int apartmentNumber, */int capacity, double price);
+    Apartment save(int capacity, double price);
 
     Apartment changePrice(long id, double price);
 

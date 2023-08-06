@@ -65,7 +65,7 @@ public class ClientServiceTest {
     }
 
     @Test
-    void getStayCoastTest() {
+    void getStayCostTest() {
         clientService.checkInApartment(4, 2, 11);
         clientService.addPerk(4, 1);
         clientService.addPerk(4, 2);

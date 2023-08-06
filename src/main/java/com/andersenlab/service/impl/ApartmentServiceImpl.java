@@ -30,9 +30,9 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public Apartment save(/*int apartmentNumber,*/ int capacity, double price) {
+    public Apartment save(int capacity, double price) {
         Apartment apartment = new Apartment(IdGenerator.generateApartmentId(),
-                /*apartmentNumber,*/ capacity, price, ApartmentStatus.AVAILABLE);
+                capacity, price, ApartmentStatus.AVAILABLE);
         return apartmentDao.save(apartment);
     }
 
