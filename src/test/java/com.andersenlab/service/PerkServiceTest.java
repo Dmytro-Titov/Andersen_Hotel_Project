@@ -10,29 +10,32 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PerkServiceTest {
 
-    //private static PerkService perkService;
     protected static PerkDao perkDao = new PerkDaoImpl();
     protected static PerkService perkService = new PerkServiceImpl(perkDao);
 
+
     @BeforeAll
     static void setup() {
-        //PerkDao perkDao = new PerkDaoImpl();
-        //perkService = new PerkServiceImpl(perkDao);
-        perkService.save("ironing", 100);
+        perkService.save("ironing", 150);
         perkService.save("laundry", 100);
         perkService.save("massage", 300);
     }
 
 
     @Test
-    void sortedByPriceTest() {
-        perkService.changePrice(2, 50);
-        assertEquals("laundry", perkService.sortByPrice().stream().findFirst().get().getName());
+    void geByIdTest() {
+        assertEquals("laundry", perkService.getById(2).getName());
     }
 
 
     @Test
-    void sortByNameTest() {
-        assertEquals("ironing", perkService.sortByName().stream().findFirst().get().getName());
+    void getSortedTest() {
+        perkService.changePrice(3, 50.0);
+        assertEquals("ironing", perkService.getSorted(PerkService.PerkSortType.ID)
+                .stream().findFirst().get().getName());
+        assertEquals("ironing", perkService.getSorted(PerkService.PerkSortType.NAME)
+                .stream().findFirst().get().getName());
+        assertEquals("massage", perkService.getSorted(PerkService.PerkSortType.PRICE)
+                .stream().findFirst().get().getName());
     }
 }
