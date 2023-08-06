@@ -19,7 +19,7 @@ public class ClientServiceTest {
 
 
     @BeforeAll
-    static void setup() {
+    synchronized static void setup() {
         clientService.save("Oleg", 2);
         clientService.save("Alex", 2);
         clientService.save("Petr", 3);

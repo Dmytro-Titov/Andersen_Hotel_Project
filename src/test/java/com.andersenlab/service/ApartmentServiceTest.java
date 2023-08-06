@@ -27,7 +27,7 @@ public class ApartmentServiceTest {
 
 
     @Test
-    void getSortedTest() {
+    synchronized void getSortedTest() {
         apartmentService.changePrice(5, 150.0);
         apartmentService.changeStatus(1);
         apartmentService.changeStatus(2);
