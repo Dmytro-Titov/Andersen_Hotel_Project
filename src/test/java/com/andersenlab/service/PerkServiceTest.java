@@ -3,19 +3,22 @@ package com.andersenlab.service;
 import com.andersenlab.dao.PerkDao;
 import com.andersenlab.dao.impl.PerkDaoImpl;
 import com.andersenlab.service.impl.PerkServiceImpl;
-import org.junit.jupiter.api.BeforeAll;
+import com.andersenlab.util.IdGenerator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PerkServiceTest {
 
-    protected static PerkDao perkDao = new PerkDaoImpl();
-    protected static PerkService perkService = new PerkServiceImpl(perkDao);
+    private PerkService perkService;
 
 
-    @BeforeAll
-    static void setup() {
+    @BeforeEach
+    void setup() {
+        IdGenerator.cancelGenerateId();
+        PerkDao perkDao = new PerkDaoImpl();
+        perkService = new PerkServiceImpl(perkDao);
         perkService.save("ironing", 150);
         perkService.save("laundry", 100);
         perkService.save("massage", 300);

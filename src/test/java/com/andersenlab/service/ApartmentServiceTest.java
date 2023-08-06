@@ -3,19 +3,22 @@ package com.andersenlab.service;
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.dao.impl.ApartmentDaoImpl;
 import com.andersenlab.service.impl.ApartmentServiceImpl;
-import org.junit.jupiter.api.BeforeAll;
+import com.andersenlab.util.IdGenerator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ApartmentServiceTest {
 
-    protected static ApartmentDao apartmentDao = new ApartmentDaoImpl();
-    protected static ApartmentService apartmentService = new ApartmentServiceImpl(apartmentDao);
+    private ApartmentService apartmentService;
 
 
-    @BeforeAll
-    static void setup() {
+    @BeforeEach
+    private void setup() {
+        IdGenerator.cancelGenerateId();
+        ApartmentDao apartmentDao = new ApartmentDaoImpl();
+        apartmentService =new ApartmentServiceImpl(apartmentDao);
         apartmentService.save(1, 200.0);
         apartmentService.save(2, 350.0);
         apartmentService.save(4, 500.0);
@@ -36,8 +39,8 @@ public class ApartmentServiceTest {
         apartmentService.changeStatus(5);
         assertEquals(1, apartmentService.getSorted(ApartmentService.ApartmentSortType.ID)
                 .stream().findFirst().get().getId());
-//        assertEquals(4, apartmentService.getSorted(ApartmentService.ApartmentSortType.CAPACITY)
-//                .stream().findFirst().get().getId());
+        assertEquals(4, apartmentService.getSorted(ApartmentService.ApartmentSortType.CAPACITY)
+                .stream().findFirst().get().getId());
         assertEquals(5, apartmentService.getSorted(ApartmentService.ApartmentSortType.PRICE)
                 .stream().findFirst().get().getId());
         assertEquals(6, apartmentService.getSorted(ApartmentService.ApartmentSortType.STATUS)
