@@ -16,7 +16,7 @@ public class ClientDaoTest {
 
 
     @BeforeEach
-    public void setup() {
+    private void setup() {
         client = new Client(IdGenerator.generateClientId(), "Evgen", 1);
         client1 = new Client(IdGenerator.generateClientId(), "Viktoria", 2);
 
@@ -26,27 +26,27 @@ public class ClientDaoTest {
     }
 
     @Test
-    public void saveTest() {
+    void saveTest() {
 
         Assertions.assertEquals(client1, clientDao.save(client1));
         Assertions.assertEquals(client1.getId(), Objects.requireNonNull(clientDao.getById(client1.getId()).orElse(null)).getId());
     }
 
     @Test
-     public void getByIdTest() {
+    void getByIdTest() {
         Assertions.assertEquals(client.getId(), Objects.requireNonNull(clientDao.getById(client.getId()).orElse(null)).getId());
         Assertions.assertTrue(clientDao.getById(Long.MAX_VALUE).isEmpty());
     }
 
     @Test
-    public void getAllTest() {
+    void getAllTest() {
         clientDao.save(client1);
         Assertions.assertNotNull(clientDao.getAll());
         Assertions.assertEquals(2,  (long) clientDao.getAll().size());
     }
 
     @Test
-    public void updateTest() {
+    void updateTest() {
             client.setName("Evgen-Evgen");
 
             Assertions.assertAll("clientUpdate",
@@ -56,7 +56,7 @@ public class ClientDaoTest {
     }
 
     @Test
-    public void removeTest() {
+    void removeTest() {
         Assertions.assertTrue(clientDao.remove(client.getId()));
         Assertions.assertTrue(clientDao.getById(client.getId()).isEmpty());
     }

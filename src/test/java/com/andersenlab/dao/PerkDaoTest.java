@@ -14,7 +14,7 @@ public class PerkDaoTest {
     private Perk perk;
 
     @BeforeEach
-    public void setup() {
+    private void setup() {
         perk = new Perk();
         perk.setId(IdGenerator.generatePerkId());
         perk.setName("Name");
@@ -37,24 +37,24 @@ public class PerkDaoTest {
     }
 
     @Test
-    public void getByIdTest() {
+    void getByIdTest() {
         Assertions.assertEquals(perk, perkDao.getById(perk.getId()).orElse(null));
         Assertions.assertTrue(perkDao.getById(Long.MAX_VALUE).isEmpty());
     }
 
     @Test
-    public void getAllTest() {
+    void getAllTest() {
         Assertions.assertEquals(3, (long) perkDao.getAll().size());
     }
 
     @Test
-    public void saveTest() {
+    void saveTest() {
         Assertions.assertNotNull(perkDao.save(perk));
         Assertions.assertEquals(perk.getId(), Objects.requireNonNull(perkDao.getById(perk.getId()).orElse(null)).getId());
     }
 
     @Test
-    public void updateTest() {
+    void updateTest() {
         perk.setPrice(100);
 
         Assertions.assertAll("perkUpdate",
@@ -64,7 +64,7 @@ public class PerkDaoTest {
     }
 
     @Test
-    public void removeTest() {
+    void removeTest() {
         Assertions.assertTrue(perkDao.remove(perk.getId()));
         Assertions.assertTrue(perkDao.getById(perk.getId()).isEmpty());
     }
