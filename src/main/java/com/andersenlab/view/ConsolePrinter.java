@@ -73,7 +73,6 @@ public class ConsolePrinter {
         }
     }
 
-
     public static void printList(List<?> list) {
         if (list.size() == 0) {
             System.out.println("Requested list is empty! :(");
@@ -95,71 +94,76 @@ public class ConsolePrinter {
 
     public static void insufficientArguments() {
         System.out.print("Not enough arguments provided.\s");
-        typeHelp();
+        printHelp();
     }
 
     public static void negativeArgumentValue() {
         System.out.print("Argument value cannot be negative.\s");
-        typeHelp();
+        printHelp();
     }
 
     public static void illegalArgument() {
         System.out.print("Illegal argument.\s");
-        typeHelp();
+        printHelp();
+    }
+
+    public static void illegalArgumentWithMsg(String message) {
+        System.out.print(message == null ? "Illegal argument.\s" : message + ".\s");
+        printHelp();
     }
 
     public static void commands() {
-        System.out.println("--------------------------------------------------------------------------------------------------------");
-        System.out.println("help                                                        see this list");
-        System.out.println("exit                                                        close the application");
-        System.out.println();
-        System.out.println("client add *name* *quantity*                                add client");
-        System.out.println("client get *client-id*                                      get client by id");
-        System.out.println("client debt *client-id*                                     get debt for client by id ");
-        System.out.println("client list                                                 get full client list");
-        System.out.println("client list *sort-type*                                     get sorted client list");
-        System.out.println("client sort-types: ID, NAME, CHECKOUT, STATUS");
-        System.out.println("client checkin *client-id* *stay-duration*                  check-in client in a free apartment");
-        System.out.println("client checkin *client-id* *stay-duration* *apartment-id*   check-in client in specified apartment");
-        System.out.println("client checkout *client-id*                                 check-out client and display current debt");
-        System.out.println("client serve *client-id* *perk-id*                          serve client with specified perk");
-        System.out.println("client getperks *client-id*                                 get list of all perks served to the client");
-        System.out.println("--------------------------------------------------------------------------------------------------------");
-        System.out.println("apartment add *capacity* *price*                            add new apartment");
-        System.out.println("apartment get *client-id*                                   get apartment by id");
-        System.out.println("apartment price *apartment-id*                              get price for the apartment");
-        System.out.println("apartment price *apartment-id* *new-price*                  set new price for apartment");
-        System.out.println("apartment list                                              get full apartment list");
-        System.out.println("apartment list *sort-type*                                  get sorted apartment list");
-        System.out.println("apartment sort-types: ID, PRICE, CAPACITY, STATUS");
-        System.out.println("apartment changestatus *apartment-id*                       change status of the apartment to opposite");
-        System.out.println("--------------------------------------------------------------------------------------------------------");
-        System.out.println("perk add *name* *price*                                     add new perk");
-        System.out.println("perk get *perk-id*                                          get perk by id");
-        System.out.println("perk price *perk-id*                                        get price for perk");
-        System.out.println("perk price *perk-id* *new-price*                            set price for perk");
-        System.out.println("perk list                                                   get full perk list");
-        System.out.println("perk list *sort-type*                                       get sorted perk list");
-        System.out.println("perk sort-types: ID, NAME, PRICE");
-        System.out.println("--------------------------------------------------------------------------------------------------------");
+        System.out.println("|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|");
+        System.out.println("| help                                                        see this list                             |");
+        System.out.println("| exit                                                        close the application                     |");
+        System.out.println("|———————————————————————————————————————————————————————————————————————————————————————————————————————|");
+        System.out.println("| client add *name* *quantity*                                add client                                |");
+        System.out.println("| client get *client-id*                                      get client by id                          |");
+        System.out.println("| client debt *client-id*                                     get debt for client by id                 |");
+        System.out.println("| client list                                                 get full client list                      |");
+        System.out.println("| client list *sort-type*                                     get sorted client list                    |");
+        System.out.println("| (client sort-types: ID, NAME, CHECKOUT, STATUS)                                                       |");
+        System.out.println("| client checkin *client-id* *stay-duration*                  check-in client in a free apartment       |");
+        System.out.println("| client checkin *client-id* *stay-duration* *apartment-id*   check-in client in specified apartment    |");
+        System.out.println("| client checkout *client-id*                                 check-out client and display current debt |");
+        System.out.println("| client serve *client-id* *perk-id*                          serve client with specified perk          |");
+        System.out.println("| client getperks *client-id*                                 get list of all perks served to the client|");
+        System.out.println("|———————————————————————————————————————————————————————————————————————————————————————————————————————|");
+        System.out.println("| apartment add *capacity* *price*                            add new apartment                         |");
+        System.out.println("| apartment get *client-id*                                   get apartment by id                       |");
+        System.out.println("| apartment price *apartment-id*                              get price for the apartment               |");
+        System.out.println("| apartment price *apartment-id* *new-price*                  set new price for apartment               |");
+        System.out.println("| apartment list                                              get full apartment list                   |");
+        System.out.println("| apartment list *sort-type*                                  get sorted apartment list                 |");
+        System.out.println("| (apartment sort-types: ID, PRICE, CAPACITY, STATUS)                                                   |");
+        System.out.println("| apartment changestatus *apartment-id*                       change status of the apartment to opposite|");
+        System.out.println("|———————————————————————————————————————————————————————————————————————————————————————————————————————|");
+        System.out.println("| perk add *name* *price*                                     add new perk                              |");
+        System.out.println("| perk get *perk-id*                                          get perk by id                            |");
+        System.out.println("| perk price *perk-id*                                        get price for perk                        |");
+        System.out.println("| perk price *perk-id* *new-price*                            set price for perk                        |");
+        System.out.println("| perk list                                                   get full perk list                        |");
+        System.out.println("| perk list *sort-type*                                       get sorted perk list                      |");
+        System.out.println("| (perk sort-types: ID, NAME, PRICE)                                                                    |");
+        System.out.println("|_______________________________________________________________________________________________________|");
     }
 
 
     public static void unknownCommand(String command) {
         System.out.printf("Command '%s' not recognized.\s", command);
-        typeHelp();
+        printHelp();
     }
 
     public static void syntaxError() {
         System.out.print("Syntax error.\s");
-        typeHelp();
+        printHelp();
     }
 
     public static void printError(String error) {
         System.out.println(error);
     }
 
-    public static void typeHelp() {
+    public static void printHelp() {
         System.out.println("Type 'help' for instructions.");
     }
 }
