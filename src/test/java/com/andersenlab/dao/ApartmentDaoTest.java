@@ -38,13 +38,13 @@ public class ApartmentDaoTest {
     }
 
     @Test
-    public void getByIDTest() {
+    void getByIDTest() {
         Assertions.assertEquals(apartment.getId(), Objects.requireNonNull(apartmentDao.getById(apartment.getId()).orElse(null)).getId());
         Assertions.assertTrue(apartmentDao.getById(Long.MAX_VALUE).isEmpty());
     }
 
     @Test
-    public void saveTest() {
+    void saveTest() {
         apartment = new Apartment();
         apartment.setId(IdGenerator.generateApartmentId());
         apartment.setCapacity(1);
@@ -56,13 +56,13 @@ public class ApartmentDaoTest {
     }
 
     @Test
-    public void getAll() {
+    void getAll() {
         Assertions.assertNotNull(apartmentDao.getAll());
         Assertions.assertEquals(2, apartmentDao.getAll().size());
     }
 
     @Test
-    public void updateTest() {
+    void updateTest() {
         apartment = new Apartment();
         apartment.setId(0);
         apartment.setCapacity(5);
@@ -87,7 +87,7 @@ public class ApartmentDaoTest {
     }
 
     @Test
-    public void removeTest() {
+    void removeTest() {
         Assertions.assertTrue(apartmentDao.remove(0));
         Assertions.assertTrue(apartmentDao.getById(0).isEmpty());
     }
