@@ -8,7 +8,6 @@ import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
 import com.andersenlab.service.PerkService;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -37,8 +36,6 @@ public class Console {
                 commandArray[0] = commandArray[0].toLowerCase();
             }
 
-            System.out.println(Arrays.toString(commandArray));
-
             for (String s : commandArray) {
                 if (negativeCheck(s)) {
                     ConsolePrinter.negativeArgumentValue();
@@ -66,8 +63,10 @@ public class Console {
                     default:
                         ConsolePrinter.unknownCommand(command);
                 }
-            } catch (IllegalArgumentException e) {
+            } catch (NumberFormatException e) {
                 ConsolePrinter.illegalArgument();
+            } catch (IllegalArgumentException e) {
+                ConsolePrinter.illegalArgumentWithMsg(e.getMessage());
             } catch (RuntimeException e) {
                 ConsolePrinter.printError(e.getMessage());
             }
@@ -111,6 +110,8 @@ public class Console {
             case 2 -> {
                 if (commandArray[1].equals("list")) {
                     ConsolePrinter.printList(clientService.getAll());
+                } else {
+                    throw new IllegalArgumentException();
                 }
             }
             case 3 -> {
@@ -124,7 +125,7 @@ public class Console {
                     case "getperks" ->
                         ConsolePrinter.printClientPerks(clientService.getAllPerks(Long.parseLong(commandArray[2])));
                     case "list" -> {
-                        List<Client> list = switch (commandArray[2]) {
+                        List<Client> list = switch (commandArray[2].toLowerCase()) {
                             case "id" -> clientService.getSorted(ClientService.ClientSortType.ID);
                             case "name" -> clientService.getSorted(ClientService.ClientSortType.NAME);
                             case "checkout" -> clientService.getSorted(ClientService.ClientSortType.CHECK_OUT_DATE);
@@ -138,28 +139,35 @@ public class Console {
             }
             case 4 -> {
                 switch (commandArray[1]) {
-                    case "add" ->
+                    case "add" -> {
+                        nullCheck(commandArray[3]);
                         ConsolePrinter.printAddedClient(clientService.save(
                                 commandArray[2],
                                 Integer.parseInt(commandArray[3])));
+                    }
                     case "serve" ->
                         ConsolePrinter.printServedPerk(clientService.addPerk(
                                 Long.parseLong(commandArray[2]),
                                 Long.parseLong(commandArray[3])));
-                    case "checkin" ->
+                    case "checkin" -> {
+                        nullCheck(commandArray[3]);
                         ConsolePrinter.printCheckIn(clientService.checkInApartment(
                                 Long.parseLong(commandArray[2]),
                                 Integer.parseInt(commandArray[3]),
                                 0));
+                    }
                     default -> throw new IllegalArgumentException();
                 }
             }
             case 5 -> {
                 if (commandArray[1].equals("checkin")) {
+                    nullCheck(commandArray[3]);
                     ConsolePrinter.printCheckIn(clientService.checkInApartment(
                             Long.parseLong(commandArray[2]),
                             Integer.parseInt(commandArray[3]),
                             Long.parseLong(commandArray[4])));
+                } else {
+                    throw new IllegalArgumentException();
                 }
             }
             default -> ConsolePrinter.syntaxError();
@@ -191,7 +199,7 @@ public class Console {
                     case "get" ->
                         ConsolePrinter.printEntity(apartmentService.getById(Long.parseLong(commandArray[2])));
                     case "list" -> {
-                        List<Apartment> list = switch (commandArray[2]) {
+                        List<Apartment> list = switch (commandArray[2].toLowerCase()) {
                             case "id" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.ID);
                             case "price" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.PRICE);
                             case "capacity" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.CAPACITY);
@@ -209,9 +217,11 @@ public class Console {
             }
             case 4 -> {
                 switch (commandArray[1]) {
-                    case "add" ->
+                    case "add" -> {
+                        nullCheck(commandArray[2]);
                         ConsolePrinter.printAddedApartment(apartmentService.save(
                                 Integer.parseInt(commandArray[2]), Double.parseDouble(commandArray[3])));
+                    }
                     case "price" ->
                         ConsolePrinter.printApartmentPriceChange(apartmentService.changePrice(
                                 Long.parseLong(commandArray[2]), Double.parseDouble(commandArray[3])));
@@ -247,7 +257,7 @@ public class Console {
                     case "price" ->
                         ConsolePrinter.printPerkPrice(perkService.getById(Long.parseLong(commandArray[2])));
                     case "list" -> {
-                        List<Perk> list = switch (commandArray[2]) {
+                        List<Perk> list = switch (commandArray[2].toLowerCase()) {
                             case "id" -> perkService.getSorted(PerkService.PerkSortType.ID);
                             case "name" -> perkService.getSorted(PerkService.PerkSortType.NAME);
                             case "price" -> perkService.getSorted(PerkService.PerkSortType.PRICE);
@@ -275,6 +285,12 @@ public class Console {
 
     private boolean negativeCheck(String element) {
         return element.matches("-\\d+");
+    }
+
+    private void nullCheck(String s) {
+        if (Double.parseDouble(s) == 0.0) {
+            throw new IllegalArgumentException("This argument cannot be null");
+        }
     }
 
     private enum CommandType {

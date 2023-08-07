@@ -73,7 +73,6 @@ public class ConsolePrinter {
         }
     }
 
-
     public static void printList(List<?> list) {
         if (list.size() == 0) {
             System.out.println("Requested list is empty! :(");
@@ -95,17 +94,22 @@ public class ConsolePrinter {
 
     public static void insufficientArguments() {
         System.out.print("Not enough arguments provided.\s");
-        typeHelp();
+        printHelp();
     }
 
     public static void negativeArgumentValue() {
         System.out.print("Argument value cannot be negative.\s");
-        typeHelp();
+        printHelp();
     }
 
     public static void illegalArgument() {
         System.out.print("Illegal argument.\s");
-        typeHelp();
+        printHelp();
+    }
+
+    public static void illegalArgumentWithMsg(String message) {
+        System.out.print(message == null ? "Illegal argument.\s" : message + ".\s");
+        printHelp();
     }
 
     public static void commands() {
@@ -147,19 +151,19 @@ public class ConsolePrinter {
 
     public static void unknownCommand(String command) {
         System.out.printf("Command '%s' not recognized.\s", command);
-        typeHelp();
+        printHelp();
     }
 
     public static void syntaxError() {
         System.out.print("Syntax error.\s");
-        typeHelp();
+        printHelp();
     }
 
     public static void printError(String error) {
         System.out.println(error);
     }
 
-    public static void typeHelp() {
+    public static void printHelp() {
         System.out.println("Type 'help' for instructions.");
     }
 }
