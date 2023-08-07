@@ -122,8 +122,8 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Perk addPerk(long clientId, long perkId) {
         Client client = getById(clientId);
-        if (ClientStatus.CHECKED_OUT == client.getStatus()) {
-            throw new RuntimeException("This client is already checked out, you cannot add him/her new perks");
+        if (ClientStatus.CHECKED_OUT == client.getStatus() || ClientStatus.NEW == client.getStatus()) {
+            throw new RuntimeException("This client is not checked in, you cannot add him/her new perks");
         }
         Perk perk = perkDao.getById(perkId)
                 .orElseThrow(() -> new RuntimeException("Perk with this id doesn't exist. Id: " + perkId));
