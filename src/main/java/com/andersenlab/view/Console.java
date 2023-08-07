@@ -8,6 +8,7 @@ import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
 import com.andersenlab.service.PerkService;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -26,13 +27,17 @@ public class Console {
 
         loop:
         while (true) {
-            String command = scanner.nextLine().toLowerCase().trim();
+            String command = scanner.nextLine().trim();
             String[] commandArray = command.split("\s+");
 
             if (commandArray.length < 1) {
                 ConsolePrinter.insufficientArguments();
                 continue;
+            } else {
+                commandArray[0] = commandArray[0].toLowerCase();
             }
+
+            System.out.println(Arrays.toString(commandArray));
 
             for (String s : commandArray) {
                 if (negativeCheck(s)) {
@@ -50,13 +55,13 @@ public class Console {
                         ConsolePrinter.commands();
                         continue;
                     case "client":
-                        clientCommand(commandArray);
+                        executeCommand(commandArray, CommandType.CLIENT);
                         continue;
                     case "apartment":
-                        apartmentCommand(commandArray);
+                        executeCommand(commandArray, CommandType.APARTMENT);
                         continue;
                     case "perk":
-                        perkCommand(commandArray);
+                        executeCommand(commandArray, CommandType.PERK);
                         continue;
                     default:
                         ConsolePrinter.unknownCommand(command);
@@ -66,6 +71,21 @@ public class Console {
             } catch (RuntimeException e) {
                 ConsolePrinter.printError(e.getMessage());
             }
+        }
+    }
+
+    private void executeCommand(String[] commandArray, CommandType type) {
+        if (commandArray.length < 2) {
+            ConsolePrinter.insufficientArguments();
+            return;
+        } else {
+            commandArray[1] = commandArray[1].toLowerCase();
+        }
+
+        switch (type) {
+            case CLIENT -> clientCommand(commandArray);
+            case APARTMENT -> apartmentCommand(commandArray);
+            case PERK -> perkCommand(commandArray);
         }
     }
 
@@ -87,11 +107,6 @@ public class Console {
     */
 
     private void clientCommand(String[] commandArray) {
-        if (commandArray.length < 2) {
-            ConsolePrinter.insufficientArguments();
-            return;
-        }
-
         switch (commandArray.length) {
             case 2 -> {
                 if (commandArray[1].equals("list")) {
@@ -165,11 +180,6 @@ public class Console {
      */
 
     private void apartmentCommand(String[] commandArray) {
-        if (commandArray.length < 2) {
-            ConsolePrinter.insufficientArguments();
-            return;
-        }
-
         switch (commandArray.length) {
             case 2 -> {
                 if (commandArray[1].equals("list")) {
@@ -224,11 +234,6 @@ public class Console {
      */
 
     private void perkCommand(String[] commandArray) {
-        if (commandArray.length < 2) {
-            ConsolePrinter.insufficientArguments();
-            return;
-        }
-
         switch (commandArray.length) {
             case 2 -> {
                 if (commandArray[1].equals("list")) {
@@ -270,5 +275,9 @@ public class Console {
 
     private boolean negativeCheck(String element) {
         return element.matches("-\\d+");
+    }
+
+    private enum CommandType {
+        CLIENT, APARTMENT, PERK
     }
 }
