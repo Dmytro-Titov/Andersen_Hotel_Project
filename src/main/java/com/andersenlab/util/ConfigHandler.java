@@ -7,26 +7,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 public class ConfigHandler {
-
-    public static ConfigData createConfig(String[] args) {
-        String path = "runtime/resources/config-dev.yaml";
-        ConfigData config;
-        if (args.length == 1) {
-            path = args[0];
-        }
-
-        System.out.println("Usage: " + path);
+    private static final String DEFAULT_PATH = "runtime/resources/config-dev.yaml";
 
 
-        Yaml yaml = new Yaml();
-        try (InputStream in = Files.newInputStream(Path.of(path))) {
-            config = yaml.loadAs(in, ConfigData.class);
-            System.out.println(config.toString());
+    public static ConfigData createConfig(String path) {
+        String pathh = Optional
+                .ofNullable(path)
+                .filter(Predicate.not(String::isEmpty))
+                .orElse(DEFAULT_PATH);
+
+        try (InputStream in = Files.newInputStream(Path.of(pathh))) {
+            return new Yaml().loadAs(in, ConfigData.class);
         } catch (IOException e) {
-            throw new RuntimeException("yaml problems", e);
+            throw new RuntimeException("Yaml problems", e);
         }
-        return config;
     }
 }

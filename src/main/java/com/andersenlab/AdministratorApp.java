@@ -6,10 +6,9 @@ import com.andersenlab.view.Console;
 
 public class AdministratorApp {
     public static void main(String[] args) {
-        var config = ConfigHandler.createConfig(args);
+        String configPath = args.length >= 1 ? args[0] : null;
+        var config = ConfigHandler.createConfig(configPath) ;
         Config.INSTANCE.setConfigData(config);
-
-        System.out.println(Config.INSTANCE.getConfigData().getDatabase().getPath());
 
 
         new Console().start();

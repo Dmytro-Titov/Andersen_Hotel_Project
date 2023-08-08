@@ -16,24 +16,22 @@ public class ConfigData {
     }
 
     public static class DatabaseConfig {
-        private DatabaseConfig.CustomPath path;
+        private String path;
 
         public DatabaseConfig() {
         }
 
-        public DatabaseConfig(DatabaseConfig.CustomPath path) {
+        public DatabaseConfig(String path) {
             this.path = path;
         }
 
-        public CustomPath getPath() {
+        public String getPath() {
             return path;
         }
 
-        public void setPath(CustomPath path) {
+        public void setPath(String path) {
             this.path = path;
         }
-
-        public record CustomPath(String path) {
-        }
+        
     }
 }
