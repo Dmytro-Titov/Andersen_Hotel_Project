@@ -1,8 +1,6 @@
 package com.andersenlab.service;
 
-import com.andersenlab.dao.ApartmentDao;
-import com.andersenlab.dao.impl.ApartmentDaoImpl;
-import com.andersenlab.service.impl.ApartmentServiceImpl;
+import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +15,8 @@ public class ApartmentServiceTest {
     @BeforeEach
     private void setup() {
         IdGenerator.cancelGenerateId();
-        ApartmentDao apartmentDao = new ApartmentDaoImpl();
-        apartmentService =new ApartmentServiceImpl(apartmentDao);
+        HotelFactory hotelFactory = new HotelFactory();
+        apartmentService = hotelFactory.getApartmentService();
         apartmentService.save(1, 200.0);
         apartmentService.save(2, 350.0);
         apartmentService.save(4, 500.0);

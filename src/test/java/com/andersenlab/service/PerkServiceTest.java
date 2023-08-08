@@ -1,8 +1,6 @@
 package com.andersenlab.service;
 
-import com.andersenlab.dao.PerkDao;
-import com.andersenlab.dao.impl.PerkDaoImpl;
-import com.andersenlab.service.impl.PerkServiceImpl;
+import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +15,8 @@ public class PerkServiceTest {
     @BeforeEach
     void setup() {
         IdGenerator.cancelGenerateId();
-        PerkDao perkDao = new PerkDaoImpl();
-        perkService = new PerkServiceImpl(perkDao);
+        HotelFactory hotelFactory = new HotelFactory();
+        perkService = hotelFactory.getPerkService();
         perkService.save("ironing", 150);
         perkService.save("laundry", 100);
         perkService.save("massage", 300);

@@ -3,6 +3,7 @@ package com.andersenlab.service.impl;
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
+import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
 import com.andersenlab.util.IdGenerator;
 
@@ -14,7 +15,7 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     private final ApartmentDao apartmentDao;
 
-    public ApartmentServiceImpl(ApartmentDao apartmentDao) {
+    public ApartmentServiceImpl(ApartmentDao apartmentDao, HotelFactory hotelFactory) {
         this.apartmentDao = apartmentDao;
     }
 
@@ -37,18 +38,21 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
+    public Apartment update(Apartment apartment) {
+        return apartmentDao.update(apartment)
+                .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + apartment.getId()));
+    }
+
+    @Override
     public Apartment changePrice(long id, double price) {
-        return apartmentDao.update(new Apartment(id, price))
-                .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + id));
+        return update(new Apartment(id, price));
     }
 
     @Override
     public Apartment changeStatus(long id) {
-        Apartment apartment = getById(id);
-        ApartmentStatus newStatus = apartment.getStatus() == ApartmentStatus.AVAILABLE ?
+        ApartmentStatus newStatus = getById(id).getStatus() == ApartmentStatus.AVAILABLE ?
                 ApartmentStatus.UNAVAILABLE : ApartmentStatus.AVAILABLE;
-        return apartmentDao.update(new Apartment(id, newStatus))
-                .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + id));
+        return update(new Apartment(id, newStatus));
     }
 
     @Override
@@ -62,19 +66,19 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     private List<Apartment> sortByPrice() {
-        List<Apartment> sortedByPrice = new ArrayList<>(apartmentDao.getAll());
+        List<Apartment> sortedByPrice = new ArrayList<>(getAll());
         sortedByPrice.sort(Comparator.comparing(Apartment::getPrice));
         return sortedByPrice;
     }
 
     private List<Apartment> sortByCapacity() {
-        List<Apartment> sortedByCapacity = new ArrayList<>(apartmentDao.getAll());
+        List<Apartment> sortedByCapacity = new ArrayList<>(getAll());
         sortedByCapacity.sort(Comparator.comparing(Apartment::getCapacity));
         return sortedByCapacity;
     }
 
     private List<Apartment> sortByStatus() {
-        List<Apartment> sortedByStatus = new ArrayList<>(apartmentDao.getAll());
+        List<Apartment> sortedByStatus = new ArrayList<>(getAll());
         sortedByStatus.sort(Comparator.comparing(Apartment::getStatus));
         return sortedByStatus;
     }

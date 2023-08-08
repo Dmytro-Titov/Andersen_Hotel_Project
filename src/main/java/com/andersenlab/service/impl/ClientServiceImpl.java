@@ -1,10 +1,11 @@
 package com.andersenlab.service.impl;
 
-import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.dao.ClientDao;
-import com.andersenlab.dao.PerkDao;
 import com.andersenlab.entity.*;
+import com.andersenlab.factory.HotelFactory;
+import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
+import com.andersenlab.service.PerkService;
 import com.andersenlab.util.IdGenerator;
 
 import java.time.LocalDateTime;
@@ -17,13 +18,13 @@ import java.util.stream.Collectors;
 public class ClientServiceImpl implements ClientService {
 
     private final ClientDao clientDao;
-    private final PerkDao perkDao;
-    private final ApartmentDao apartmentDao;
+    private final ApartmentService apartmentService;
+    private final PerkService perkService;
 
-    public ClientServiceImpl(ClientDao clientDao, PerkDao perkDao, ApartmentDao apartmentDao) {
+    public ClientServiceImpl(ClientDao clientDao, HotelFactory hotelFactory) {
         this.clientDao = clientDao;
-        this.perkDao = perkDao;
-        this.apartmentDao = apartmentDao;
+        apartmentService = hotelFactory.getApartmentService();
+        perkService = hotelFactory.getPerkService();
     }
 
     @Override
@@ -39,8 +40,13 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client save(String name, int quantityOfPeople) {
-        Client client = new Client(IdGenerator.generateClientId(), name, quantityOfPeople);
-        return clientDao.save(client);
+        return clientDao.save(new Client(IdGenerator.generateClientId(), name, quantityOfPeople));
+    }
+
+    @Override
+    public Client update(Client client) {
+        return clientDao.update(client)
+                .orElseThrow(() -> new RuntimeException("Client with this id doesn't exist. Id: " + client.getId()));
     }
 
     @Override
@@ -54,8 +60,7 @@ public class ClientServiceImpl implements ClientService {
             return checkInAnyFreeApartment(clientId, stayDuration);
         }
         Client client = getById(clientId);
-        Apartment apartment = apartmentDao.getById(apartmentId)
-                .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + apartmentId));
+        Apartment apartment = apartmentService.getById(apartmentId);
         if (ClientStatus.CHECKED_IN == client.getStatus()) {
             throw new RuntimeException("This client is already checked in. Apartment id: "
                     + client.getApartment().getId());
@@ -71,7 +76,7 @@ public class ClientServiceImpl implements ClientService {
 
     public Client checkInAnyFreeApartment(long clientId, int stayDuration) {
         Client client = getById(clientId);
-        List<Apartment> apartments = apartmentDao.getAll();
+        List<Apartment> apartments = apartmentService.getAll();
         if (ClientStatus.CHECKED_IN == client.getStatus()) {
             throw new RuntimeException("This client is already checked in. Apartment id: "
                     + client.getApartment().getId());
@@ -96,8 +101,8 @@ public class ClientServiceImpl implements ClientService {
         client.setCheckInDate(LocalDateTime.now());
         apartment.setStatus(ApartmentStatus.UNAVAILABLE);
         client.setStayCost(client.getStayCost() + (apartment.getPrice() * stayDuration));
-        clientDao.update(client);
-        apartmentDao.update(apartment);
+        update(client);
+        apartmentService.update(apartment);
     }
 
     @Override
@@ -111,8 +116,8 @@ public class ClientServiceImpl implements ClientService {
             client.setPerks(new ArrayList<>());
             client.setStayCost(0.0);
             apartment.setStatus(ApartmentStatus.AVAILABLE);
-            clientDao.update(client);
-            apartmentDao.update(apartment);
+            update(client);
+            apartmentService.update(apartment);
             return stayCost;
         } else {
             throw new RuntimeException("This client isn't checked in in any apartment yet! Id: " + client.getId());
@@ -125,13 +130,12 @@ public class ClientServiceImpl implements ClientService {
         if (ClientStatus.CHECKED_OUT == client.getStatus() || ClientStatus.NEW == client.getStatus()) {
             throw new RuntimeException("This client is not checked in, you cannot add him/her new perks");
         }
-        Perk perk = perkDao.getById(perkId)
-                .orElseThrow(() -> new RuntimeException("Perk with this id doesn't exist. Id: " + perkId));
+        Perk perk = perkService.getById(perkId);
         List<Perk> clientPerks = client.getPerks();
         clientPerks.add(perk);
         client.setPerks(clientPerks);
         client.setStayCost(client.getStayCost() + perk.getPrice());
-        clientDao.update(client);
+        update(client);
         return perk;
     }
 
@@ -151,13 +155,13 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private List<Client> sortByName() {
-        List<Client> sortedByName = new ArrayList<>(clientDao.getAll());
+        List<Client> sortedByName = new ArrayList<>(getAll());
         sortedByName.sort(Comparator.comparing(Client::getName));
         return sortedByName;
     }
 
     private List<Client> sortByCheckOutDate() {
-        List<Client> sortedByCheckOutDate = new ArrayList<>(clientDao.getAll());
+        List<Client> sortedByCheckOutDate = new ArrayList<>(getAll());
         return sortedByCheckOutDate.stream()
                 .filter(client -> client.getStatus() != ClientStatus.NEW)
                 .sorted(Comparator.comparing(Client::getCheckOutDate))
@@ -165,7 +169,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private List<Client> sortByStatus() {
-        List<Client> sortedByStatus = new ArrayList<>(clientDao.getAll());
+        List<Client> sortedByStatus = new ArrayList<>(getAll());
         sortedByStatus.sort(Comparator.comparing(Client::getStatus));
         return sortedByStatus;
     }
