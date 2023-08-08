@@ -6,6 +6,7 @@ import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
 import com.andersenlab.service.PerkService;
+import com.andersenlab.util.EntityValidityCheck;
 import com.andersenlab.util.IdGenerator;
 
 import java.time.LocalDateTime;
@@ -39,6 +40,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client save(String name, int quantityOfPeople) {
+        EntityValidityCheck.clientQuantityOfPeopleCheck(quantityOfPeople);
         return clientDao.save(new Client(IdGenerator.generateClientId(), name, quantityOfPeople));
     }
 
@@ -55,6 +57,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client checkInApartment(long clientId, int stayDuration, long apartmentId) {
+        EntityValidityCheck.clientStayDurationCheck(stayDuration);
         if (apartmentId == 0) {
             return checkInAnyFreeApartment(clientId, stayDuration);
         }
@@ -74,6 +77,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     public Client checkInAnyFreeApartment(long clientId, int stayDuration) {
+        EntityValidityCheck.clientStayDurationCheck(stayDuration);
         Client client = getById(clientId);
         if (ClientStatus.CHECKED_IN == client.getStatus()) {
             throw new RuntimeException("This client is already checked in. Apartment id: "

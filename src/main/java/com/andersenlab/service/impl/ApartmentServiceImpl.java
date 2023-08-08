@@ -5,6 +5,7 @@ import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
+import com.andersenlab.util.EntityValidityCheck;
 import com.andersenlab.util.IdGenerator;
 
 import java.util.Comparator;
@@ -31,6 +32,8 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public Apartment save(int capacity, double price) {
+        EntityValidityCheck.apartmentCapacityCheck(capacity);
+        EntityValidityCheck.apartmentPriceCheck(price);
         Apartment apartment = new Apartment(IdGenerator.generateApartmentId(),
                 capacity, price, ApartmentStatus.AVAILABLE);
         return apartmentDao.save(apartment);
@@ -44,6 +47,7 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public Apartment changePrice(long id, double price) {
+        EntityValidityCheck.apartmentPriceCheck(price);
         return update(new Apartment(id, price));
     }
 

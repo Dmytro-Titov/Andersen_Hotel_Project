@@ -41,12 +41,14 @@ public class Console {
                 commandArray[0] = commandArray[0].toLowerCase();
             }
 
+/*
             for (String s : commandArray) {
                 if (negativeCheck(s)) {
-                    ConsolePrinter.negativeArgumentValue();
+                    ConsolePrinter.negativeArgumentValue(); //
                     continue loop;
                 }
             }
+*/
 
             try {
                 switch (commandArray[0]) {
@@ -145,7 +147,7 @@ public class Console {
             case 4 -> {
                 switch (commandArray[1]) {
                     case "add" -> {
-                        nullCheck(commandArray[3]);
+                        /* nullCheck(commandArray[3]); */
                         ConsolePrinter.printAddedClient(clientService.save(
                                 commandArray[2],
                                 Integer.parseInt(commandArray[3])));
@@ -155,7 +157,7 @@ public class Console {
                                 Long.parseLong(commandArray[2]),
                                 Long.parseLong(commandArray[3])));
                     case "checkin" -> {
-                        nullCheck(commandArray[3]);
+                        /* nullCheck(commandArray[3]); */
                         ConsolePrinter.printCheckIn(clientService.checkInApartment(
                                 Long.parseLong(commandArray[2]),
                                 Integer.parseInt(commandArray[3]),
@@ -166,7 +168,7 @@ public class Console {
             }
             case 5 -> {
                 if (commandArray[1].equals("checkin")) {
-                    nullCheck(commandArray[3]);
+                    /* nullCheck(commandArray[3]); */
                     ConsolePrinter.printCheckIn(clientService.checkInApartment(
                             Long.parseLong(commandArray[2]),
                             Integer.parseInt(commandArray[3]),
@@ -223,7 +225,7 @@ public class Console {
             case 4 -> {
                 switch (commandArray[1]) {
                     case "add" -> {
-                        nullCheck(commandArray[2]);
+                        /* nullCheck(commandArray[2]); */
                         ConsolePrinter.printAddedApartment(apartmentService.save(
                                 Integer.parseInt(commandArray[2]), Double.parseDouble(commandArray[3])));
                     }
@@ -288,6 +290,7 @@ public class Console {
         }
     }
 
+/*
     private boolean negativeCheck(String element) {
         return element.matches("-\\d+");
     }
@@ -297,6 +300,7 @@ public class Console {
             throw new IllegalArgumentException("This argument cannot be null");
         }
     }
+*/
 
     private enum CommandType {
         CLIENT, APARTMENT, PERK

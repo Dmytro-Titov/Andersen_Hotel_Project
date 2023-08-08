@@ -4,6 +4,7 @@ import com.andersenlab.dao.PerkDao;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.PerkService;
+import com.andersenlab.util.EntityValidityCheck;
 import com.andersenlab.util.IdGenerator;
 
 import java.util.Comparator;
@@ -24,6 +25,7 @@ public class PerkServiceImpl implements PerkService {
 
     @Override
     public Perk save(String name, double price) {
+        EntityValidityCheck.perkPriceCheck(price);
         return perkDao.save(new Perk(IdGenerator.generatePerkId(), name, price));
     }
 
@@ -35,6 +37,7 @@ public class PerkServiceImpl implements PerkService {
 
     @Override
     public Perk changePrice(long id, double price) {
+        EntityValidityCheck.perkPriceCheck(price);
         return update(new Perk(id, price));
     }
 
