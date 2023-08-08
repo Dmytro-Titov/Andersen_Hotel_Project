@@ -17,4 +17,9 @@ public class IdGenerator {
         return ++PERK_COUNTER;
     }
 
+    public static void cancelGenerateId(){
+        CLIENT_COUNTER = 0;
+        APARTMENT_COUNTER = 0;
+        PERK_COUNTER = 0;
+    }
 }

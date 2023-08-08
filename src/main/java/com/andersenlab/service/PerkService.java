@@ -1,32 +1,21 @@
 package com.andersenlab.service;
 
-import com.andersenlab.dao.ApartmentDao;
-import com.andersenlab.dao.ClientDao;
-import com.andersenlab.dao.PerkDao;
 import com.andersenlab.entity.Perk;
-import com.andersenlab.util.IdGenerator;
-;
 
-public class PerkService {
+import java.util.*;
 
-    private final ClientDao clientDao = ClientDao.getInstance();
-    private final ApartmentDao apartmentDao = ApartmentDao.getInstance();
+public interface PerkService {
+    Perk getById(long id);
 
-    private final PerkDao perkDao = PerkDao.getInstance();
+    Perk save(String name, double price);
 
-    public Long createAndAddNewPerk(String name, double price) {
-        return perkDao.addPerk(new Perk(IdGenerator.generatePerkId(), name, price));
-    }
+    Perk changePrice(long id, double price);
 
-    public Perk getPerk(Long id) {
-        return perkDao.getPerkById(id);
-    }
+    List<Perk> getAll();
 
-    public void changePriceOfPerk(Long id, double newPrice) {
-        Perk perk = getPerk(id);
-        if(perk != null) {
-            perk.setPrice(newPrice);
-            System.out.println("The price was successfully changed!");
-        }
+    List<Perk> getSorted(PerkSortType type);
+
+    enum PerkSortType {
+        ID, NAME, PRICE
     }
 }

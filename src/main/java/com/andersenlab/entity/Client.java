@@ -1,32 +1,36 @@
 package com.andersenlab.entity;
 
-
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class Client {
-    private final Long id;
+    private long id;
     private String name;
-
     private LocalDateTime checkOutDate;
-    private boolean isLives;
-
+    private LocalDateTime checkInDate;
+    private ClientStatus status;
     private Apartment apartment;
-    private Set<Perk> perks;
+    private List<Perk> perks;
+    private double stayCost;
+    private int quantityOfPeople;
 
-    private double currentPriceToPay;
-
-    public Client(Long id, String name) {
+    public Client(long id, String name, int quantityOfPeople) {
         this.id = id;
         this.name = name;
-        isLives = false;
-        perks = new HashSet<>();
+        this.quantityOfPeople = quantityOfPeople;
+        status = ClientStatus.NEW;
+        perks = new ArrayList<>();
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -45,12 +49,20 @@ public class Client {
         this.checkOutDate = checkOutDate;
     }
 
-    public boolean isLives() {
-        return isLives;
+    public LocalDateTime getCheckInDate() {
+        return checkInDate;
     }
 
-    public void setLives(boolean lives) {
-        isLives = lives;
+    public void setCheckInDate(LocalDateTime checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    public ClientStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ClientStatus status) {
+        this.status = status;
     }
 
     public Apartment getApartment() {
@@ -61,20 +73,28 @@ public class Client {
         this.apartment = apartment;
     }
 
-    public Set<Perk> getPerks() {
+    public List<Perk> getPerks() {
         return perks;
     }
 
-    public void addPerk(Perk perk) {
-        perks.add(perk);
+    public void setPerks(List<Perk> perks) {
+        this.perks = perks;
     }
 
-    public double getCurrentPriceToPay() {
-        return currentPriceToPay;
+    public double getStayCost() {
+        return stayCost;
     }
 
-    public void setCurrentPriceToPay(double currentPriceToPay) {
-        this.currentPriceToPay = currentPriceToPay;
+    public void setStayCost(double stayCost) {
+        this.stayCost = stayCost;
+    }
+
+    public int getQuantityOfPeople() {
+        return quantityOfPeople;
+    }
+
+    public void setQuantityOfPeople(int quantityOfPeople) {
+        this.quantityOfPeople = quantityOfPeople;
     }
 
     @Override
@@ -82,24 +102,52 @@ public class Client {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Client client = (Client) o;
-        return id == client.id;
+        return id == client.id && Double.compare(client.stayCost, stayCost) == 0
+                && quantityOfPeople == client.quantityOfPeople && Objects.equals(name, client.name)
+                && Objects.equals(checkOutDate, client.checkOutDate)
+                && Objects.equals(checkInDate, client.checkInDate)
+                && status == client.status && Objects.equals(apartment, client.apartment)
+                && Objects.equals(perks, client.perks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, name, checkOutDate, checkInDate, status, apartment, perks, stayCost, quantityOfPeople);
     }
 
     @Override
     public String toString() {
-        return "Client{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", checkOutDate=" + checkOutDate +
-                ", isLives=" + isLives +
-                ", apartment=" + apartment +
-                ", perks=" + perks +
-                ", currentPriceToPay=" + currentPriceToPay +
-                '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("id: ").append(id)
+                .append(", name: ").append(name)
+                .append(", quantity of people: ").append(quantityOfPeople)
+                .append(", status: ").append(status);
+        if (apartment != null) {
+            builder.append(", apartment id: ")
+                    .append(apartment.getId());
+        }
+        if (checkInDate != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+            builder.append(", checking date: ")
+                    .append(checkInDate.format(formatter));
+        }
+        if (checkOutDate != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+            builder.append(", checkout date: ")
+                    .append(checkOutDate.format(formatter));
+        }
+        if (!perks.isEmpty()) {
+            builder.append(", extra services: [");
+            for (int i = 0; i < perks.size(); i++) {
+                builder.append(perks.get(i).getName());
+                if (i != perks.size() - 1) {
+                    builder.append(", ");
+                } else {
+                    builder.append("]");
+                }
+            }
+        }
+        builder.append(", current stay cost: ").append(stayCost);
+        return builder.toString();
     }
 }

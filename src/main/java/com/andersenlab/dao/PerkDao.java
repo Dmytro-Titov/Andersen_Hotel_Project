@@ -1,60 +1,17 @@
 package com.andersenlab.dao;
 
-
 import com.andersenlab.entity.Perk;
+
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class PerkDao {
-    private static PerkDao instance;
-    private Set<Perk> perkSet = new HashSet<>();
+public interface PerkDao {
+    Optional<Perk> getById(long id);
 
-    private PerkDao() {
-    }
+    List<Perk> getAll();
 
-    public static PerkDao getInstance() {
-        if (instance == null) {
-            instance = new PerkDao();
-        }
-        return instance;
-    }
+    Perk save(Perk perk);
 
-    public Long addPerk(Perk newPerk) {
-        perkSet.add(newPerk);
-        return newPerk.getId();
-    }
+    Optional<Perk> update(Perk perk);
 
-    public Perk getPerkById(Long id) {
-        return perkSet.stream()
-                .filter(perk -> perk.getId().equals(id))
-                .findFirst().orElse(null);
-
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    }
-
-    public Collection<Perk> getAllPerks() {
-        return perkSet.stream().toList();
-    }
-
-    public boolean removePerk(Perk perk) {
-        return perkSet.remove(perk);
-    }
-
-    public boolean isPerkPresent(Perk perk) {
-        return perkSet.contains(perk);
-    }
-
-    public List<Perk> sortByName() {
-        return perkSet.stream()
-                .sorted(Comparator.comparing(Perk::getName))
-                .collect(Collectors.toList());
-    }
-
-    public List<Perk> sortByPrice() {
-        return perkSet.stream()
-                .sorted(Comparator.comparing(Perk::getPrice))
-                .collect(Collectors.toList());
-    }
-
-
+    boolean remove(long id);
 }

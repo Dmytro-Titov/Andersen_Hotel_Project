@@ -1,55 +1,24 @@
 package com.andersenlab.service;
 
-import com.andersenlab.dao.ApartmentDao;
-import com.andersenlab.dao.ClientDao;
-import com.andersenlab.dao.PerkDao;
 import com.andersenlab.entity.Apartment;
-import com.andersenlab.util.IdGenerator;
 
 import java.util.List;
 
-public class ApartmentService {
+public interface ApartmentService {
 
-    private final ClientDao clientDao = ClientDao.getInstance();
-    private final ApartmentDao apartmentDao = ApartmentDao.getInstance();
+    Apartment getById(long id);
 
-    private final PerkDao perkDao = PerkDao.getInstance();
+    List<Apartment> getAll();
 
-    public Long createAndAddNewApartment(double price, int capacity) {
-        return apartmentDao.addApartment(new Apartment(IdGenerator.generateApartmentId(), price, capacity));
+    Apartment save(int capacity, double price);
+
+    Apartment changePrice(long id, double price);
+
+    Apartment changeStatus(long id);
+
+    List<Apartment> getSorted(ApartmentSortType type);
+
+    enum ApartmentSortType {
+        ID, PRICE, CAPACITY, STATUS
     }
-
-    public Apartment getApartment(Long id) {
-        return apartmentDao.getApartmentById(id);
-    }
-
-    public List<Apartment> showAllApartments(int order) {
-        switch (order) {
-            case 2:
-                return apartmentDao.sortByCapacity();
-            case 3:
-                return apartmentDao.sortByAvailability();
-            default:
-                return apartmentDao.sortByPrice();
-        }
-    }
-
-    public void changePriceOfApartment(Long id, double newPrice) {
-        Apartment apartment = getApartment(id);
-        if(apartment != null) {
-            apartment.setPrice(newPrice);
-            System.out.println("The price was successfully changed!");
-        }
-    }
-
-    public void reverseStatus(Long id) {
-        Apartment apartment = getApartment(id);
-        if(apartment != null) {
-            apartment.setAvailability(!apartment.isAvailable());
-            System.out.println("Status was successfully changed!");
-        }
-    }
-
-
-
 }

@@ -3,28 +3,37 @@ package com.andersenlab.entity;
 import java.util.Objects;
 
 public class Apartment {
-    private final Long id;
-    private double price;
+    private long id;
     private int capacity;
-    private boolean availability;
+    private double price;
+    private ApartmentStatus status;
 
-    public Apartment(Long id, double price, int capacity) {
-        this.id = id;
-        this.price = price;
-        this.capacity = capacity;
-        this.availability = true;
+    public Apartment() {
     }
 
-    public Long getId() {
+    public Apartment(long id, double price) {
+        this.id = id;
+        this.price = price;
+    }
+
+    public Apartment(long id, ApartmentStatus status) {
+        this.id = id;
+        this.status = status;
+    }
+
+    public Apartment(long id, int capacity, double price, ApartmentStatus status) {
+        this.id = id;
+        this.capacity = capacity;
+        this.price = price;
+        this.status = status;
+    }
+
+    public long getId() {
         return id;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getCapacity() {
@@ -35,12 +44,20 @@ public class Apartment {
         this.capacity = capacity;
     }
 
-    public boolean isAvailable() {
-        return availability;
+    public double getPrice() {
+        return price;
     }
 
-    public void setAvailability(boolean availability) {
-        this.availability = availability;
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public ApartmentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ApartmentStatus status) {
+        this.status = status;
     }
 
     @Override
@@ -48,13 +65,23 @@ public class Apartment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Apartment apartment = (Apartment) o;
-        return Objects.equals(id, apartment.id);
+        return id == apartment.id && capacity == apartment.capacity
+                && Double.compare(apartment.price, price) == 0
+                && status == apartment.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, capacity, price, status);
     }
 
-
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("id: ").append(id)
+                .append(", apartment for ").append(capacity)
+                .append(" person(s), price: ").append(price)
+                .append(", current status: ").append(status);
+        return builder.toString();
+    }
 }
