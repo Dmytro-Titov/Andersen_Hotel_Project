@@ -7,7 +7,6 @@ import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
 import com.andersenlab.util.IdGenerator;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -66,20 +65,20 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     private List<Apartment> sortByPrice() {
-        List<Apartment> sortedByPrice = new ArrayList<>(getAll());
-        sortedByPrice.sort(Comparator.comparing(Apartment::getPrice));
-        return sortedByPrice;
+        return getAll().stream()
+                .sorted(Comparator.comparing(Apartment::getPrice))
+                .toList();
     }
 
     private List<Apartment> sortByCapacity() {
-        List<Apartment> sortedByCapacity = new ArrayList<>(getAll());
-        sortedByCapacity.sort(Comparator.comparing(Apartment::getCapacity));
-        return sortedByCapacity;
+        return getAll().stream()
+                .sorted(Comparator.comparing(Apartment::getCapacity))
+                .toList();
     }
 
     private List<Apartment> sortByStatus() {
-        List<Apartment> sortedByStatus = new ArrayList<>(getAll());
-        sortedByStatus.sort(Comparator.comparing(Apartment::getStatus));
-        return sortedByStatus;
+        return getAll().stream()
+                .sorted(Comparator.comparing(Apartment::getStatus))
+                .toList();
     }
 }
