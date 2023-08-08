@@ -22,6 +22,19 @@ public class Console {
         clientService = hotelFactory.getClientService();
         apartmentService = hotelFactory.getApartmentService();
         perkService = hotelFactory.getPerkService();
+
+        clientService.save("Denis", 1);
+        clientService.save("Dima", 2);
+        clientService.save("Nick", 1);
+        apartmentService.save(1, 100);
+        apartmentService.save(2, 150);
+        apartmentService.save(1, 100);
+        perkService.save("minibar", 33.5);
+        perkService.save("ironing", 15);
+        perkService.save("breakfast_in_apartment", 20);
+
+
+
     }
 
     public void start() {
