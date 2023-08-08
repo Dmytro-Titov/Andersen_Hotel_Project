@@ -9,6 +9,8 @@ public interface PerkService {
 
     Perk save(String name, double price);
 
+    Perk update(Perk perk);
+
     Perk changePrice(long id, double price);
 
     List<Perk> getAll();

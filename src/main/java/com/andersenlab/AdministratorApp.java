@@ -2,6 +2,7 @@ package com.andersenlab;
 
 import com.andersenlab.config.Config;
 import com.andersenlab.util.ConfigHandler;
+import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.view.Console;
 
 public class AdministratorApp {
@@ -11,6 +12,6 @@ public class AdministratorApp {
         Config.INSTANCE.setConfigData(config);
 
 
-        new Console().start();
+        new Console(new HotelFactory()).start();
     }
 }

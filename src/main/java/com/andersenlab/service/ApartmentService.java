@@ -12,6 +12,8 @@ public interface ApartmentService {
 
     Apartment save(int capacity, double price);
 
+    Apartment update(Apartment apartment);
+
     Apartment changePrice(long id, double price);
 
     Apartment changeStatus(long id);
