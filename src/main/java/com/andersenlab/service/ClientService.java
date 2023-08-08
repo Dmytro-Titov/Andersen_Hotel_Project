@@ -6,11 +6,14 @@ import com.andersenlab.entity.Perk;
 import java.util.List;
 
 public interface ClientService {
+
     Client getById(long id);
 
     List<Client> getAll();
 
     Client save(String name, int quantityOfPeople);
+
+    Client update(Client client);
 
     double getStayCost(long id);
 

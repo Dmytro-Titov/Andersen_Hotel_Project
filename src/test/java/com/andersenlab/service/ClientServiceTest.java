@@ -1,15 +1,7 @@
 package com.andersenlab.service;
 
-import com.andersenlab.dao.ApartmentDao;
-import com.andersenlab.dao.ClientDao;
-import com.andersenlab.dao.PerkDao;
-import com.andersenlab.dao.impl.ApartmentDaoImpl;
-import com.andersenlab.dao.impl.ClientDaoImpl;
-import com.andersenlab.dao.impl.PerkDaoImpl;
 import com.andersenlab.entity.ClientStatus;
-import com.andersenlab.service.impl.ApartmentServiceImpl;
-import com.andersenlab.service.impl.ClientServiceImpl;
-import com.andersenlab.service.impl.PerkServiceImpl;
+import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,16 +12,13 @@ public class ClientServiceTest {
 
     private ClientService clientService;
 
-
     @BeforeEach
     private void setup() {
         IdGenerator.cancelGenerateId();
-        ClientDao clientDao = new ClientDaoImpl();
-        ApartmentDao apartmentDao = new ApartmentDaoImpl();
-        PerkDao perkDao = new PerkDaoImpl();
-        clientService = new ClientServiceImpl(clientDao, perkDao, apartmentDao);
-        ApartmentService apartmentService = new ApartmentServiceImpl(apartmentDao);
-        PerkService perkService = new PerkServiceImpl(perkDao);
+        HotelFactory hotelFactory = new HotelFactory();
+        clientService = hotelFactory.getClientService();
+        ApartmentService apartmentService = hotelFactory.getApartmentService();
+        PerkService perkService = hotelFactory.getPerkService();
         clientService.save("Oleg", 2);
         clientService.save("Alex", 2);
         clientService.save("Petr", 3);

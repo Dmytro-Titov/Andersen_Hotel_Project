@@ -14,10 +14,15 @@ import java.util.Scanner;
 public class Console {
 
     private final Scanner scanner = new Scanner(System.in);
-    private final HotelFactory hotelFactory = HotelFactory.getInstance();
-    private final ClientService clientService = hotelFactory.getClientService();
-    private final ApartmentService apartmentService = hotelFactory.getApartmentService();
-    private final PerkService perkService = hotelFactory.getPerkService();
+    private final ClientService clientService;
+    private final ApartmentService apartmentService;
+    private final PerkService perkService;
+
+    public Console(HotelFactory hotelFactory) {
+        clientService = hotelFactory.getClientService();
+        apartmentService = hotelFactory.getApartmentService();
+        perkService = hotelFactory.getPerkService();
+    }
 
     public void start() {
 
