@@ -22,8 +22,7 @@ public class Console {
 
 
 
-    public Console() {
-        HotelFactory hotelFactory = new HotelFactory();
+    public Console(HotelFactory hotelFactory) {
         clientService = hotelFactory.getClientService();
         apartmentService = hotelFactory.getApartmentService();
         perkService = hotelFactory.getPerkService();
