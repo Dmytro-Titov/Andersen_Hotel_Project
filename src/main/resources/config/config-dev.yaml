@@ -1,0 +1,5 @@
+database:
+  path: "local/db"
+
+apartment:
+  allowApartmentStatusChange: true
