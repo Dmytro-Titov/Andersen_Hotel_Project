@@ -20,7 +20,6 @@ public class ApartmentServiceTest {
         apartmentService.save(1, 200.0);
         apartmentService.save(2, 350.0);
         apartmentService.save(4, 500.0);
-        /* apartmentService.save(0, 200.0); */
         apartmentService.save(1, 200.0);
         apartmentService.save(4, 500.0);
         apartmentService.save(2, 350.0);

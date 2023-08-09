@@ -97,13 +97,6 @@ public class ConsolePrinter {
         printHelp();
     }
 
-/*
-    public static void negativeArgumentValue() {
-        System.out.print("Argument value cannot be negative.\s");
-        printHelp();
-    }
-*/
-
     public static void illegalArgument() {
         System.out.print("Illegal argument.\s");
         printHelp();
