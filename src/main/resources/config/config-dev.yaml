@@ -2,4 +2,4 @@ database:
   path: "local/db"
 
 apartment:
-  mutableStatus: true
+  allowApartmentStatusChange: true

@@ -11,7 +11,6 @@ public class AdministratorApp {
         var config = ConfigHandler.createConfig(configPath) ;
         Config.INSTANCE.setConfigData(config);
 
-
         new Console(new HotelFactory()).start();
     }
 }

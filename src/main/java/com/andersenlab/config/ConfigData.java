@@ -47,21 +47,21 @@ public class ConfigData {
 
     public static class ApartmentConfig {
 
-        private boolean mutableStatus;
+        private boolean allowApartmentStatusChange;
 
         public ApartmentConfig() {
         }
 
-        public ApartmentConfig(boolean mutableStatus) {
-            this.mutableStatus = mutableStatus;
+        public ApartmentConfig(boolean allowApartmentStatusChange) {
+            this.allowApartmentStatusChange = allowApartmentStatusChange;
         }
 
-        public boolean isMutableStatus() {
-            return mutableStatus;
+        public boolean isAllowApartmentStatusChange() {
+            return allowApartmentStatusChange;
         }
 
-        public void setMutableStatus(boolean mutableStatus) {
-            this.mutableStatus = mutableStatus;
+        public void setAllowApartmentStatusChange(boolean allowApartmentStatusChange) {
+            this.allowApartmentStatusChange = allowApartmentStatusChange;
         }
     }
 }
