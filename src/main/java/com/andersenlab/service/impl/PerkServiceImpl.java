@@ -4,9 +4,9 @@ import com.andersenlab.dao.PerkDao;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.PerkService;
+import com.andersenlab.util.EntityValidityCheck;
 import com.andersenlab.util.IdGenerator;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -25,8 +25,8 @@ public class PerkServiceImpl implements PerkService {
 
     @Override
     public Perk save(String name, double price) {
-        Perk perk = new Perk(IdGenerator.generatePerkId(), name, price);
-        return perkDao.save(perk);
+        EntityValidityCheck.perkPriceCheck(price);
+        return perkDao.save(new Perk(IdGenerator.generatePerkId(), name, price));
     }
 
     public void save(List<Perk> perks) {
@@ -43,6 +43,7 @@ public class PerkServiceImpl implements PerkService {
 
     @Override
     public Perk changePrice(long id, double price) {
+        EntityValidityCheck.perkPriceCheck(price);
         return update(new Perk(id, price));
     }
 
@@ -61,14 +62,14 @@ public class PerkServiceImpl implements PerkService {
     }
 
     private List<Perk> sortByName() {
-        List<Perk> sortedByName = new ArrayList<>(getAll());
-        sortedByName.sort(Comparator.comparing(Perk::getName));
-        return sortedByName;
+        return getAll().stream()
+                .sorted(Comparator.comparing(Perk::getName))
+                .toList();
     }
 
     private List<Perk> sortByPrice() {
-        List<Perk> sortedByPrice = new ArrayList<>(getAll());
-        sortedByPrice.sort(Comparator.comparing(Perk::getPrice));
-        return sortedByPrice;
+        return getAll().stream()
+                .sorted(Comparator.comparing(Perk::getPrice))
+                .toList();
     }
 }

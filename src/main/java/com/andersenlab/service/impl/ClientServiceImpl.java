@@ -6,6 +6,7 @@ import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
 import com.andersenlab.service.PerkService;
+import com.andersenlab.util.EntityValidityCheck;
 import com.andersenlab.util.IdGenerator;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ClientServiceImpl implements ClientService {
 
@@ -40,6 +40,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client save(String name, int quantityOfPeople) {
+        EntityValidityCheck.clientQuantityOfPeopleCheck(quantityOfPeople);
         return clientDao.save(new Client(IdGenerator.generateClientId(), name, quantityOfPeople));
     }
 
@@ -63,6 +64,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client checkInApartment(long clientId, int stayDuration, long apartmentId) {
+        EntityValidityCheck.clientStayDurationCheck(stayDuration);
         if (apartmentId == 0) {
             return checkInAnyFreeApartment(clientId, stayDuration);
         }
@@ -82,13 +84,13 @@ public class ClientServiceImpl implements ClientService {
     }
 
     public Client checkInAnyFreeApartment(long clientId, int stayDuration) {
+        EntityValidityCheck.clientStayDurationCheck(stayDuration);
         Client client = getById(clientId);
-        List<Apartment> apartments = apartmentService.getAll();
         if (ClientStatus.CHECKED_IN == client.getStatus()) {
             throw new RuntimeException("This client is already checked in. Apartment id: "
                     + client.getApartment().getId());
         }
-        Optional<Apartment> availableApartment = apartments.stream()
+        Optional<Apartment> availableApartment = apartmentService.getAll().stream()
                 .filter(apartment -> apartment.getCapacity() >= client.getQuantityOfPeople())
                 .filter(apartment -> ApartmentStatus.AVAILABLE == apartment.getStatus())
                 .findFirst();
@@ -162,22 +164,21 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private List<Client> sortByName() {
-        List<Client> sortedByName = new ArrayList<>(getAll());
-        sortedByName.sort(Comparator.comparing(Client::getName));
-        return sortedByName;
+        return getAll().stream()
+                .sorted(Comparator.comparing(Client::getName))
+                .toList();
     }
 
     private List<Client> sortByCheckOutDate() {
-        List<Client> sortedByCheckOutDate = new ArrayList<>(getAll());
-        return sortedByCheckOutDate.stream()
+        return getAll().stream()
                 .filter(client -> client.getStatus() != ClientStatus.NEW)
                 .sorted(Comparator.comparing(Client::getCheckOutDate))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<Client> sortByStatus() {
-        List<Client> sortedByStatus = new ArrayList<>(getAll());
-        sortedByStatus.sort(Comparator.comparing(Client::getStatus));
-        return sortedByStatus;
+        return getAll().stream()
+                .sorted(Comparator.comparing(Client::getStatus))
+                .toList();
     }
 }
