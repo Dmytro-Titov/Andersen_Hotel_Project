@@ -12,7 +12,6 @@ public class AdministratorApp {
         Config.INSTANCE.setConfigData(config);
 
 
-
         new Console(new HotelFactory()).start();
     }
 }
