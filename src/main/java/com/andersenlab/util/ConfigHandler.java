@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class ConfigHandler {
-    private static final String DEFAULT_PATH = "runtime/resources/config-dev.yaml";
+    private static final String DEFAULT_PATH = "src/main/resources/config/config-dev.yaml";
 
 
     public static ConfigData createConfig(String path) {

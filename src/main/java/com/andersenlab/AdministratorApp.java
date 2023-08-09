@@ -11,6 +11,8 @@ public class AdministratorApp {
         var config = ConfigHandler.createConfig(configPath) ;
         Config.INSTANCE.setConfigData(config);
 
+        System.out.println(Config.INSTANCE.getConfigData().getApartment().isMutableStatus());
+
 
         new Console(new HotelFactory()).start();
     }
