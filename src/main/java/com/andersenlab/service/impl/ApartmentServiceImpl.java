@@ -5,9 +5,9 @@ import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
+import com.andersenlab.util.EntityValidityCheck;
 import com.andersenlab.util.IdGenerator;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -32,6 +32,8 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public Apartment save(int capacity, double price) {
+        EntityValidityCheck.apartmentCapacityCheck(capacity);
+        EntityValidityCheck.apartmentPriceCheck(price);
         Apartment apartment = new Apartment(IdGenerator.generateApartmentId(),
                 capacity, price, ApartmentStatus.AVAILABLE);
         return apartmentDao.save(apartment);
@@ -45,6 +47,7 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public Apartment changePrice(long id, double price) {
+        EntityValidityCheck.apartmentPriceCheck(price);
         return update(new Apartment(id, price));
     }
 
@@ -66,20 +69,20 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     private List<Apartment> sortByPrice() {
-        List<Apartment> sortedByPrice = new ArrayList<>(getAll());
-        sortedByPrice.sort(Comparator.comparing(Apartment::getPrice));
-        return sortedByPrice;
+        return getAll().stream()
+                .sorted(Comparator.comparing(Apartment::getPrice))
+                .toList();
     }
 
     private List<Apartment> sortByCapacity() {
-        List<Apartment> sortedByCapacity = new ArrayList<>(getAll());
-        sortedByCapacity.sort(Comparator.comparing(Apartment::getCapacity));
-        return sortedByCapacity;
+        return getAll().stream()
+                .sorted(Comparator.comparing(Apartment::getCapacity))
+                .toList();
     }
 
     private List<Apartment> sortByStatus() {
-        List<Apartment> sortedByStatus = new ArrayList<>(getAll());
-        sortedByStatus.sort(Comparator.comparing(Apartment::getStatus));
-        return sortedByStatus;
+        return getAll().stream()
+                .sorted(Comparator.comparing(Apartment::getStatus))
+                .toList();
     }
 }
