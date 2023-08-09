@@ -38,6 +38,13 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
+    public void save(List<Apartment> apartments) {
+        for(Apartment apartment : apartments) {
+            apartmentDao.save(apartment);
+        }
+    }
+
+    @Override
     public Apartment update(Apartment apartment) {
         return apartmentDao.update(apartment)
                 .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + apartment.getId()));

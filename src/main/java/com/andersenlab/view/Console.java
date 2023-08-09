@@ -7,6 +7,7 @@ import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
 import com.andersenlab.service.PerkService;
+import com.andersenlab.util.JsonHandler;
 
 import java.util.List;
 import java.util.Scanner;
@@ -17,27 +18,35 @@ public class Console {
     private final ClientService clientService;
     private final ApartmentService apartmentService;
     private final PerkService perkService;
+    private final JsonHandler jsonHandler;
 
-    public Console(HotelFactory hotelFactory) {
+
+
+    public Console() {
+        HotelFactory hotelFactory = new HotelFactory();
         clientService = hotelFactory.getClientService();
         apartmentService = hotelFactory.getApartmentService();
         perkService = hotelFactory.getPerkService();
 
-        clientService.save("Denis", 1);
-        clientService.save("Dima", 2);
-        clientService.save("Nick", 1);
-        apartmentService.save(1, 100);
-        apartmentService.save(2, 150);
-        apartmentService.save(1, 100);
-        perkService.save("minibar", 33.5);
-        perkService.save("ironing", 15);
-        perkService.save("breakfast_in_apartment", 20);
+        jsonHandler = new JsonHandler(hotelFactory);
+
+//        clientService.save("Denis", 1);
+//        clientService.save("Dima", 2);
+//        clientService.save("Nick", 1);
+//        apartmentService.save(1, 100);
+//        apartmentService.save(2, 150);
+//        apartmentService.save(1, 100);
+//        perkService.save("minibar", 33.5);
+//        perkService.save("ironing", 15);
+//        perkService.save("breakfast_in_apartment", 20);
+
 
 
 
     }
 
     public void start() {
+
 
         System.out.println("Hotel Administrator Alpha v0.1");
         System.out.println("Print 'help' for the list of commands");
@@ -77,6 +86,12 @@ public class Console {
                         continue;
                     case "perk":
                         executeCommand(commandArray, CommandType.PERK);
+                        continue;
+                    case "save":
+                        jsonHandler.save();
+                        continue;
+                    case "load":
+                        jsonHandler.load();
                         continue;
                     default:
                         ConsolePrinter.unknownCommand(command);

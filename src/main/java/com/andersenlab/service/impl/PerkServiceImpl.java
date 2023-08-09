@@ -29,6 +29,12 @@ public class PerkServiceImpl implements PerkService {
         return perkDao.save(perk);
     }
 
+    public void save(List<Perk> perks) {
+        for (Perk perk : perks) {
+            perkDao.save(perk);
+        }
+    }
+
     @Override
     public Perk update(Perk perk) {
         return perkDao.update(perk)
