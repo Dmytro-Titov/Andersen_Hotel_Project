@@ -43,6 +43,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     public void save(List<Apartment> apartments) {
         for(Apartment apartment : apartments) {
             apartmentDao.save(apartment);
+            IdGenerator.generateApartmentId();
         }
     }
 

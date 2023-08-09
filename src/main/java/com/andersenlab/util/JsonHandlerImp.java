@@ -1,6 +1,6 @@
 package com.andersenlab.util;
 
-import com.andersenlab.config.ConfigData;
+import com.andersenlab.config.Config;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
@@ -20,8 +20,7 @@ public class JsonHandlerImp implements JsonHandler {
         ClientService clientService;
         ApartmentService apartmentService;
         PerkService perkService;
-        ConfigData configData = ConfigHandler.createConfig("");
-        String pathJson = configData.getDatabase().getPath();
+        String pathJson = Config.INSTANCE.getConfigData().getDatabase().getPath();
     public JsonHandlerImp(HotelFactory hotelFactory) {
         clientService = hotelFactory.getClientService();
         apartmentService = hotelFactory.getApartmentService();
@@ -58,7 +57,7 @@ public class JsonHandlerImp implements JsonHandler {
                 apartments = objectMapper.readValue(new File(pathJson + "apartment.json"), new TypeReference<>() {});
                 perks = objectMapper.readValue(new File(pathJson + "perk.json"), new TypeReference<>() {});
             } catch (IOException e) {
-                throw new RuntimeException("There is a problem with outgoing files");
+                throw new RuntimeException("There is a problem with incoming files");
             }
 
             clientService.save(clients);
@@ -67,6 +66,7 @@ public class JsonHandlerImp implements JsonHandler {
         }
     }
 
+    @Override
     public Boolean checkIfExistsJson() {
         return new File(pathJson + "client.json").exists()
                 && new File(pathJson + "apartment.json").exists()

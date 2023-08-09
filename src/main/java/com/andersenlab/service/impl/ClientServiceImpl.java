@@ -48,6 +48,7 @@ public class ClientServiceImpl implements ClientService {
     public void save(List<Client> clients) {
         for (Client client : clients){
             clientDao.save(client);
+            IdGenerator.generateClientId();
         }
     }
 

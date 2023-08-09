@@ -7,7 +7,6 @@ import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
 import com.andersenlab.service.PerkService;
-import com.andersenlab.util.JsonHandlerImp;
 
 import java.util.List;
 import java.util.Scanner;
@@ -18,21 +17,14 @@ public class Console {
     private final ClientService clientService;
     private final ApartmentService apartmentService;
     private final PerkService perkService;
-    private final JsonHandlerImp jsonHandlerImp;
-
-
 
     public Console(HotelFactory hotelFactory) {
         clientService = hotelFactory.getClientService();
         apartmentService = hotelFactory.getApartmentService();
         perkService = hotelFactory.getPerkService();
-
-        jsonHandlerImp = new JsonHandlerImp(hotelFactory);
-        jsonHandlerImp.load();
     }
 
     public void start() {
-
 
         System.out.println("Hotel Administrator Alpha v0.1");
         System.out.println("Print 'help' for the list of commands");
@@ -75,8 +67,8 @@ public class Console {
                 ConsolePrinter.illegalArgumentWithMsg(e.getMessage());
             } catch (RuntimeException e) {
                 ConsolePrinter.printError(e.getMessage());
-            } finally {
-                jsonHandlerImp.save();
+//            } finally {
+//                jsonHandlerImp.save();
             }
         }
     }
