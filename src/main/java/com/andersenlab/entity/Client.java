@@ -17,6 +17,9 @@ public class Client {
     private double stayCost;
     private int quantityOfPeople;
 
+    public Client() {
+    }
+
     public Client(long id, String name, int quantityOfPeople) {
         this.id = id;
         this.name = name;

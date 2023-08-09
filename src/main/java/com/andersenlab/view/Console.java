@@ -7,7 +7,7 @@ import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
 import com.andersenlab.service.PerkService;
-import com.andersenlab.util.JsonHandler;
+import com.andersenlab.util.JsonHandlerImp;
 
 import java.util.List;
 import java.util.Scanner;
@@ -18,7 +18,7 @@ public class Console {
     private final ClientService clientService;
     private final ApartmentService apartmentService;
     private final PerkService perkService;
-    private final JsonHandler jsonHandler;
+    private final JsonHandlerImp jsonHandlerImp;
 
 
 
@@ -27,21 +27,8 @@ public class Console {
         apartmentService = hotelFactory.getApartmentService();
         perkService = hotelFactory.getPerkService();
 
-        jsonHandler = new JsonHandler(hotelFactory);
-
-//        clientService.save("Denis", 1);
-//        clientService.save("Dima", 2);
-//        clientService.save("Nick", 1);
-//        apartmentService.save(1, 100);
-//        apartmentService.save(2, 150);
-//        apartmentService.save(1, 100);
-//        perkService.save("minibar", 33.5);
-//        perkService.save("ironing", 15);
-//        perkService.save("breakfast_in_apartment", 20);
-
-
-
-
+        jsonHandlerImp = new JsonHandlerImp(hotelFactory);
+        jsonHandlerImp.load();
     }
 
     public void start() {
@@ -79,12 +66,6 @@ public class Console {
                     case "perk":
                         executeCommand(commandArray, CommandType.PERK);
                         continue;
-                    case "save":
-                        jsonHandler.save();
-                        continue;
-                    case "load":
-                        jsonHandler.load();
-                        continue;
                     default:
                         ConsolePrinter.unknownCommand(command);
                 }
@@ -94,6 +75,8 @@ public class Console {
                 ConsolePrinter.illegalArgumentWithMsg(e.getMessage());
             } catch (RuntimeException e) {
                 ConsolePrinter.printError(e.getMessage());
+            } finally {
+                jsonHandlerImp.save();
             }
         }
     }
