@@ -5,7 +5,6 @@ import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.util.IdGenerator;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,13 +37,17 @@ public class ApartmentDaoTest {
     }
 
     @Test
-    void getByIDTest() {
+    void inMemoryList_getApartmentById_EqualsOfApartmentIdInSetupAndInMemoryTest() {
         Assertions.assertEquals(apartment.getId(), Objects.requireNonNull(apartmentDao.getById(apartment.getId()).orElse(null)).getId());
+    }
+
+    @Test
+    void inMemoryList_getApartmentByNonExistingId_ReturnedIsEmptyTest() {
         Assertions.assertTrue(apartmentDao.getById(Long.MAX_VALUE).isEmpty());
     }
 
     @Test
-    void saveTest() {
+    void inMemoryList_saveApartmentToMemory_EqualsOfApartmentInSetupAndReturnedTest() {
         apartment = new Apartment();
         apartment.setId(IdGenerator.generateApartmentId());
         apartment.setCapacity(1);
@@ -56,13 +59,13 @@ public class ApartmentDaoTest {
     }
 
     @Test
-    void getAll() {
+    void inMemoryList_getAllApartments_NotNullAndCountOfReturnedEqualsTwoTest() {
         Assertions.assertNotNull(apartmentDao.getAll());
         Assertions.assertEquals(2, apartmentDao.getAll().size());
     }
 
     @Test
-    void updateTest() {
+    void inMemoryList_UpdateApartment_ReturnedNotNullAndNotUpdatedFieldIfSetIsNullAndNotUpdatedByNullApartmentTest() {
         apartment = new Apartment();
         apartment.setId(0);
         apartment.setCapacity(5);
@@ -87,7 +90,7 @@ public class ApartmentDaoTest {
     }
 
     @Test
-    void removeTest() {
+    void inMemoryList_RemoveApartmentByIdAndGetApartmentByDeletedID_ReturnedEmptyTest() {
         Assertions.assertTrue(apartmentDao.remove(0));
         Assertions.assertTrue(apartmentDao.getById(0).isEmpty());
     }
