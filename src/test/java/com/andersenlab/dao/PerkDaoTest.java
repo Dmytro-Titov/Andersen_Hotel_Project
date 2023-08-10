@@ -39,7 +39,10 @@ public class PerkDaoTest {
     @Test
     void inMemoryList_getPerkById_EqualsOfPerkIdInSetupAndInMemoryTest() {
         Assertions.assertEquals(perk, perkDao.getById(perk.getId()).orElse(null));
+    }
 
+    @Test
+    void inMemoryList_getPerkByNonExistingId_ReturnedIsEmptyTest() {
         Assertions.assertTrue(perkDao.getById(Long.MAX_VALUE).isEmpty());
     }
 
