@@ -64,7 +64,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     public Apartment changeStatus(long id) {
         boolean allowStatusChange = Config.INSTANCE.getConfigData().getApartment().isAllowApartmentStatusChange();
         if (!allowStatusChange) {
-            throw new IllegalArgumentException("Configuration does not allow change of status");
+            throw new RuntimeException("Configuration does not allow change of status");
         }
         ApartmentStatus newStatus = getById(id).getStatus() == ApartmentStatus.AVAILABLE ?
                 ApartmentStatus.UNAVAILABLE : ApartmentStatus.AVAILABLE;

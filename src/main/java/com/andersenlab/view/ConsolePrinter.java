@@ -102,11 +102,6 @@ public class ConsolePrinter {
         printHelp();
     }
 
-    public static void illegalArgumentWithMsg(String message) {
-        System.out.print(message == null ? "Illegal argument.\s" : message + ".\s");
-        printHelp();
-    }
-
     public static void commands() {
         System.out.println("|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|");
         System.out.println("| help                                                        see this list                             |");
