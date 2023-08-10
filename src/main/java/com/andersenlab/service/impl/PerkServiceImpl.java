@@ -30,10 +30,10 @@ public class PerkServiceImpl implements PerkService {
     }
 
     public void save(List<Perk> perks) {
-        for (Perk perk : perks) {
+        perks.forEach(perk -> {
             perkDao.save(perk);
             IdGenerator.generatePerkId();
-        }
+        });
     }
 
     @Override

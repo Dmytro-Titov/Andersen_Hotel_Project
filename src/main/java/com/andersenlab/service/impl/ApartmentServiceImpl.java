@@ -42,10 +42,10 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public void save(List<Apartment> apartments) {
-        for(Apartment apartment : apartments) {
+        apartments.forEach(apartment -> {
             apartmentDao.save(apartment);
             IdGenerator.generateApartmentId();
-        }
+        });
     }
 
     @Override
