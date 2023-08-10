@@ -12,7 +12,7 @@ public class ConfigHandler {
     private static final String DEFAULT_PATH = "src/main/resources/config/config-dev.yaml";
 
     public static ConfigData createConfig(String possiblePath) {
-        String actualPath = possiblePath.isEmpty() ? DEFAULT_PATH : possiblePath;
+        String actualPath = possiblePath == null ? DEFAULT_PATH : possiblePath;
 
         try (InputStream in = Files.newInputStream(Path.of(actualPath))) {
             return new Yaml().loadAs(in, ConfigData.class);
