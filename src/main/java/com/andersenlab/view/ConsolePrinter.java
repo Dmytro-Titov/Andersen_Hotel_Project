@@ -103,7 +103,7 @@ public class ConsolePrinter {
     }
 
     public static void illegalArgumentWithMsg(String message) {
-        System.out.print(message + ".\s");
+        System.out.print(message == null ? "Illegal argument.\s" : message + ".\s");
         printHelp();
     }
 
