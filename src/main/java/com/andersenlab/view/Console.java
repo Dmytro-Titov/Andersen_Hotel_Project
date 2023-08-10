@@ -1,5 +1,6 @@
 package com.andersenlab.view;
 
+import com.andersenlab.config.Config;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
@@ -206,9 +207,15 @@ public class Console {
                         ConsolePrinter.printList(list);
                     }
                     case "price" ->
-                        ConsolePrinter.printApartmentPrice(apartmentService.getById(Long.parseLong(commandArray[2])));
-                    case "changestatus" ->
-                        ConsolePrinter.printApartmentStatusChange(apartmentService.changeStatus(Long.parseLong(commandArray[2])));
+                            ConsolePrinter.printApartmentPrice(apartmentService.getById(Long.parseLong(commandArray[2])));
+                    case "changestatus" -> {
+                        boolean allowStatusChange = Config.INSTANCE.getConfigData().getApartment().isMutableStatus();
+                        if (allowStatusChange) {
+                            ConsolePrinter.printApartmentStatusChange(apartmentService.changeStatus(Long.parseLong(commandArray[2])));
+                        } else {
+                            throw new IllegalArgumentException("Configuration does not allow change of status");
+                        }
+                    }
                     default -> throw new IllegalArgumentException();
                 }
             }
