@@ -14,13 +14,13 @@ public class ConfigHandler {
     private static final String DEFAULT_PATH = "src/main/resources/config/config-dev.yaml";
 
 
-    public static ConfigData createConfig(String path) {
-        String pathh = Optional
-                .ofNullable(path)
+    public static ConfigData createConfig(String possiblePath) {
+        String actualPath = Optional
+                .ofNullable(possiblePath)
                 .filter(Predicate.not(String::isEmpty))
                 .orElse(DEFAULT_PATH);
 
-        try (InputStream in = Files.newInputStream(Path.of(pathh))) {
+        try (InputStream in = Files.newInputStream(Path.of(actualPath))) {
             return new Yaml().loadAs(in, ConfigData.class);
         } catch (IOException e) {
             throw new RuntimeException("Yaml problems", e);

@@ -1,6 +1,5 @@
 package com.andersenlab.view;
 
-import com.andersenlab.config.Config;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
@@ -68,8 +67,6 @@ public class Console {
                 ConsolePrinter.illegalArgumentWithMsg(e.getMessage());
             } catch (RuntimeException e) {
                 ConsolePrinter.printError(e.getMessage());
-//            } finally {
-//                jsonHandlerImp.save();
             }
         }
     }
@@ -140,21 +137,19 @@ public class Console {
             }
             case 4 -> {
                 switch (commandArray[1]) {
-                    case "add" -> {
+                    case "add" ->
                         ConsolePrinter.printAddedClient(clientService.save(
                                 commandArray[2],
                                 Integer.parseInt(commandArray[3])));
-                    }
                     case "serve" ->
                         ConsolePrinter.printServedPerk(clientService.addPerk(
                                 Long.parseLong(commandArray[2]),
                                 Long.parseLong(commandArray[3])));
-                    case "checkin" -> {
+                    case "checkin" ->
                         ConsolePrinter.printCheckIn(clientService.checkInApartment(
                                 Long.parseLong(commandArray[2]),
                                 Integer.parseInt(commandArray[3]),
                                 0));
-                    }
                     default -> throw new IllegalArgumentException();
                 }
             }
@@ -215,10 +210,9 @@ public class Console {
             }
             case 4 -> {
                 switch (commandArray[1]) {
-                    case "add" -> {
+                    case "add" ->
                         ConsolePrinter.printAddedApartment(apartmentService.save(
                                 Integer.parseInt(commandArray[2]), Double.parseDouble(commandArray[3])));
-                    }
                     case "price" ->
                         ConsolePrinter.printApartmentPriceChange(apartmentService.changePrice(
                                 Long.parseLong(commandArray[2]), Double.parseDouble(commandArray[3])));
