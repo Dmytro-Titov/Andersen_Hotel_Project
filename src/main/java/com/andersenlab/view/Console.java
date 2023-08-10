@@ -208,14 +208,8 @@ public class Console {
                     }
                     case "price" ->
                             ConsolePrinter.printApartmentPrice(apartmentService.getById(Long.parseLong(commandArray[2])));
-                    case "changestatus" -> {
-                        boolean allowStatusChange = Config.INSTANCE.getConfigData().getApartment().isMutableStatus();
-                        if (allowStatusChange) {
+                    case "changestatus" ->
                             ConsolePrinter.printApartmentStatusChange(apartmentService.changeStatus(Long.parseLong(commandArray[2])));
-                        } else {
-                            throw new IllegalArgumentException("Configuration does not allow change of status");
-                        }
-                    }
                     default -> throw new IllegalArgumentException();
                 }
             }
