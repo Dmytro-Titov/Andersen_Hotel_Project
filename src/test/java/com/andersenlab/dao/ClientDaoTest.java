@@ -4,7 +4,6 @@ import com.andersenlab.dao.impl.ClientDaoImpl;
 import com.andersenlab.entity.Client;
 import com.andersenlab.util.IdGenerator;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,27 +25,30 @@ public class ClientDaoTest {
     }
 
     @Test
-    void saveTest() {
-
+    void inMemoryList_saveClientToMemory_EqualsOfClientInSetupAndReturnedTest() {
         Assertions.assertEquals(client1, clientDao.save(client1));
         Assertions.assertEquals(client1.getId(), Objects.requireNonNull(clientDao.getById(client1.getId()).orElse(null)).getId());
     }
 
     @Test
-    void getByIdTest() {
+    void inMemoryList_getApartmentById_EqualsOfApartmentIdInSetupAndInMemoryTest() {
         Assertions.assertEquals(client.getId(), Objects.requireNonNull(clientDao.getById(client.getId()).orElse(null)).getId());
+    }
+
+    @Test
+    void inMemoryList_getClientByNonExistingId_ReturnedIsEmptyTest() {
         Assertions.assertTrue(clientDao.getById(Long.MAX_VALUE).isEmpty());
     }
 
     @Test
-    void getAllTest() {
+    void inMemoryList_getAllClient_NotNullAndCountOfReturnedEqualsTwoTest() {
         clientDao.save(client1);
         Assertions.assertNotNull(clientDao.getAll());
         Assertions.assertEquals(2,  (long) clientDao.getAll().size());
     }
 
     @Test
-    void updateTest() {
+    void inMemoryList_UpdateClientName_ReturnNotNullAndClientEqualsReturnedClientTest() {
             client.setName("Evgen-Evgen");
 
             Assertions.assertAll("clientUpdate",
@@ -56,7 +58,7 @@ public class ClientDaoTest {
     }
 
     @Test
-    void removeTest() {
+    void inMemoryList_RemoveClientByIdAndGetClientByDeletedID_ReturnedEmptyTest() {
         Assertions.assertTrue(clientDao.remove(client.getId()));
         Assertions.assertTrue(clientDao.getById(client.getId()).isEmpty());
     }

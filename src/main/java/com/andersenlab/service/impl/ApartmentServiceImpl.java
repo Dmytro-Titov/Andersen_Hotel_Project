@@ -1,5 +1,6 @@
 package com.andersenlab.service.impl;
 
+import com.andersenlab.config.Config;
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
@@ -40,6 +41,14 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
+    public void save(List<Apartment> apartments) {
+        apartments.forEach(apartment -> {
+            apartmentDao.save(apartment);
+            IdGenerator.generateApartmentId();
+        });
+    }
+
+    @Override
     public Apartment update(Apartment apartment) {
         return apartmentDao.update(apartment)
                 .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + apartment.getId()));
@@ -53,6 +62,10 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public Apartment changeStatus(long id) {
+        boolean allowStatusChange = Config.INSTANCE.getConfigData().getApartment().isAllowApartmentStatusChange();
+        if (!allowStatusChange) {
+            throw new IllegalArgumentException("Configuration does not allow change of status");
+        }
         ApartmentStatus newStatus = getById(id).getStatus() == ApartmentStatus.AVAILABLE ?
                 ApartmentStatus.UNAVAILABLE : ApartmentStatus.AVAILABLE;
         return update(new Apartment(id, newStatus));

@@ -1,5 +1,5 @@
 database:
-  path: "local/db"
+  path: "src/main/resources/json/"
 
 apartment:
   allowApartmentStatusChange: true

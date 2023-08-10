@@ -45,6 +45,14 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    public void save(List<Client> clients) {
+        clients.forEach(client -> {
+            clientDao.save(client);
+            IdGenerator.generateClientId();
+        });
+    }
+
+    @Override
     public Client update(Client client) {
         return clientDao.update(client)
                 .orElseThrow(() -> new RuntimeException("Client with this id doesn't exist. Id: " + client.getId()));

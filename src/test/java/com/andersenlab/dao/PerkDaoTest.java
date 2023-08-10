@@ -37,24 +37,25 @@ public class PerkDaoTest {
     }
 
     @Test
-    void getByIdTest() {
+    void inMemoryList_getPerkById_EqualsOfPerkIdInSetupAndInMemoryTest() {
         Assertions.assertEquals(perk, perkDao.getById(perk.getId()).orElse(null));
+
         Assertions.assertTrue(perkDao.getById(Long.MAX_VALUE).isEmpty());
     }
 
     @Test
-    void getAllTest() {
+    void nMemoryList_getAllPerk_NotNullAndCountOfReturnedEqualsThreeTest() {
         Assertions.assertEquals(3, (long) perkDao.getAll().size());
     }
 
     @Test
-    void saveTest() {
+    void inMemoryList_savePerkToMemory_EqualsOfPerkInSetupAndReturnedTest() {
         Assertions.assertNotNull(perkDao.save(perk));
         Assertions.assertEquals(perk.getId(), Objects.requireNonNull(perkDao.getById(perk.getId()).orElse(null)).getId());
     }
 
     @Test
-    void updateTest() {
+    void inMemoryList_UpdatePerkPrice_ReturnNotNullAndClientPerkReturnedClientTest() {
         perk.setPrice(100);
 
         Assertions.assertAll("perkUpdate",
@@ -64,7 +65,7 @@ public class PerkDaoTest {
     }
 
     @Test
-    void removeTest() {
+    void inMemoryList_RemovePerkByIdAndGetPerkByDeletedID_ReturnedEmptyTest() {
         Assertions.assertTrue(perkDao.remove(perk.getId()));
         Assertions.assertTrue(perkDao.getById(perk.getId()).isEmpty());
     }

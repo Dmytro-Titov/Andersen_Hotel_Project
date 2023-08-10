@@ -1,8 +1,10 @@
 package com.andersenlab.service;
 
+import com.andersenlab.config.Config;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.factory.HotelFactory;
+import com.andersenlab.util.ConfigHandler;
 import com.andersenlab.util.IdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,8 @@ public class ApartmentServiceTest {
         apartmentService.save(2, 350.0);
         apartmentService.save(4, 500.0);
         apartmentService.save(3, 200.0);
+        var config = ConfigHandler.createConfig(null) ;
+        Config.INSTANCE.setConfigData(config);
     }
 
 

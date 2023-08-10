@@ -1,5 +1,6 @@
 package com.andersenlab.view;
 
+import com.andersenlab.config.Config;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
@@ -67,6 +68,8 @@ public class Console {
                 ConsolePrinter.illegalArgumentWithMsg(e.getMessage());
             } catch (RuntimeException e) {
                 ConsolePrinter.printError(e.getMessage());
+//            } finally {
+//                jsonHandlerImp.save();
             }
         }
     }
@@ -204,9 +207,9 @@ public class Console {
                         ConsolePrinter.printList(list);
                     }
                     case "price" ->
-                        ConsolePrinter.printApartmentPrice(apartmentService.getById(Long.parseLong(commandArray[2])));
+                            ConsolePrinter.printApartmentPrice(apartmentService.getById(Long.parseLong(commandArray[2])));
                     case "changestatus" ->
-                        ConsolePrinter.printApartmentStatusChange(apartmentService.changeStatus(Long.parseLong(commandArray[2])));
+                            ConsolePrinter.printApartmentStatusChange(apartmentService.changeStatus(Long.parseLong(commandArray[2])));
                     default -> throw new IllegalArgumentException();
                 }
             }
