@@ -7,18 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Optional;
-import java.util.function.Predicate;
 
 public class ConfigHandler {
     private static final String DEFAULT_PATH = "src/main/resources/config/config-dev.yaml";
 
-
     public static ConfigData createConfig(String possiblePath) {
-        String actualPath = Optional
-                .ofNullable(possiblePath)
-                .filter(Predicate.not(String::isEmpty))
-                .orElse(DEFAULT_PATH);
+        String actualPath = possiblePath == null ? DEFAULT_PATH : possiblePath;
 
         try (InputStream in = Files.newInputStream(Path.of(actualPath))) {
             return new Yaml().loadAs(in, ConfigData.class);

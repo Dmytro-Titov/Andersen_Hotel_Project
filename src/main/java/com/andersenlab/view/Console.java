@@ -29,7 +29,6 @@ public class Console {
         System.out.println("Hotel Administrator Alpha v0.1");
         System.out.println("Print 'help' for the list of commands");
 
-        loop:
         while (true) {
             String command = scanner.nextLine().trim();
             String[] commandArray = command.split("\s+");
@@ -43,23 +42,15 @@ public class Console {
 
             try {
                 switch (commandArray[0]) {
-                    case "exit":
+                    case "exit" -> {
                         ConsolePrinter.exit();
-                        break loop;
-                    case "help":
-                        ConsolePrinter.commands();
-                        continue;
-                    case "client":
-                        executeCommand(commandArray, CommandType.CLIENT);
-                        continue;
-                    case "apartment":
-                        executeCommand(commandArray, CommandType.APARTMENT);
-                        continue;
-                    case "perk":
-                        executeCommand(commandArray, CommandType.PERK);
-                        continue;
-                    default:
-                        ConsolePrinter.unknownCommand(command);
+                        return;
+                    }
+                    case "help" -> ConsolePrinter.commands();
+                    case "client" -> executeCommand(commandArray, CommandType.CLIENT);
+                    case "apartment" -> executeCommand(commandArray, CommandType.APARTMENT);
+                    case "perk" -> executeCommand(commandArray, CommandType.PERK);
+                    default -> ConsolePrinter.unknownCommand(command);
                 }
             } catch (NumberFormatException e) {
                 ConsolePrinter.illegalArgument();
