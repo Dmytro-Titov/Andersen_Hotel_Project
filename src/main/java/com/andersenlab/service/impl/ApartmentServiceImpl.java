@@ -11,6 +11,7 @@ import com.andersenlab.util.IdGenerator;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 public class ApartmentServiceImpl implements ApartmentService {
 
@@ -75,27 +76,14 @@ public class ApartmentServiceImpl implements ApartmentService {
     public List<Apartment> getSorted(ApartmentSortType type) {
         return switch (type) {
             case ID -> getAll();
-            case PRICE -> sortByPrice();
-            case CAPACITY -> sortByCapacity();
-            case STATUS -> sortByStatus();
+            case PRICE -> sortBy(Apartment::getPrice);
+            case CAPACITY -> sortBy(Apartment::getCapacity);
+            case STATUS -> sortBy(Apartment::getStatus);
         };
     }
-
-    private List<Apartment> sortByPrice() {
+    private List<Apartment> sortBy(Function<Apartment, Comparable> extractor) {
         return getAll().stream()
-                .sorted(Comparator.comparing(Apartment::getPrice))
-                .toList();
-    }
-
-    private List<Apartment> sortByCapacity() {
-        return getAll().stream()
-                .sorted(Comparator.comparing(Apartment::getCapacity))
-                .toList();
-    }
-
-    private List<Apartment> sortByStatus() {
-        return getAll().stream()
-                .sorted(Comparator.comparing(Apartment::getStatus))
+                .sorted(Comparator.comparing(extractor))
                 .toList();
     }
 }
