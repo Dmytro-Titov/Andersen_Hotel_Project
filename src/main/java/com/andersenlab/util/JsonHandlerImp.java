@@ -8,12 +8,13 @@ import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
 import com.andersenlab.service.PerkService;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public class JsonHandlerImp implements JsonHandler {
@@ -29,14 +30,11 @@ public class JsonHandlerImp implements JsonHandler {
 
     @Override
     public void save() {
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-
+        State state = new State(apartmentService.getAll(), clientService.getAll(), perkService.getAll());
+        ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
             try {
-                objectMapper.writeValue(new File(pathJson+"client.json"), clientService.getAll());
-                objectMapper.writeValue(new File(pathJson+"apartment.json"), apartmentService.getAll());
-                objectMapper.writeValue(new File(pathJson+"perk.json"), perkService.getAll());
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(pathJson), state);
+
             } catch (IOException e) {
                 throw new RuntimeException("There is a problem with outgoing files");
         }
@@ -45,32 +43,26 @@ public class JsonHandlerImp implements JsonHandler {
     @Override
     public void load() {
         if (checkIfExistsJson()) {
-            List<Client> clients;
-            List<Apartment> apartments;
-            List<Perk> perks;
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-
-            try {
-                clients = objectMapper.readValue(new File(pathJson + "client.json"), new TypeReference<>() {});
-                apartments = objectMapper.readValue(new File(pathJson + "apartment.json"), new TypeReference<>() {});
-                perks = objectMapper.readValue(new File(pathJson + "perk.json"), new TypeReference<>() {});
+            State state;
+            ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
+            try  {
+                var reader = Files.newBufferedReader(Path.of(pathJson));
+                state = objectMapper.readValue(reader, State.class);
             } catch (IOException e) {
                 throw new RuntimeException("There is a problem with incoming files");
             }
 
-            clientService.save(clients);
-            apartmentService.save(apartments);
-            perkService.save(perks);
+            clientService.save(state.clientsList());
+            apartmentService.save(state.apartmentsList());
+            perkService.save(state.perksList());
         }
     }
 
     @Override
     public Boolean checkIfExistsJson() {
-        return new File(pathJson + "client.json").exists()
-                && new File(pathJson + "apartment.json").exists()
-                && new File(pathJson + "perk.json").exists();
-
+        return  new File(pathJson).exists();
     }
+}
+
+record State (List<Apartment> apartmentsList, List<Client> clientsList, List<Perk> perksList) {
 }

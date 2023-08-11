@@ -1,5 +1,5 @@
 database:
-  path: "src/main/resources/json/"
+  path: "src/main/resources/json/hotel.json"
 
 apartment:
   allowApartmentStatusChange: true
