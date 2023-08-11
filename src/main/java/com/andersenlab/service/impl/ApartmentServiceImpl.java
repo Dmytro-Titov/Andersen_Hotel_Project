@@ -4,7 +4,7 @@ import com.andersenlab.config.Config;
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
-import com.andersenlab.exceptions.ActionNotAllowedException;
+import com.andersenlab.exceptions.ConfigurationRestrictionException;
 import com.andersenlab.exceptions.IdDoesNotExistException;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
@@ -67,7 +67,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     public Apartment changeStatus(long id) {
         boolean allowStatusChange = Config.INSTANCE.getConfigData().getApartment().isAllowApartmentStatusChange();
         if (!allowStatusChange) {
-            throw new ActionNotAllowedException("Configuration does not allow change of status");
+            throw new ConfigurationRestrictionException("Configuration does not allow change of status");
         }
         ApartmentStatus newStatus = getById(id).getStatus() == ApartmentStatus.AVAILABLE ?
                 ApartmentStatus.UNAVAILABLE : ApartmentStatus.AVAILABLE;

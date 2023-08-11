@@ -53,9 +53,9 @@ public class Console {
                     default -> throw new UnknownCommandException(commandArray[0]);
                 }
             } catch (UnknownCommandException |
-                     ActionNotAllowedException |
+                     ConfigurationRestrictionException |
                      IdDoesNotExistException |
-                     IllegalArgumentValueException |
+                     InappropriateValueException |
                      InnerLogicException e) {
                 ConsolePrinter.printCustomError(e.getMessage());
             } catch (CommandSyntaxException e) {
