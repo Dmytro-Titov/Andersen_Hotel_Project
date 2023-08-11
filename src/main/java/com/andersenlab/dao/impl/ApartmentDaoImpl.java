@@ -24,7 +24,7 @@ public class ApartmentDaoImpl implements ApartmentDao {
 
     @Override
     public List<Apartment> getAll() {
-        return apartments;
+        return new ArrayList<>(apartments);
     }
 
     @Override

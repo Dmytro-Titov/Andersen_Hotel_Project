@@ -9,6 +9,7 @@ import com.andersenlab.util.IdGenerator;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 public class PerkServiceImpl implements PerkService {
     private final PerkDao perkDao;
@@ -57,20 +58,14 @@ public class PerkServiceImpl implements PerkService {
     public List<Perk> getSorted(PerkSortType type) {
         return switch (type) {
             case ID -> getAll();
-            case NAME -> sortByName();
-            case PRICE -> sortByPrice();
+            case NAME -> sortBy(Perk::getName);
+            case PRICE -> sortBy(Perk::getPrice);
         };
     }
 
-    private List<Perk> sortByName() {
+    private List<Perk> sortBy(Function<Perk, Comparable> extractor) {
         return getAll().stream()
-                .sorted(Comparator.comparing(Perk::getName))
-                .toList();
-    }
-
-    private List<Perk> sortByPrice() {
-        return getAll().stream()
-                .sorted(Comparator.comparing(Perk::getPrice))
+                .sorted(Comparator.comparing(extractor))
                 .toList();
     }
 }
