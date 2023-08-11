@@ -24,7 +24,7 @@ public class ClientDaoImpl implements ClientDao {
 
     @Override
     public List<Client> getAll() {
-        return clients;
+        return new ArrayList<>(clients);
     }
 
     @Override

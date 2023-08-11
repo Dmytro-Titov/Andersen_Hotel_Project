@@ -24,7 +24,7 @@ public class PerkDaoImpl implements PerkDao {
 
     @Override
     public List<Perk> getAll() {
-        return perks;
+        return new ArrayList<>(perks);
     }
 
     @Override
