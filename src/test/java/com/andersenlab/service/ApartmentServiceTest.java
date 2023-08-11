@@ -1,6 +1,5 @@
 package com.andersenlab.service;
 
-import com.andersenlab.config.Config;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.factory.HotelFactory;
@@ -29,7 +28,7 @@ public class ApartmentServiceTest {
         apartmentService.save(4, 500.0);
         apartmentService.save(3, 200.0);
         var config = ConfigHandler.createConfig(null) ;
-        Config.INSTANCE.setConfigData(config);
+        hotelFactory.getConfig().setConfigData(config);
     }
 
 
