@@ -36,16 +36,14 @@ public class ClientDaoImpl implements ClientDao {
     @Override
     public Optional<Client> update(Client client) {
         Optional<Client> existingClient = getById(client.getId());
-        if (existingClient.isPresent()) {
+        existingClient.ifPresent(updClient -> {
             existingClient.get().setName(client.getName());
             existingClient.get().setCheckOutDate(client.getCheckOutDate());
             existingClient.get().setStatus(client.getStatus());
             existingClient.get().setApartment(client.getApartment());
             existingClient.get().setPerks(client.getPerks());
-            return existingClient;
-        } else {
-            return Optional.empty();
-        }
+        });
+        return existingClient;
     }
 
     @Override

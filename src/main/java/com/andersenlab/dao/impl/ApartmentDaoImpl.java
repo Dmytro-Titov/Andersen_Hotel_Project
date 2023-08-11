@@ -36,20 +36,18 @@ public class ApartmentDaoImpl implements ApartmentDao {
     @Override
     public Optional<Apartment> update(Apartment apartment) {
         Optional<Apartment> existingApartment = getById(apartment.getId());
-        if (existingApartment.isPresent()) {
+        existingApartment.ifPresent(apt -> {
             if (apartment.getPrice() != 0.0) {
-                existingApartment.get().setPrice(apartment.getPrice());
+                apt.setPrice(apartment.getPrice());
             }
             if (apartment.getCapacity() != 0) {
-                existingApartment.get().setCapacity(apartment.getCapacity());
+                apt.setCapacity(apartment.getCapacity());
             }
             if (apartment.getStatus() != null) {
-                existingApartment.get().setStatus(apartment.getStatus());
+                apt.setStatus(apartment.getStatus());
             }
-            return existingApartment;
-        } else {
-            return Optional.empty();
-        }
+        });
+        return existingApartment;
     }
 
     @Override

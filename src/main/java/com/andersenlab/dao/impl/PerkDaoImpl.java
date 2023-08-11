@@ -36,15 +36,13 @@ public class PerkDaoImpl implements PerkDao {
     @Override
     public Optional<Perk> update(Perk perk) {
         Optional<Perk> existingPerk = getById(perk.getId());
-        if (existingPerk.isPresent()) {
+        existingPerk.ifPresent(updPerk -> {
             if (perk.getName() != null) {
-                existingPerk.get().setName(perk.getName());
+                updPerk.setName(perk.getName());
             }
-            existingPerk.get().setPrice(perk.getPrice());
-            return existingPerk;
-        } else {
-            return Optional.empty();
-        }
+            updPerk.setPrice(perk.getPrice());
+        });
+        return existingPerk;
     }
 
     @Override
