@@ -92,21 +92,6 @@ public class ConsolePrinter {
         System.out.printf("Client successfully checked-out. Their current bill is: %s\n", debt);
     }
 
-    public static void insufficientArguments() {
-        System.out.print("Not enough arguments provided.\s");
-        printHelp();
-    }
-
-    public static void illegalArgument() {
-        System.out.print("Illegal argument.\s");
-        printHelp();
-    }
-
-    public static void illegalArgumentWithMsg(String message) {
-        System.out.print(message == null ? "Illegal argument.\s" : message + ".\s");
-        printHelp();
-    }
-
     public static void commands() {
         System.out.println("|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|");
         System.out.println("| help                                                        see this list                             |");
@@ -143,18 +128,18 @@ public class ConsolePrinter {
         System.out.println("|_______________________________________________________________________________________________________|");
     }
 
+    public static void printInvalidArgument(String msg) {
+        System.out.print(msg.substring(msg.indexOf('"')) + " isn't a valid number.\s");
+        printHelp();
 
-    public static void unknownCommand(String command) {
-        System.out.printf("Command '%s' not recognized.\s", command);
+    }
+
+    public static void printSyntaxError() {
+        System.out.print("Command syntax error.\s");
         printHelp();
     }
 
-    public static void syntaxError() {
-        System.out.print("Syntax error.\s");
-        printHelp();
-    }
-
-    public static void printError(String error) {
+    public static void printCustomError(String error) {
         System.out.println(error);
     }
 

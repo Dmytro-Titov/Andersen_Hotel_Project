@@ -3,6 +3,7 @@ package com.andersenlab.view;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
+import com.andersenlab.exceptions.*;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
@@ -30,17 +31,16 @@ public class Console {
         System.out.println("Print 'help' for the list of commands");
 
         while (true) {
-            String command = scanner.nextLine().trim();
-            String[] commandArray = command.split("\s+");
-
-            if (commandArray.length < 1) {
-                ConsolePrinter.insufficientArguments();
-                continue;
-            } else {
-                commandArray[0] = commandArray[0].toLowerCase();
-            }
-
             try {
+                String command = scanner.nextLine().trim();
+                String[] commandArray = command.split("\s+");
+
+                if (commandArray.length < 1) {
+                    throw new UnknownCommandException(command);
+                } else {
+                    commandArray[0] = commandArray[0].toLowerCase();
+                }
+
                 switch (commandArray[0]) {
                     case "exit" -> {
                         ConsolePrinter.exit();
@@ -50,22 +50,25 @@ public class Console {
                     case "client" -> executeCommand(commandArray, CommandType.CLIENT);
                     case "apartment" -> executeCommand(commandArray, CommandType.APARTMENT);
                     case "perk" -> executeCommand(commandArray, CommandType.PERK);
-                    default -> ConsolePrinter.unknownCommand(command);
+                    default -> throw new UnknownCommandException(commandArray[0]);
                 }
+            } catch (UnknownCommandException |
+                     ActionNotAllowedException |
+                     IdDoesNotExistException |
+                     IllegalArgumentValueException |
+                     InnerLogicException e) {
+                ConsolePrinter.printCustomError(e.getMessage());
+            } catch (CommandSyntaxException e) {
+                ConsolePrinter.printSyntaxError();
             } catch (NumberFormatException e) {
-                ConsolePrinter.illegalArgument();
-            } catch (IllegalArgumentException e) {
-                ConsolePrinter.illegalArgumentWithMsg(e.getMessage());
-            } catch (RuntimeException e) {
-                ConsolePrinter.printError(e.getMessage());
+                ConsolePrinter.printInvalidArgument(e.getMessage());
             }
         }
     }
 
     private void executeCommand(String[] commandArray, CommandType type) {
         if (commandArray.length < 2) {
-            ConsolePrinter.insufficientArguments();
-            return;
+            throw new CommandSyntaxException();
         } else {
             commandArray[1] = commandArray[1].toLowerCase();
         }
@@ -74,6 +77,7 @@ public class Console {
             case CLIENT -> clientCommand(commandArray);
             case APARTMENT -> apartmentCommand(commandArray);
             case PERK -> perkCommand(commandArray);
+            default -> throw new CommandSyntaxException();
         }
     }
 
@@ -100,7 +104,7 @@ public class Console {
                 if (commandArray[1].equals("list")) {
                     ConsolePrinter.printList(clientService.getAll());
                 } else {
-                    throw new IllegalArgumentException();
+                    throw new UnknownCommandException(commandArray[1]);
                 }
             }
             case 3 -> {
@@ -119,11 +123,11 @@ public class Console {
                             case "name" -> clientService.getSorted(ClientService.ClientSortType.NAME);
                             case "checkout" -> clientService.getSorted(ClientService.ClientSortType.CHECK_OUT_DATE);
                             case "status" -> clientService.getSorted(ClientService.ClientSortType.STATUS);
-                            default -> throw new IllegalArgumentException();
+                            default -> throw new UnknownCommandException(commandArray[2]);
                         };
                         ConsolePrinter.printList(list);
                     }
-                    default -> throw new IllegalArgumentException();
+                    default -> throw new UnknownCommandException(commandArray[1]);
                 }
             }
             case 4 -> {
@@ -141,7 +145,7 @@ public class Console {
                                 Long.parseLong(commandArray[2]),
                                 Integer.parseInt(commandArray[3]),
                                 0));
-                    default -> throw new IllegalArgumentException();
+                    default -> throw new UnknownCommandException(commandArray[1]);
                 }
             }
             case 5 -> {
@@ -151,10 +155,10 @@ public class Console {
                             Integer.parseInt(commandArray[3]),
                             Long.parseLong(commandArray[4])));
                 } else {
-                    throw new IllegalArgumentException();
+                    throw new UnknownCommandException(commandArray[1]);
                 }
             }
-            default -> ConsolePrinter.syntaxError();
+            default -> throw new CommandSyntaxException();
         }
     }
 
@@ -176,7 +180,7 @@ public class Console {
             case 2 -> {
                 if (commandArray[1].equals("list")) {
                     ConsolePrinter.printList(apartmentService.getAll());
-                } else throw new IllegalArgumentException();
+                } else throw new UnknownCommandException(commandArray[1]);
             }
             case 3 -> {
                 switch (commandArray[1]) {
@@ -188,7 +192,7 @@ public class Console {
                             case "price" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.PRICE);
                             case "capacity" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.CAPACITY);
                             case "status" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.STATUS);
-                            default -> throw new IllegalArgumentException();
+                            default -> throw new UnknownCommandException(commandArray[2]);
                         };
                         ConsolePrinter.printList(list);
                     }
@@ -196,7 +200,7 @@ public class Console {
                             ConsolePrinter.printApartmentPrice(apartmentService.getById(Long.parseLong(commandArray[2])));
                     case "changestatus" ->
                             ConsolePrinter.printApartmentStatusChange(apartmentService.changeStatus(Long.parseLong(commandArray[2])));
-                    default -> throw new IllegalArgumentException();
+                    default -> throw new UnknownCommandException(commandArray[1]);
                 }
             }
             case 4 -> {
@@ -207,10 +211,10 @@ public class Console {
                     case "price" ->
                         ConsolePrinter.printApartmentPriceChange(apartmentService.changePrice(
                                 Long.parseLong(commandArray[2]), Double.parseDouble(commandArray[3])));
-                    default -> throw new IllegalArgumentException();
+                    default -> throw new UnknownCommandException(commandArray[1]);
                 }
             }
-            default -> ConsolePrinter.syntaxError();
+            default -> throw new CommandSyntaxException();
         }
     }
 
@@ -230,7 +234,7 @@ public class Console {
             case 2 -> {
                 if (commandArray[1].equals("list")) {
                     ConsolePrinter.printList(perkService.getAll());
-                } else throw new IllegalArgumentException();
+                } else throw new UnknownCommandException(commandArray[1]);
             }
             case 3 -> {
                 switch (commandArray[1]) {
@@ -243,11 +247,11 @@ public class Console {
                             case "id" -> perkService.getSorted(PerkService.PerkSortType.ID);
                             case "name" -> perkService.getSorted(PerkService.PerkSortType.NAME);
                             case "price" -> perkService.getSorted(PerkService.PerkSortType.PRICE);
-                            default -> throw new IllegalArgumentException();
+                            default -> throw new UnknownCommandException(commandArray[2]);
                         };
                         ConsolePrinter.printList(list);
                     }
-                    default -> throw new IllegalArgumentException();
+                    default -> throw new UnknownCommandException(commandArray[1]);
                 }
             }
             case 4 -> {
@@ -258,10 +262,10 @@ public class Console {
                         ConsolePrinter.printPerkPriceChange(perkService.changePrice(
                                 Long.parseLong(commandArray[2]), Double.parseDouble(commandArray[3])
                         ));
-                    default -> throw new IllegalArgumentException();
+                    default -> throw new UnknownCommandException(commandArray[1]);
                 }
             }
-            default -> ConsolePrinter.syntaxError();
+            default -> throw new CommandSyntaxException();
         }
     }
 

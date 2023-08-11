@@ -2,6 +2,7 @@ package com.andersenlab.service.impl;
 
 import com.andersenlab.dao.PerkDao;
 import com.andersenlab.entity.Perk;
+import com.andersenlab.exceptions.IdDoesNotExistException;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.PerkService;
 import com.andersenlab.util.EntityValidityCheck;
@@ -20,7 +21,7 @@ public class PerkServiceImpl implements PerkService {
     @Override
     public Perk getById(long id) {
         return perkDao.getById(id)
-                .orElseThrow(() -> new RuntimeException("Perk with this id doesn't exist. Id: " + id));
+                .orElseThrow(() -> new IdDoesNotExistException("Perk with this id doesn't exist. Id: " + id));
     }
 
     @Override
@@ -39,7 +40,7 @@ public class PerkServiceImpl implements PerkService {
     @Override
     public Perk update(Perk perk) {
         return perkDao.update(perk)
-                .orElseThrow(() -> new RuntimeException("Perk with this id doesn't exist. Id: " + perk.getId()));
+                .orElseThrow(() -> new IdDoesNotExistException("Perk with this id doesn't exist. Id: " + perk.getId()));
     }
 
     @Override
