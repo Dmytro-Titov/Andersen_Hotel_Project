@@ -2,6 +2,8 @@ package com.andersenlab.service.impl;
 
 import com.andersenlab.dao.ClientDao;
 import com.andersenlab.entity.*;
+import com.andersenlab.exceptions.IdDoesNotExistException;
+import com.andersenlab.exceptions.InnerLogicException;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
@@ -31,7 +33,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Client getById(long id) {
         return clientDao.getById(id)
-                .orElseThrow(() -> new RuntimeException("Client with this id doesn't exist. Id: " + id));
+                .orElseThrow(() -> new IdDoesNotExistException("Client with this id doesn't exist. Id: " + id));
     }
 
     @Override
@@ -56,7 +58,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Client update(Client client) {
         return clientDao.update(client)
-                .orElseThrow(() -> new RuntimeException("Client with this id doesn't exist. Id: " + client.getId()));
+                .orElseThrow(() -> new IdDoesNotExistException("Client with this id doesn't exist. Id: " + client.getId()));
     }
 
     @Override
@@ -73,7 +75,7 @@ public class ClientServiceImpl implements ClientService {
         Client client = getById(clientId);
         Apartment apartment = apartmentService.getById(apartmentId);
         if (ClientStatus.CHECKED_IN == client.getStatus()) {
-            throw new RuntimeException("This client is already checked in. Apartment id: "
+            throw new InnerLogicException("This client is already checked-in. Apartment id: "
                     + client.getApartment().getId());
         }
         if (ApartmentStatus.AVAILABLE == apartment.getStatus()
@@ -81,7 +83,7 @@ public class ClientServiceImpl implements ClientService {
             checkInProcedure(stayDuration, client, apartment);
             return client;
         } else {
-            throw new RuntimeException("No available apartment in the hotel");
+            throw new InnerLogicException("No available apartment in the hotel");
         }
     }
 
@@ -89,7 +91,7 @@ public class ClientServiceImpl implements ClientService {
         EntityValidityCheck.clientStayDurationCheck(stayDuration);
         Client client = getById(clientId);
         if (ClientStatus.CHECKED_IN == client.getStatus()) {
-            throw new RuntimeException("This client is already checked in. Apartment id: "
+            throw new InnerLogicException("This client is already checked in. Apartment id: "
                     + client.getApartment().getId());
         }
         Optional<Apartment> availableApartment = apartmentService.getAll().stream()
@@ -98,7 +100,7 @@ public class ClientServiceImpl implements ClientService {
                 .findFirst();
         availableApartment.ifPresentOrElse(apartment -> checkInProcedure(stayDuration, client, apartment),
                 () -> {
-                    throw new RuntimeException("No available apartment in the hotel");
+                    throw new InnerLogicException("No available apartment in the hotel");
                 });
         return client;
     }
@@ -129,7 +131,7 @@ public class ClientServiceImpl implements ClientService {
             apartmentService.update(apartment);
             return stayCost;
         } else {
-            throw new RuntimeException("This client isn't checked in in any apartment yet! Id: " + client.getId());
+            throw new InnerLogicException("This client isn't checked-in in any apartment yet! Id: " + client.getId());
         }
     }
 
@@ -137,7 +139,7 @@ public class ClientServiceImpl implements ClientService {
     public Perk addPerk(long clientId, long perkId) {
         Client client = getById(clientId);
         if (ClientStatus.CHECKED_OUT == client.getStatus() || ClientStatus.NEW == client.getStatus()) {
-            throw new RuntimeException("This client is not checked in, you cannot add him/her new perks");
+            throw new InnerLogicException("This client is not checked in, you cannot add him/her new perks");
         }
         Perk perk = perkService.getById(perkId);
         List<Perk> clientPerks = client.getPerks();

@@ -4,6 +4,8 @@ import com.andersenlab.config.Config;
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
+import com.andersenlab.exceptions.ConfigurationRestrictionException;
+import com.andersenlab.exceptions.IdDoesNotExistException;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
 import com.andersenlab.util.EntityValidityCheck;
@@ -24,7 +26,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public Apartment getById(long id) {
         return apartmentDao.getById(id)
-                .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + id));
+                .orElseThrow(() -> new IdDoesNotExistException("Apartment with this id doesn't exist. Id: " + id));
     }
 
     @Override
@@ -52,7 +54,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public Apartment update(Apartment apartment) {
         return apartmentDao.update(apartment)
-                .orElseThrow(() -> new RuntimeException("Apartment with this id doesn't exist. Id: " + apartment.getId()));
+                .orElseThrow(() -> new IdDoesNotExistException("Apartment with this id doesn't exist. Id: " + apartment.getId()));
     }
 
     @Override
@@ -65,7 +67,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     public Apartment changeStatus(long id) {
         boolean allowStatusChange = Config.INSTANCE.getConfigData().getApartment().isAllowApartmentStatusChange();
         if (!allowStatusChange) {
-            throw new IllegalArgumentException("Configuration does not allow change of status");
+            throw new ConfigurationRestrictionException("Configuration does not allow change of status");
         }
         ApartmentStatus newStatus = getById(id).getStatus() == ApartmentStatus.AVAILABLE ?
                 ApartmentStatus.UNAVAILABLE : ApartmentStatus.AVAILABLE;
