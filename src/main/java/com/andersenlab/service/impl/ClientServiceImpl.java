@@ -95,13 +95,11 @@ public class ClientServiceImpl implements ClientService {
                 .filter(apartment -> apartment.getCapacity() >= client.getQuantityOfPeople())
                 .filter(apartment -> ApartmentStatus.AVAILABLE == apartment.getStatus())
                 .findFirst();
-        if (availableApartment.isPresent()) {
-            Apartment apartment = availableApartment.get();
-            checkInProcedure(stayDuration, client, apartment);
-            return client;
-        } else {
-            throw new RuntimeException("No available apartment in the hotel");
-        }
+        availableApartment.ifPresentOrElse(apartment -> checkInProcedure(stayDuration, client, apartment),
+                () -> {
+                    throw new RuntimeException("No available apartment in the hotel");
+                });
+        return client;
     }
 
     private void checkInProcedure(int stayDuration, Client client, Apartment apartment) {
