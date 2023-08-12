@@ -9,11 +9,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class ClientDaoOnDiskImpl implements ClientDao {
-    private HotelFactory hotelFactory;
-    private JsonHandler jsonHandler;
+    private final JsonHandler jsonHandler;
 
     public ClientDaoOnDiskImpl(HotelFactory hotelFactory) {
-        this.hotelFactory = hotelFactory;
         this.jsonHandler = new JsonHandlerImp(hotelFactory);
     }
 
@@ -32,20 +30,18 @@ public class ClientDaoOnDiskImpl implements ClientDao {
 
     @Override
     public Client save(Client client) {
-        var clients = jsonHandler.load().clientsList();
+        var stateEntity = jsonHandler.load();
+        var clients = stateEntity.clientsList();
         clients.add(client);
 
-        jsonHandler.save();
+        jsonHandler.save(stateEntity);
         return client;
-    }
-
-    public void save (List<Client> clients) {
-
     }
 
     @Override
     public Optional<Client> update(Client client) {
-        var existingClient = jsonHandler.load().clientsList()
+        var stateEntity = jsonHandler.load();
+        var existingClient = stateEntity.clientsList()
                 .stream()
                 .filter(client1 -> Objects.equals(client1.getId(), client.getId()))
                 .findFirst();
@@ -58,16 +54,17 @@ public class ClientDaoOnDiskImpl implements ClientDao {
             existingClient.get().setPerks(client.getPerks());
         });
 
-        jsonHandler.save();
+        jsonHandler.save(stateEntity);
         return existingClient;
     }
 
     @Override
     public boolean remove(long id) {
-        var answer = jsonHandler.load().clientsList()
+        var stateEntity = jsonHandler.load();
+        var answer = stateEntity.clientsList()
                 .removeIf(client -> client.getId() == id);
 
-        jsonHandler.save();
+        jsonHandler.save(stateEntity);
         return answer;
     }
 }

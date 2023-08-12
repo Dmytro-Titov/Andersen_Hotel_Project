@@ -8,11 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class ApartmentDaoOnDiskImpl implements ApartmentDao {
-    private HotelFactory hotelFactory;
-    private JsonHandler jsonHandler;
+    private final JsonHandler jsonHandler;
 
     public ApartmentDaoOnDiskImpl(HotelFactory hotelFactory) {
-        this.hotelFactory = hotelFactory;
         this.jsonHandler = new JsonHandlerImp(hotelFactory);
     }
 
@@ -31,16 +29,18 @@ public class ApartmentDaoOnDiskImpl implements ApartmentDao {
 
     @Override
     public Apartment save(Apartment apartment) {
-        var apartments = jsonHandler.load().apartmentsList();
+        var stateEntity = jsonHandler.load();
+        var apartments = stateEntity.apartmentsList();
         apartments.add(apartment);
 
-        jsonHandler.save();
+        jsonHandler.save(stateEntity);
         return apartment;
     }
 
     @Override
     public Optional<Apartment> update(Apartment apartment) {
-        var existingApartment= jsonHandler.load().apartmentsList()
+        var stateEntity = jsonHandler.load();
+        var existingApartment= stateEntity.apartmentsList()
                 .stream()
                 .filter(apartment1 -> apartment1.getId() == apartment.getId())
                 .findFirst();
@@ -57,16 +57,17 @@ public class ApartmentDaoOnDiskImpl implements ApartmentDao {
             }
         });
 
-        jsonHandler.save();
+        jsonHandler.save(stateEntity);
         return existingApartment;
     }
 
     @Override
     public boolean remove(long id) {
-        var answer =  jsonHandler.load().apartmentsList()
+        var entityState = jsonHandler.load();
+        var answer =  entityState.apartmentsList()
                 .removeIf(apartment -> apartment.getId() == id);
 
-        jsonHandler.save();
+        jsonHandler.save(entityState);
         return answer;
     }
 }

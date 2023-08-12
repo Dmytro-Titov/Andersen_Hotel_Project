@@ -5,9 +5,7 @@ import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
-import com.andersenlab.service.ApartmentService;
-import com.andersenlab.service.ClientService;
-import com.andersenlab.service.PerkService;
+import com.andersenlab.util.IdGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -17,29 +15,20 @@ import java.nio.file.Path;
 import java.util.*;
 
 public final class JsonHandlerImp implements JsonHandler {
-//        ClientService clientService;
-//        ApartmentService apartmentService;
-//        PerkService perkService;
     HotelFactory hotelFactory;
-        String pathJson = Config.INSTANCE.getConfigData().getDatabase().getPath();
+    String pathJson = Config.INSTANCE.getConfigData().getDatabase().getPath();
     public JsonHandlerImp(HotelFactory hotelFactory) {
-//        clientService = hotelFactory.getClientService();
-//        apartmentService = hotelFactory.getApartmentService();
-//        perkService = hotelFactory.getPerkService();
         this.hotelFactory = hotelFactory;
     }
 
     @Override
-    public void save() {
-        StateEntity stateEntity = new StateEntity(hotelFactory.getApartmentService().getAll(),
-                                                hotelFactory.getClientService().getAll(),
-                                                hotelFactory.getPerkService().getAll());
+    public void save(StateEntity stateEntity) {
         ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
-            try {
-                objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(pathJson), stateEntity);
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(pathJson), stateEntity);
 
-            } catch (IOException e) {
-                throw new RuntimeException("There is a problem with outgoing files");
+        } catch (IOException e) {
+            throw new RuntimeException("There is a problem with outgoing files");
         }
     }
 
@@ -54,6 +43,8 @@ public final class JsonHandlerImp implements JsonHandler {
             } catch (IOException e) {
                 throw new RuntimeException("There is a problem with incoming files");
             }
+            IdGenerator.setGenerateId(stateEntity.clientsList().size(), stateEntity.apartmentsList().size(), stateEntity.perksList().size());
+
             return stateEntity;
         }
         return stateEntity;
@@ -71,9 +62,4 @@ record StateEntity(List<Apartment> apartmentsList, List<Client> clientsList, Lis
         this(List.of(), List.of(), List.of());
     }
 
-    StateEntity(List<Apartment> apartmentsList, List<Client> clientsList, List<Perk> perksList) {
-        this.apartmentsList = apartmentsList;
-        this.clientsList = clientsList;
-        this.perksList = perksList;
-    }
 }
