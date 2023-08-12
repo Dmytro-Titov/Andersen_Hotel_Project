@@ -22,4 +22,10 @@ public class IdGenerator {
         APARTMENT_COUNTER = 0;
         PERK_COUNTER = 0;
     }
+
+    public static void setGenerateId(long clientCount, long apartmentCount, long perkCount) {
+        CLIENT_COUNTER = clientCount;
+        APARTMENT_COUNTER = apartmentCount;
+        PERK_COUNTER = perkCount;
+    }
 }
