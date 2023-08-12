@@ -1,10 +1,10 @@
 package com.andersenlab;
 
 import com.andersenlab.config.Config;
+import com.andersenlab.dao.onDiskImpl.JsonHandler;
+import com.andersenlab.dao.onDiskImpl.JsonHandlerImp;
 import com.andersenlab.util.ConfigHandler;
 import com.andersenlab.factory.HotelFactory;
-import com.andersenlab.util.JsonHandler;
-import com.andersenlab.util.JsonHandlerImp;
 import com.andersenlab.view.Console;
 
 public class AdministratorApp {

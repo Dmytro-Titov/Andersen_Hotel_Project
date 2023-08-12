@@ -1,4 +1,4 @@
-package com.andersenlab.util;
+package com.andersenlab.dao.onDiskImpl;
 
 import com.andersenlab.config.Config;
 import com.andersenlab.entity.Apartment;
@@ -9,7 +9,6 @@ import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
 import com.andersenlab.service.PerkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 
 import java.io.*;
@@ -17,7 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-public class JsonHandlerImp implements JsonHandler {
+public final class JsonHandlerImp implements JsonHandler {
         ClientService clientService;
         ApartmentService apartmentService;
         PerkService perkService;
@@ -30,10 +29,10 @@ public class JsonHandlerImp implements JsonHandler {
 
     @Override
     public void save() {
-        State state = new State(apartmentService.getAll(), clientService.getAll(), perkService.getAll());
+        StateEntity stateEntity = new StateEntity(apartmentService.getAll(), clientService.getAll(), perkService.getAll());
         ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
             try {
-                objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(pathJson), state);
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(pathJson), stateEntity);
 
             } catch (IOException e) {
                 throw new RuntimeException("There is a problem with outgoing files");
@@ -41,21 +40,24 @@ public class JsonHandlerImp implements JsonHandler {
     }
 
     @Override
-    public void load() {
+    public StateEntity load() {
+        StateEntity stateEntity = new StateEntity();
         if (checkIfExistsJson()) {
-            State state;
             ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
             try  {
                 var reader = Files.newBufferedReader(Path.of(pathJson));
-                state = objectMapper.readValue(reader, State.class);
+                stateEntity = objectMapper.readValue(reader, StateEntity.class);
             } catch (IOException e) {
                 throw new RuntimeException("There is a problem with incoming files");
             }
 
-            clientService.save(state.clientsList());
-            apartmentService.save(state.apartmentsList());
-            perkService.save(state.perksList());
+            clientService.save(stateEntity.clientsList());
+            apartmentService.save(stateEntity.apartmentsList());
+            perkService.save(stateEntity.perksList());
+
+            return stateEntity;
         }
+        return stateEntity;
     }
 
     @Override
@@ -64,5 +66,15 @@ public class JsonHandlerImp implements JsonHandler {
     }
 }
 
-record State (List<Apartment> apartmentsList, List<Client> clientsList, List<Perk> perksList) {
+record StateEntity(List<Apartment> apartmentsList, List<Client> clientsList, List<Perk> perksList) {
+
+    StateEntity() {
+        this(List.of(), List.of(), List.of());
+    }
+
+    StateEntity(List<Apartment> apartmentsList, List<Client> clientsList, List<Perk> perksList) {
+        this.apartmentsList = apartmentsList;
+        this.clientsList = clientsList;
+        this.perksList = perksList;
+    }
 }

@@ -1,9 +1,9 @@
-package com.andersenlab.util;
+package com.andersenlab.dao.onDiskImpl;
 
 public interface JsonHandler {
     void save();
 
-    void load();
+    StateEntity load();
 
     Boolean checkIfExistsJson();
 }
