@@ -8,8 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public class ApartmentDaoOnDiskImpl implements ApartmentDao {
-    private final HotelFactory hotelFactory = new HotelFactory();
-    private final JsonHandler jsonHandler = new JsonHandlerImp(hotelFactory);
+    private HotelFactory hotelFactory;
+    private JsonHandler jsonHandler;
+
+    public ApartmentDaoOnDiskImpl(HotelFactory hotelFactory) {
+        this.hotelFactory = hotelFactory;
+        this.jsonHandler = new JsonHandlerImp(hotelFactory);
+    }
 
     @Override
     public Optional<Apartment> getById(long id) {

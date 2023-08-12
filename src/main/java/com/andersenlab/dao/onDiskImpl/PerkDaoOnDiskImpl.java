@@ -8,8 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public class PerkDaoOnDiskImpl implements PerkDao {
-    private final HotelFactory hotelFactory = new HotelFactory();
-    private final JsonHandlerImp jsonHandler = new JsonHandlerImp(hotelFactory);
+    private HotelFactory hotelFactory;
+    private JsonHandler jsonHandler;
+
+    public PerkDaoOnDiskImpl(HotelFactory hotelFactory) {
+        this.hotelFactory = hotelFactory;
+        this.jsonHandler = new JsonHandlerImp(hotelFactory);
+    }
 
     @Override
     public Optional<Perk> getById(long id) {

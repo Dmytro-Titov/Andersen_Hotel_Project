@@ -9,8 +9,13 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class ClientDaoOnDiskImpl implements ClientDao {
-    private final HotelFactory hotelFactory = new HotelFactory();
-    private final JsonHandler jsonHandler = new JsonHandlerImp(hotelFactory);
+    private HotelFactory hotelFactory;
+    private JsonHandler jsonHandler;
+
+    public ClientDaoOnDiskImpl(HotelFactory hotelFactory) {
+        this.hotelFactory = hotelFactory;
+        this.jsonHandler = new JsonHandlerImp(hotelFactory);
+    }
 
     @Override
     public Optional<Client> getById(long id) {
