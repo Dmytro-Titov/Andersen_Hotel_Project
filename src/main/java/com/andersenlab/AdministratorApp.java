@@ -14,17 +14,18 @@ public class AdministratorApp {
         Config.INSTANCE.setConfigData(config);
 
         HotelFactory hotelFactory = new HotelFactory();
-        JsonHandler jsonHandler = new JsonHandlerImp(hotelFactory);
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                jsonHandler.save();
-            } catch (Exception e) {
-                throw new RuntimeException("Error occurred while exiting the program");
-            }
-        }));
-
-        jsonHandler.load();
+//        JsonHandler jsonHandler = new JsonHandlerImp(hotelFactory);
+//
+//        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+//            try {
+//                jsonHandler.save();
+//            } catch (Exception e) {
+//                throw new RuntimeException("Error occurred while exiting the program");
+//            }
+//        }));
+//
+//        jsonHandler.load();
+//        new JsonHandlerImp(hotelFactory);
         new Console(hotelFactory).start();
     }
 }

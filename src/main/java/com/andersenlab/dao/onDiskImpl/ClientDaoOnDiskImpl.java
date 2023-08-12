@@ -39,6 +39,10 @@ public class ClientDaoOnDiskImpl implements ClientDao {
         return client;
     }
 
+    public void save (List<Client> clients) {
+
+    }
+
     @Override
     public Optional<Client> update(Client client) {
         var existingClient = jsonHandler.load().clientsList()

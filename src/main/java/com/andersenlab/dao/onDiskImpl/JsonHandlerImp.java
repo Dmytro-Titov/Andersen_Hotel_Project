@@ -17,19 +17,23 @@ import java.nio.file.Path;
 import java.util.*;
 
 public final class JsonHandlerImp implements JsonHandler {
-        ClientService clientService;
-        ApartmentService apartmentService;
-        PerkService perkService;
+//        ClientService clientService;
+//        ApartmentService apartmentService;
+//        PerkService perkService;
+    HotelFactory hotelFactory;
         String pathJson = Config.INSTANCE.getConfigData().getDatabase().getPath();
     public JsonHandlerImp(HotelFactory hotelFactory) {
-        clientService = hotelFactory.getClientService();
-        apartmentService = hotelFactory.getApartmentService();
-        perkService = hotelFactory.getPerkService();
+//        clientService = hotelFactory.getClientService();
+//        apartmentService = hotelFactory.getApartmentService();
+//        perkService = hotelFactory.getPerkService();
+        this.hotelFactory = hotelFactory;
     }
 
     @Override
     public void save() {
-        StateEntity stateEntity = new StateEntity(apartmentService.getAll(), clientService.getAll(), perkService.getAll());
+        StateEntity stateEntity = new StateEntity(hotelFactory.getApartmentService().getAll(),
+                                                hotelFactory.getClientService().getAll(),
+                                                hotelFactory.getPerkService().getAll());
         ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
             try {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(pathJson), stateEntity);
@@ -50,11 +54,6 @@ public final class JsonHandlerImp implements JsonHandler {
             } catch (IOException e) {
                 throw new RuntimeException("There is a problem with incoming files");
             }
-
-            clientService.save(stateEntity.clientsList());
-            apartmentService.save(stateEntity.apartmentsList());
-            perkService.save(stateEntity.perksList());
-
             return stateEntity;
         }
         return stateEntity;
