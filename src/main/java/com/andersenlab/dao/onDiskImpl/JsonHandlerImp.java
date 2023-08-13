@@ -15,8 +15,9 @@ import java.nio.file.Path;
 import java.util.*;
 
 public final class JsonHandlerImp implements JsonHandler {
-    private final String  pathJson = Config.INSTANCE.getConfigData().getDatabase().getPath();
-    public JsonHandlerImp() {
+    private final String pathJson;
+    public JsonHandlerImp(HotelFactory hotelFactory) {
+        pathJson = hotelFactory.getConfig().getConfigData().getDatabase().getPath();
     }
 
     @Override
