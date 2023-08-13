@@ -9,10 +9,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class ClientDaoOnDiskImpl implements ClientDao {
-    private final JsonHandler jsonHandler;
+    private final JsonHandler jsonHandler = new JsonHandlerImp();
 
-    public ClientDaoOnDiskImpl(HotelFactory hotelFactory) {
-        this.jsonHandler = new JsonHandlerImp(hotelFactory);
+    public ClientDaoOnDiskImpl() {
     }
 
     @Override

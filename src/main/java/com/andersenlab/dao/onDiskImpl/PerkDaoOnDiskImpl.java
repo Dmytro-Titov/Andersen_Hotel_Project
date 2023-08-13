@@ -8,10 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class PerkDaoOnDiskImpl implements PerkDao {
-    private final JsonHandler jsonHandler;
+    private final JsonHandler jsonHandler = new JsonHandlerImp();
 
-    public PerkDaoOnDiskImpl(HotelFactory hotelFactory) {
-        this.jsonHandler = new JsonHandlerImp(hotelFactory);
+    public PerkDaoOnDiskImpl() {
     }
 
     @Override
