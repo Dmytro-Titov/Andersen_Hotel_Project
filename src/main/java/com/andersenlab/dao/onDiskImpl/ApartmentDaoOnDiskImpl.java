@@ -8,10 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class ApartmentDaoOnDiskImpl implements ApartmentDao {
-    private final JsonHandler jsonHandler;
+    private final JsonHandler jsonHandler = new JsonHandlerImp();
 
-    public ApartmentDaoOnDiskImpl(HotelFactory hotelFactory) {
-        this.jsonHandler = new JsonHandlerImp(hotelFactory);
+    public ApartmentDaoOnDiskImpl() {
     }
 
     @Override

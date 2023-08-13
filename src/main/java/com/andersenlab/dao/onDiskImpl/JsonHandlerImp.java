@@ -17,8 +17,7 @@ import java.util.*;
 public final class JsonHandlerImp implements JsonHandler {
     HotelFactory hotelFactory;
     String pathJson = Config.INSTANCE.getConfigData().getDatabase().getPath();
-    public JsonHandlerImp(HotelFactory hotelFactory) {
-        this.hotelFactory = hotelFactory;
+    public JsonHandlerImp() {
     }
 
     @Override

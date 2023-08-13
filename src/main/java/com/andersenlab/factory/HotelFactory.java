@@ -14,9 +14,9 @@ public class HotelFactory {
     private final PerkService perkService;
 
     public HotelFactory() {
-        apartmentService = new ApartmentServiceImpl(new ApartmentDaoOnDiskImpl(this), this);
-        perkService = new PerkServiceImpl(new PerkDaoOnDiskImpl(this), this);
-        clientService = new ClientServiceImpl(new ClientDaoOnDiskImpl(this), this);
+        apartmentService = new ApartmentServiceImpl(new ApartmentDaoOnDiskImpl(), this);
+        perkService = new PerkServiceImpl(new PerkDaoOnDiskImpl(), this);
+        clientService = new ClientServiceImpl(new ClientDaoOnDiskImpl(), this);
     }
 
     public ApartmentService getApartmentService() {

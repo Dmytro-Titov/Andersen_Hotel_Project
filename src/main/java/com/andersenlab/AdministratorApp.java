@@ -14,7 +14,7 @@ public class AdministratorApp {
         Config.INSTANCE.setConfigData(config);
 
         HotelFactory hotelFactory = new HotelFactory();
-        JsonHandler jsonHandler = new JsonHandlerImp(hotelFactory);
+        JsonHandler jsonHandler = new JsonHandlerImp();
 
         jsonHandler.load();
         new Console(hotelFactory).start();
