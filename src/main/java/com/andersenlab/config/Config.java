@@ -1,6 +1,7 @@
 package com.andersenlab.config;
 
 public class Config {
+
     private ConfigData configData;
 
     public ConfigData getConfigData() {

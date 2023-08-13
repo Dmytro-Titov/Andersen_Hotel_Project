@@ -1,4 +1,4 @@
-package com.andersenlab.dao.impl;
+package com.andersenlab.dao.inMemoryImpl;
 
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.entity.Apartment;
@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ApartmentDaoImpl implements ApartmentDao {
+public class InMemoryApartmentDaoImpl implements ApartmentDao {
 
     private final List<Apartment> apartments;
 
-    public ApartmentDaoImpl() {
+    public InMemoryApartmentDaoImpl() {
         this.apartments = new ArrayList<>();
     }
 
