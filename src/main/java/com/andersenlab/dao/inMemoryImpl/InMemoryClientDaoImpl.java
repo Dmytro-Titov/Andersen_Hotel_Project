@@ -1,4 +1,4 @@
-package com.andersenlab.dao.impl;
+package com.andersenlab.dao.inMemoryImpl;
 
 import com.andersenlab.dao.ClientDao;
 import com.andersenlab.entity.Client;
@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ClientDaoImpl implements ClientDao {
+public class InMemoryClientDaoImpl implements ClientDao {
 
     private final List<Client> clients;
 
-    public ClientDaoImpl() {
+    public InMemoryClientDaoImpl() {
         this.clients = new ArrayList<>();
     }
 

@@ -7,15 +7,15 @@ import com.andersenlab.factory.HotelFactory;
 import java.util.List;
 import java.util.Optional;
 
-public class PerkDaoOnDiskImpl implements PerkDao {
-    private final JsonHandler jsonHandler;
-    public PerkDaoOnDiskImpl(HotelFactory hotelFactory) {
-        this.jsonHandler = new JsonHandlerImp(hotelFactory);
+public class OnDiskPerkDaoImpl implements PerkDao {
+    private final OnDiskJsonHandler onDiskJsonHandler;
+    public OnDiskPerkDaoImpl(HotelFactory hotelFactory) {
+        this.onDiskJsonHandler = new OnDiskJsonHandlerImp(hotelFactory);
     }
 
     @Override
     public Optional<Perk> getById(long id) {
-        return jsonHandler.load().perksList()
+        return onDiskJsonHandler.load().perksList()
                 .stream()
                 .filter(perk -> perk.getId() == id)
                 .findFirst();
@@ -23,22 +23,22 @@ public class PerkDaoOnDiskImpl implements PerkDao {
 
     @Override
     public List<Perk> getAll() {
-        return jsonHandler.load().perksList();
+        return onDiskJsonHandler.load().perksList();
     }
 
     @Override
     public Perk save(Perk perk) {
-        var stateEntity = jsonHandler.load();
+        var stateEntity = onDiskJsonHandler.load();
         var perks = stateEntity.perksList();
         perks.add(perk);
 
-        jsonHandler.save(stateEntity);
+        onDiskJsonHandler.save(stateEntity);
         return perk;
     }
 
     @Override
     public Optional<Perk> update(Perk perk) {
-        var stateEntity = jsonHandler.load();
+        var stateEntity = onDiskJsonHandler.load();
         var existingPerk = stateEntity.perksList()
                 .stream()
                 .filter(perk1 -> perk1.getId() == perk.getId())
@@ -51,17 +51,17 @@ public class PerkDaoOnDiskImpl implements PerkDao {
             updPerk.setPrice(perk.getPrice());
         });
 
-        jsonHandler.save(stateEntity);
+        onDiskJsonHandler.save(stateEntity);
         return existingPerk;
     }
 
     @Override
     public boolean remove(long id) {
-        var stateEntity = jsonHandler.load();
+        var stateEntity = onDiskJsonHandler.load();
         var answer = stateEntity.perksList()
                 .removeIf(perk -> perk.getId() == id);
 
-        jsonHandler.save(stateEntity);
+        onDiskJsonHandler.save(stateEntity);
         return answer;
     }
 }

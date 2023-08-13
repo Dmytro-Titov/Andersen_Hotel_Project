@@ -1,6 +1,6 @@
 package com.andersenlab.dao.onDiskImpl;
 
-public interface JsonHandler {
+public interface OnDiskJsonHandler {
     void save(StateEntity stateEntity);
 
     StateEntity load();

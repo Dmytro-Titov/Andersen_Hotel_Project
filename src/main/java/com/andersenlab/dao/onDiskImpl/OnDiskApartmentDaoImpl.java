@@ -7,15 +7,15 @@ import com.andersenlab.factory.HotelFactory;
 import java.util.List;
 import java.util.Optional;
 
-public class ApartmentDaoOnDiskImpl implements ApartmentDao {
-    private final JsonHandler jsonHandler;
-    public ApartmentDaoOnDiskImpl(HotelFactory hotelFactory) {
-        this.jsonHandler = new JsonHandlerImp(hotelFactory);
+public class OnDiskApartmentDaoImpl implements ApartmentDao {
+    private final OnDiskJsonHandler onDiskJsonHandler;
+    public OnDiskApartmentDaoImpl(HotelFactory hotelFactory) {
+        this.onDiskJsonHandler = new OnDiskJsonHandlerImp(hotelFactory);
     }
 
     @Override
     public Optional<Apartment> getById(long id) {
-        return jsonHandler.load().apartmentsList()
+        return onDiskJsonHandler.load().apartmentsList()
                 .stream()
                 .filter(apartment -> apartment.getId() == id)
                 .findFirst();
@@ -23,22 +23,22 @@ public class ApartmentDaoOnDiskImpl implements ApartmentDao {
 
     @Override
     public List<Apartment> getAll() {
-        return jsonHandler.load().apartmentsList();
+        return onDiskJsonHandler.load().apartmentsList();
     }
 
     @Override
     public Apartment save(Apartment apartment) {
-        var stateEntity = jsonHandler.load();
+        var stateEntity = onDiskJsonHandler.load();
         var apartments = stateEntity.apartmentsList();
         apartments.add(apartment);
 
-        jsonHandler.save(stateEntity);
+        onDiskJsonHandler.save(stateEntity);
         return apartment;
     }
 
     @Override
     public Optional<Apartment> update(Apartment apartment) {
-        var stateEntity = jsonHandler.load();
+        var stateEntity = onDiskJsonHandler.load();
         var existingApartment= stateEntity.apartmentsList()
                 .stream()
                 .filter(apartment1 -> apartment1.getId() == apartment.getId())
@@ -56,17 +56,17 @@ public class ApartmentDaoOnDiskImpl implements ApartmentDao {
             }
         });
 
-        jsonHandler.save(stateEntity);
+        onDiskJsonHandler.save(stateEntity);
         return existingApartment;
     }
 
     @Override
     public boolean remove(long id) {
-        var entityState = jsonHandler.load();
+        var entityState = onDiskJsonHandler.load();
         var answer =  entityState.apartmentsList()
                 .removeIf(apartment -> apartment.getId() == id);
 
-        jsonHandler.save(entityState);
+        onDiskJsonHandler.save(entityState);
         return answer;
     }
 }

@@ -1,6 +1,6 @@
 package com.andersenlab.dao;
 
-import com.andersenlab.dao.impl.ApartmentDaoImpl;
+import com.andersenlab.dao.inMemoryImpl.InMemoryApartmentDaoImpl;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.util.IdGenerator;
@@ -13,11 +13,11 @@ import java.util.Objects;
 
 public class ApartmentDaoTest {
     private Apartment apartment;
-    private ApartmentDaoImpl apartmentDao;
+    private InMemoryApartmentDaoImpl apartmentDao;
 
     @BeforeEach
     private void setup() {
-        apartmentDao = new ApartmentDaoImpl();
+        apartmentDao = new InMemoryApartmentDaoImpl();
 
         apartment = new Apartment();
         apartment.setId(0);

@@ -1,6 +1,5 @@
 package com.andersenlab.dao.onDiskImpl;
 
-import com.andersenlab.config.Config;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
@@ -14,9 +13,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-public final class JsonHandlerImp implements JsonHandler {
+public final class OnDiskJsonHandlerImp implements OnDiskJsonHandler {
     private final String pathJson;
-    public JsonHandlerImp(HotelFactory hotelFactory) {
+    public OnDiskJsonHandlerImp(HotelFactory hotelFactory) {
         pathJson = hotelFactory.getConfig().getConfigData().getDatabase().getPath();
     }
 

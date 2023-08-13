@@ -1,4 +1,4 @@
-package com.andersenlab.dao.impl;
+package com.andersenlab.dao.inMemoryImpl;
 
 import com.andersenlab.dao.PerkDao;
 import com.andersenlab.entity.Perk;
@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PerkDaoImpl implements PerkDao {
+public class ImMemoryPerkDaoImpl implements PerkDao {
 
     private final List<Perk> perks;
 
-    public PerkDaoImpl() {
+    public ImMemoryPerkDaoImpl() {
         this.perks = new ArrayList<>();
     }
 

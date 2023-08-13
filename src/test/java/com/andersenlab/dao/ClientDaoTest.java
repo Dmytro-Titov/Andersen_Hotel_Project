@@ -1,6 +1,6 @@
 package com.andersenlab.dao;
 
-import com.andersenlab.dao.impl.ClientDaoImpl;
+import com.andersenlab.dao.inMemoryImpl.InMemoryClientDaoImpl;
 import com.andersenlab.entity.Client;
 import com.andersenlab.util.IdGenerator;
 import org.junit.jupiter.api.Assertions;
@@ -19,7 +19,7 @@ public class ClientDaoTest {
         client = new Client(IdGenerator.generateClientId(), "Evgen", 1);
         client1 = new Client(IdGenerator.generateClientId(), "Viktoria", 2);
 
-        clientDao = new ClientDaoImpl();
+        clientDao = new InMemoryClientDaoImpl();
         clientDao.save(client);
 
     }

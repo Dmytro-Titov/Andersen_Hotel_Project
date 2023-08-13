@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class ClientDaoOnDiskImpl implements ClientDao {
-    private final JsonHandler jsonHandler;
-    public ClientDaoOnDiskImpl(HotelFactory hotelFactory) {
-        this.jsonHandler = new JsonHandlerImp(hotelFactory);
+public class OnDiskClientDaoImpl implements ClientDao {
+    private final OnDiskJsonHandler onDiskJsonHandler;
+    public OnDiskClientDaoImpl(HotelFactory hotelFactory) {
+        this.onDiskJsonHandler = new OnDiskJsonHandlerImp(hotelFactory);
     }
 
     @Override
     public Optional<Client> getById(long id) {
-        return jsonHandler.load().clientsList()
+        return onDiskJsonHandler.load().clientsList()
                 .stream()
                 .filter(client -> client.getId() == id)
                 .findFirst();
@@ -24,22 +24,22 @@ public class ClientDaoOnDiskImpl implements ClientDao {
 
     @Override
     public List<Client> getAll() {
-        return jsonHandler.load().clientsList();
+        return onDiskJsonHandler.load().clientsList();
     }
 
     @Override
     public Client save(Client client) {
-        var stateEntity = jsonHandler.load();
+        var stateEntity = onDiskJsonHandler.load();
         var clients = stateEntity.clientsList();
         clients.add(client);
 
-        jsonHandler.save(stateEntity);
+        onDiskJsonHandler.save(stateEntity);
         return client;
     }
 
     @Override
     public Optional<Client> update(Client client) {
-        var stateEntity = jsonHandler.load();
+        var stateEntity = onDiskJsonHandler.load();
         var existingClient = stateEntity.clientsList()
                 .stream()
                 .filter(client1 -> Objects.equals(client1.getId(), client.getId()))
@@ -53,17 +53,17 @@ public class ClientDaoOnDiskImpl implements ClientDao {
             existingClient.get().setPerks(client.getPerks());
         });
 
-        jsonHandler.save(stateEntity);
+        onDiskJsonHandler.save(stateEntity);
         return existingClient;
     }
 
     @Override
     public boolean remove(long id) {
-        var stateEntity = jsonHandler.load();
+        var stateEntity = onDiskJsonHandler.load();
         var answer = stateEntity.clientsList()
                 .removeIf(client -> client.getId() == id);
 
-        jsonHandler.save(stateEntity);
+        onDiskJsonHandler.save(stateEntity);
         return answer;
     }
 }
