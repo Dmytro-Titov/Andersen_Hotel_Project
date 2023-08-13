@@ -1,6 +1,5 @@
 package com.andersenlab.util;
 
-import com.andersenlab.config.Config;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
@@ -20,11 +19,12 @@ public class JsonHandlerImp implements JsonHandler {
         ClientService clientService;
         ApartmentService apartmentService;
         PerkService perkService;
-        String pathJson = Config.INSTANCE.getConfigData().getDatabase().getPath();
+        String pathJson;
     public JsonHandlerImp(HotelFactory hotelFactory) {
         clientService = hotelFactory.getClientService();
         apartmentService = hotelFactory.getApartmentService();
         perkService = hotelFactory.getPerkService();
+        pathJson = hotelFactory.getConfig().getConfigData().getDatabase().getPath();
     }
 
     @Override

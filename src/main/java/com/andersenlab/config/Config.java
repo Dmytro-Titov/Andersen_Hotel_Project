@@ -1,9 +1,7 @@
 package com.andersenlab.config;
 
-public enum Config {
-    INSTANCE;
-
-    ConfigData configData;
+public class Config {
+    private ConfigData configData;
 
     public ConfigData getConfigData() {
         return configData;
