@@ -16,7 +16,7 @@ public class OnDiskApartmentDaoImpl implements ApartmentDao {
 
     @Override
     public Optional<Apartment> getById(long id) {
-        return onDiskJsonHandler.load().apartmentsList()
+        return onDiskJsonHandler.load().getApartmentsList()
                 .stream()
                 .filter(apartment -> apartment.getId() == id)
                 .findFirst();
@@ -24,13 +24,13 @@ public class OnDiskApartmentDaoImpl implements ApartmentDao {
 
     @Override
     public List<Apartment> getAll() {
-        return onDiskJsonHandler.load().apartmentsList();
+        return onDiskJsonHandler.load().getApartmentsList();
     }
 
     @Override
     public Apartment save(Apartment apartment) {
         var stateEntity = onDiskJsonHandler.load();
-        var apartments = stateEntity.apartmentsList();
+        var apartments = stateEntity.getApartmentsList();
         var copy = new ArrayList<>(apartments);
         copy.add(apartment);
 
@@ -41,7 +41,7 @@ public class OnDiskApartmentDaoImpl implements ApartmentDao {
     @Override
     public Optional<Apartment> update(Apartment apartment) {
         var stateEntity = onDiskJsonHandler.load();
-        var existingApartment= stateEntity.apartmentsList()
+        var existingApartment= stateEntity.getApartmentsList()
                 .stream()
                 .filter(apartment1 -> apartment1.getId() == apartment.getId())
                 .findFirst();
@@ -65,7 +65,7 @@ public class OnDiskApartmentDaoImpl implements ApartmentDao {
     @Override
     public boolean remove(long id) {
         var entityState = onDiskJsonHandler.load();
-        var answer =  entityState.apartmentsList()
+        var answer =  entityState.getApartmentsList()
                 .removeIf(apartment -> apartment.getId() == id);
 
         onDiskJsonHandler.save(entityState);

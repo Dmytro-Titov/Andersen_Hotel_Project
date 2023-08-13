@@ -16,7 +16,7 @@ public class OnDiskPerkDaoImpl implements PerkDao {
 
     @Override
     public Optional<Perk> getById(long id) {
-        return onDiskJsonHandler.load().perksList()
+        return onDiskJsonHandler.load().getPerksList()
                 .stream()
                 .filter(perk -> perk.getId() == id)
                 .findFirst();
@@ -24,13 +24,13 @@ public class OnDiskPerkDaoImpl implements PerkDao {
 
     @Override
     public List<Perk> getAll() {
-        return onDiskJsonHandler.load().perksList();
+        return onDiskJsonHandler.load().getPerksList();
     }
 
     @Override
     public Perk save(Perk perk) {
         var stateEntity = onDiskJsonHandler.load();
-        var perks = stateEntity.perksList();
+        var perks = stateEntity.getPerksList();
         var copy = new ArrayList<>(perks);
         copy.add(perk);
 
@@ -41,7 +41,7 @@ public class OnDiskPerkDaoImpl implements PerkDao {
     @Override
     public Optional<Perk> update(Perk perk) {
         var stateEntity = onDiskJsonHandler.load();
-        var existingPerk = stateEntity.perksList()
+        var existingPerk = stateEntity.getPerksList()
                 .stream()
                 .filter(perk1 -> perk1.getId() == perk.getId())
                 .findFirst();
@@ -60,7 +60,7 @@ public class OnDiskPerkDaoImpl implements PerkDao {
     @Override
     public boolean remove(long id) {
         var stateEntity = onDiskJsonHandler.load();
-        var answer = stateEntity.perksList()
+        var answer = stateEntity.getPerksList()
                 .removeIf(perk -> perk.getId() == id);
 
         onDiskJsonHandler.save(stateEntity);

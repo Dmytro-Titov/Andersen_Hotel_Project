@@ -41,7 +41,7 @@ public final class OnDiskJsonHandlerImp implements OnDiskJsonHandler {
             } catch (IOException e) {
                 throw new RuntimeException("There is a problem with incoming files");
             }
-            IdGenerator.setGenerateId(stateEntity.clientsList().size(), stateEntity.apartmentsList().size(), stateEntity.perksList().size());
+            IdGenerator.setGenerateId(stateEntity.getClientsList().size(), stateEntity.getApartmentsList().size(), stateEntity.getPerksList().size());
 
             return stateEntity;
         }
@@ -54,22 +54,22 @@ public final class OnDiskJsonHandlerImp implements OnDiskJsonHandler {
     }
 }
 
-record StateEntity(List<Apartment> apartmentsList, List<Client> clientsList, List<Perk> perksList) {
-
-    StateEntity() {
-        this(List.of(), List.of(), List.of());
-    }
-
-    StateEntity addPerkList(List<Perk> perks) {
-        return new StateEntity(apartmentsList, clientsList, perks);
-    }
-
-    StateEntity addApartmentList(List<Apartment> apartments) {
-        return new StateEntity(apartments, clientsList, perksList);
-    }
-
-    StateEntity addClientList(List<Client> clients) {
-        return new StateEntity(apartmentsList, clients, perksList);
-    }
-
-}
+//record StateEntity(List<Apartment> apartmentsList, List<Client> clientsList, List<Perk> perksList) {
+//
+//    StateEntity() {
+//        this(List.of(), List.of(), List.of());
+//    }
+//
+//    StateEntity addPerkList(List<Perk> perks) {
+//        return new StateEntity(apartmentsList, clientsList, perks);
+//    }
+//
+//    StateEntity addApartmentList(List<Apartment> apartments) {
+//        return new StateEntity(apartments, clientsList, perksList);
+//    }
+//
+//    StateEntity addClientList(List<Client> clients) {
+//        return new StateEntity(apartmentsList, clients, perksList);
+//    }
+//
+//}

@@ -17,7 +17,7 @@ public class OnDiskClientDaoImpl implements ClientDao {
 
     @Override
     public Optional<Client> getById(long id) {
-        return onDiskJsonHandler.load().clientsList()
+        return onDiskJsonHandler.load().getClientsList()
                 .stream()
                 .filter(client -> client.getId() == id)
                 .findFirst();
@@ -25,13 +25,13 @@ public class OnDiskClientDaoImpl implements ClientDao {
 
     @Override
     public List<Client> getAll() {
-        return onDiskJsonHandler.load().clientsList();
+        return onDiskJsonHandler.load().getClientsList();
     }
 
     @Override
     public Client save(Client client) {
         var stateEntity = onDiskJsonHandler.load();
-        var clients = stateEntity.clientsList();
+        var clients = stateEntity.getClientsList();
         var copy = new ArrayList<>(clients);
         copy.add(client);
 
@@ -42,7 +42,7 @@ public class OnDiskClientDaoImpl implements ClientDao {
     @Override
     public Optional<Client> update(Client client) {
         var stateEntity = onDiskJsonHandler.load();
-        var existingClient = stateEntity.clientsList()
+        var existingClient = stateEntity.getClientsList()
                 .stream()
                 .filter(client1 -> Objects.equals(client1.getId(), client.getId()))
                 .findFirst();
@@ -62,7 +62,7 @@ public class OnDiskClientDaoImpl implements ClientDao {
     @Override
     public boolean remove(long id) {
         var stateEntity = onDiskJsonHandler.load();
-        var answer = stateEntity.clientsList()
+        var answer = stateEntity.getClientsList()
                 .removeIf(client -> client.getId() == id);
 
         onDiskJsonHandler.save(stateEntity);
