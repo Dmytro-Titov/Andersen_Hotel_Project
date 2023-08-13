@@ -4,6 +4,7 @@ import com.andersenlab.config.Config;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
+import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.IdGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -49,7 +50,7 @@ public final class JsonHandlerImp implements JsonHandler {
 
     @Override
     public Boolean checkIfExistsJson() {
-        return new File(pathJson).exists();
+        return  new File(pathJson).exists();
     }
 }
 
