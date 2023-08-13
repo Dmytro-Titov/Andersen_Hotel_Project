@@ -4,6 +4,7 @@ import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.factory.HotelFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,9 +31,10 @@ public class OnDiskApartmentDaoImpl implements ApartmentDao {
     public Apartment save(Apartment apartment) {
         var stateEntity = onDiskJsonHandler.load();
         var apartments = stateEntity.apartmentsList();
-        apartments.add(apartment);
+        var copy = new ArrayList<>(apartments);
+        copy.add(apartment);
 
-        onDiskJsonHandler.save(stateEntity);
+        onDiskJsonHandler.save(stateEntity.addApartmentList(copy));
         return apartment;
     }
 

@@ -4,6 +4,7 @@ import com.andersenlab.dao.ClientDao;
 import com.andersenlab.entity.Client;
 import com.andersenlab.factory.HotelFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,9 +32,10 @@ public class OnDiskClientDaoImpl implements ClientDao {
     public Client save(Client client) {
         var stateEntity = onDiskJsonHandler.load();
         var clients = stateEntity.clientsList();
-        clients.add(client);
+        var copy = new ArrayList<>(clients);
+        copy.add(client);
 
-        onDiskJsonHandler.save(stateEntity);
+        onDiskJsonHandler.save(stateEntity.addClientList(copy));
         return client;
     }
 

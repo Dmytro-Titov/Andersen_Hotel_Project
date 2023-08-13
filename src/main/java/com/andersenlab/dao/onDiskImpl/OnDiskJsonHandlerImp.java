@@ -60,4 +60,16 @@ record StateEntity(List<Apartment> apartmentsList, List<Client> clientsList, Lis
         this(List.of(), List.of(), List.of());
     }
 
+    StateEntity addPerkList(List<Perk> perks) {
+        return new StateEntity(apartmentsList, clientsList, perks);
+    }
+
+    StateEntity addApartmentList(List<Apartment> apartments) {
+        return new StateEntity(apartments, clientsList, perksList);
+    }
+
+    StateEntity addClientList(List<Client> clients) {
+        return new StateEntity(apartmentsList, clients, perksList);
+    }
+
 }

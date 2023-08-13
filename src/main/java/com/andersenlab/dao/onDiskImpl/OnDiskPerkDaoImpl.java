@@ -4,6 +4,7 @@ import com.andersenlab.dao.PerkDao;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,9 +31,10 @@ public class OnDiskPerkDaoImpl implements PerkDao {
     public Perk save(Perk perk) {
         var stateEntity = onDiskJsonHandler.load();
         var perks = stateEntity.perksList();
-        perks.add(perk);
+        var copy = new ArrayList<>(perks);
+        copy.add(perk);
 
-        onDiskJsonHandler.save(stateEntity);
+        onDiskJsonHandler.save(stateEntity.addPerkList(copy));
         return perk;
     }
 
