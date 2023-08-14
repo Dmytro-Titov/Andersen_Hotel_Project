@@ -52,6 +52,7 @@ public class OnDiskClientDaoImpl implements ClientDao {
             existingClient.get().setCheckOutDate(client.getCheckOutDate());
             existingClient.get().setStatus(client.getStatus());
             existingClient.get().setApartment(client.getApartment());
+            existingClient.get().setStayCost(client.getStayCost());
             existingClient.get().setPerks(client.getPerks());
         });
 

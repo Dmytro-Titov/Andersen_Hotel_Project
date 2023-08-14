@@ -1,6 +1,6 @@
 package com.andersenlab.dao;
 
-import com.andersenlab.dao.inMemoryImpl.ImMemoryPerkDaoImpl;
+import com.andersenlab.dao.inMemoryImpl.InMemoryPerkDaoImpl;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.util.IdGenerator;
 import org.junit.jupiter.api.Assertions;
@@ -30,7 +30,7 @@ public class PerkDaoTest {
         perk2.setName("Name3");
         perk2.setPrice(30);
 
-        perkDao = new ImMemoryPerkDaoImpl();
+        perkDao = new InMemoryPerkDaoImpl();
         perkDao.save(perk);
         perkDao.save(perk1);
         perkDao.save(perk2);

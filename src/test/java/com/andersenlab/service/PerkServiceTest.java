@@ -1,8 +1,14 @@
 package com.andersenlab.service;
 
+import com.andersenlab.config.Config;
+import com.andersenlab.dao.onDiskImpl.OnDiskApartmentDaoImpl;
+import com.andersenlab.dao.onDiskImpl.OnDiskPerkDaoImpl;
+import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
+import com.andersenlab.util.ConfigHandler;
 import com.andersenlab.util.IdGenerator;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,16 +20,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class PerkServiceTest {
 
     private PerkService perkService;
+    private HotelFactory hotelFactory;
 
 
     @BeforeEach
     void setup() {
         IdGenerator.cancelGenerateId();
-        HotelFactory hotelFactory = new HotelFactory();
+        Config config = new Config();
+        config.setConfigData(ConfigHandler.createConfig("src/main/resources/config/config-dev.yaml"));
+        config.getConfigData().getDatabase().setPath("src/main/resources/json/testHotel.json");
+        hotelFactory = new HotelFactory(config);
         perkService = hotelFactory.getPerkService();
         perkService.save("massage", 300);
         perkService.save("ironing", 150);
         perkService.save("laundry", 100);
+    }
+
+    @AfterEach
+    private void teardown() {
+        OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory);
+        for (Perk perk : perkService.getAll()) {
+            onDiskPerkDao.remove(perk.getId());
+        }
     }
 
 

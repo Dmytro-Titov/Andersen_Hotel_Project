@@ -55,10 +55,8 @@ public class ClientServiceImpl implements ClientService {
         });
     }
 
-
     public void save(Client client) {
-        clientDao.save(client);
-        IdGenerator.generateClientId();
+        clientDao.save(new Client(IdGenerator.generateClientId(), client.getName(), client.getQuantityOfPeople()));
     }
 
     @Override
