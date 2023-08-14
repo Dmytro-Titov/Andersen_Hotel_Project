@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ImMemoryPerkDaoImpl implements PerkDao {
+public class InMemoryPerkDaoImpl implements PerkDao {
 
     private final List<Perk> perks;
 
-    public ImMemoryPerkDaoImpl() {
+    public InMemoryPerkDaoImpl() {
         this.perks = new ArrayList<>();
     }
 

@@ -6,6 +6,8 @@ public class ConfigData {
 
     private ApartmentConfig apartment;
 
+    private SaveOptionConfig saveOption;
+
     public ConfigData() {
     }
 
@@ -23,6 +25,14 @@ public class ConfigData {
 
     public void setApartment(ApartmentConfig apartment) {
         this.apartment = apartment;
+    }
+
+    public SaveOptionConfig getSaveOption() {
+        return saveOption;
+    }
+
+    public void setSaveOption(SaveOptionConfig saveOption) {
+        this.saveOption = saveOption;
     }
 
     public static class DatabaseConfig {
@@ -62,6 +72,22 @@ public class ConfigData {
 
         public void setAllowApartmentStatusChange(boolean allowApartmentStatusChange) {
             this.allowApartmentStatusChange = allowApartmentStatusChange;
+        }
+    }
+
+    public static class SaveOptionConfig {
+
+        private boolean saveOnDisk;
+
+        public SaveOptionConfig() {
+        }
+
+        public boolean isSaveOnDisk() {
+            return saveOnDisk;
+        }
+
+        public void setSaveOnDisk(boolean saveOnDisk) {
+            this.saveOnDisk = saveOnDisk;
         }
     }
 }

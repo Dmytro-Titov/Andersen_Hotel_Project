@@ -3,3 +3,6 @@ database:
 
 apartment:
   allowApartmentStatusChange: true
+
+saveOption:
+  saveOnDisk: true
