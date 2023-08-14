@@ -1,10 +1,13 @@
 package com.andersenlab.service;
 
+import com.andersenlab.config.Config;
+import com.andersenlab.dao.onDiskImpl.OnDiskApartmentDaoImpl;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.ConfigHandler;
 import com.andersenlab.util.IdGenerator;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,19 +19,29 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ApartmentServiceTest {
 
     private ApartmentService apartmentService;
+    private HotelFactory hotelFactory;
 
 
     @BeforeEach
     private void setup() {
         IdGenerator.cancelGenerateId();
-        HotelFactory hotelFactory = new HotelFactory();
+        Config config = new Config();
+        config.setConfigData(ConfigHandler.createConfig("src/main/resources/config/config-dev.yaml"));
+        config.getConfigData().getDatabase().setPath("src/main/resources/json/testHotel.json");
+        hotelFactory = new HotelFactory(config);
         apartmentService = hotelFactory.getApartmentService();
         apartmentService.save(1, 200.0);
         apartmentService.save(2, 350.0);
         apartmentService.save(4, 500.0);
         apartmentService.save(3, 200.0);
-        var config = ConfigHandler.createConfig(null) ;
-        hotelFactory.getConfig().setConfigData(config);
+    }
+
+    @AfterEach
+    private void teardown() {
+        OnDiskApartmentDaoImpl onDiskApartmentDao = new OnDiskApartmentDaoImpl(hotelFactory);
+        for (Apartment apartment : apartmentService.getAll()) {
+            onDiskApartmentDao.remove(apartment.getId());
+        }
     }
 
 
