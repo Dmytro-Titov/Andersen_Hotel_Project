@@ -8,6 +8,8 @@ public class ConfigData {
 
     private SaveOptionConfig saveOption;
 
+    private PostgresDB postgresDatabase;
+
     public ConfigData() {
     }
 
@@ -33,6 +35,14 @@ public class ConfigData {
 
     public void setSaveOption(SaveOptionConfig saveOption) {
         this.saveOption = saveOption;
+    }
+
+    public PostgresDB getPostgresDatabase() {
+        return postgresDatabase;
+    }
+
+    public void setPostgresDatabase(PostgresDB postgresDatabase) {
+        this.postgresDatabase = postgresDatabase;
     }
 
     public static class DatabaseConfig {
@@ -88,6 +98,39 @@ public class ConfigData {
 
         public void setSaveOnDisk(boolean saveOnDisk) {
             this.saveOnDisk = saveOnDisk;
+        }
+    }
+
+    public static class PostgresDB {
+       private String POSTGRES_USER;
+       private String POSTGRES_PASS;
+       private String DB_URL;
+
+        public PostgresDB() {
+        }
+
+        public String getPOSTGRES_USER() {
+            return POSTGRES_USER;
+        }
+
+        public void setPOSTGRES_USER(String POSTGRES_USER) {
+            this.POSTGRES_USER = POSTGRES_USER;
+        }
+
+        public String getPOSTGRES_PASS() {
+            return POSTGRES_PASS;
+        }
+
+        public void setPOSTGRES_PASS(String POSTGRES_PASS) {
+            this.POSTGRES_PASS = POSTGRES_PASS;
+        }
+
+        public String getDB_URL() {
+            return DB_URL;
+        }
+
+        public void setDB_URL(String DB_URL) {
+            this.DB_URL = DB_URL;
         }
     }
 }
