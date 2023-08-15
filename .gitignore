@@ -9,6 +9,7 @@ target/
 *.iml
 *.ipr
 *out/artifacts/AndersenHotelProject_jar
+*tomcat.8080
 
 ### Eclipse ###
 .apt_generated
