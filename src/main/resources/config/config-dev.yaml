@@ -1,6 +1,22 @@
 database:
   path: "src/main/resources/json/hotel.json"
 
+datasource:
+  driver: "org.postgresql.Driver"
+  URL: "jdbc:postgresql://localhost:5432/hotel_db"
+  username_value: "postgres"
+  password: "r00t"
+
+jdbc:
+  properties:
+  hibernate:
+  dialect: org.hibernate.dialect.PostgreSQL95Dialect
+  show_sql: true
+  use_jdbc_metadata_defaults: false
+
+liquibase:
+  change-log: classpath:liquibase/changelog.yml
+
 apartment:
   allowApartmentStatusChange: true
 
