@@ -19,6 +19,8 @@ public interface ClientService {
 
     Client checkInApartment(long clientId, int stayDuration, long apartmentId);
 
+    Client checkInAnyFreeApartment(long clientId, int stayDuration);
+
     double checkOutApartment(long clientId);
 
     Perk addPerk(long clientId, long perkId);

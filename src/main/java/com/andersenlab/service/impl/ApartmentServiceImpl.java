@@ -47,7 +47,8 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public Apartment update(Apartment apartment) {
         return apartmentDao.update(apartment)
-                .orElseThrow(() -> new IdDoesNotExistException("Apartment with this id doesn't exist. Id: " + apartment.getId()));
+                .orElseThrow(() -> new IdDoesNotExistException("Apartment with this id doesn't exist. Id: "
+                        + apartment.getId()));
     }
 
     @Override
@@ -60,8 +61,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     public Apartment changeStatus(long id) {
         boolean allowStatusChange = hotelFactory.getConfig().getConfigData().getApartment().isAllowApartmentStatusChange();
         if (!allowStatusChange) {
-            throw new ConfigurationRestrictionException("Configuration does not allow change of status");
-        }
+            throw new ConfigurationRestrictionException("Configuration does not allow change of status");}
         ApartmentStatus newStatus = getById(id).getStatus() == ApartmentStatus.AVAILABLE ?
                 ApartmentStatus.UNAVAILABLE : ApartmentStatus.AVAILABLE;
         return update(new Apartment(id, newStatus));
