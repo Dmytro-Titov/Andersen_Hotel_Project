@@ -31,13 +31,6 @@ public class PerkServiceImpl implements PerkService {
         return perkDao.save(new Perk(IdGenerator.generatePerkId(), name, price));
     }
 
-    public void save(List<Perk> perks) {
-        perks.forEach(perk -> {
-            perkDao.save(perk);
-            IdGenerator.generatePerkId();
-        });
-    }
-
     @Override
     public Perk update(Perk perk) {
         return perkDao.update(perk)

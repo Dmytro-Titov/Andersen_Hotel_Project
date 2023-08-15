@@ -13,8 +13,6 @@ public interface ClientService {
 
     Client save(String name, int quantityOfPeople);
 
-    void save(List<Client> clients);
-
     Client update(Client client);
 
     double getStayCost(long id);
