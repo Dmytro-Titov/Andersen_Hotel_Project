@@ -23,6 +23,7 @@
         <source>17</source>
         <maven-jar-plugin>3.2.0</maven-jar-plugin>
         <maven-surefire-plugin>3.1.2</maven-surefire-plugin>
+        <postgresql>42.6.0</postgresql>
     </properties>
 
     <build>
@@ -71,12 +72,6 @@
                     </properties>
                 </configuration>
             </plugin>
-
-<!--            <plugin>-->
-<!--                    <groupId>org.liquibase</groupId>-->
-<!--                    <artifactId>liquibase-maven-plugin</artifactId>-->
-<!--                    <version>4.23.1</version>-->
-<!--            </plugin>-->
         </plugins>
     </build>
 
@@ -120,6 +115,16 @@
             <version>${jackson-datatype-jsr310}</version>
         </dependency>
         <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>4.23.1</version>
@@ -129,13 +134,5 @@
             <artifactId>liquibase-maven-plugin</artifactId>
             <version>4.23.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.6.0</version>
-        </dependency>
-
-
-
     </dependencies>
 </project>

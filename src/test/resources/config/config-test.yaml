@@ -1,0 +1,8 @@
+database:
+  path: "src/test/resources/json/testHotel.json"
+
+apartment:
+  allowApartmentStatusChange: true
+
+saveOption:
+  saveOnDisk: true

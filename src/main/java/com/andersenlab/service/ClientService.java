@@ -13,13 +13,13 @@ public interface ClientService {
 
     Client save(String name, int quantityOfPeople);
 
-    void save(List<Client> clients);
-
     Client update(Client client);
 
     double getStayCost(long id);
 
     Client checkInApartment(long clientId, int stayDuration, long apartmentId);
+
+    Client checkInAnyFreeApartment(long clientId, int stayDuration);
 
     double checkOutApartment(long clientId);
 
