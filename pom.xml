@@ -27,6 +27,8 @@
         <maven-jar-plugin>3.2.0</maven-jar-plugin>
         <maven-surefire-plugin>3.1.2</maven-surefire-plugin>
         <tomcat.version>8.5.38</tomcat.version>
+        <javax.servlet-api>4.0.1</javax.servlet-api>
+        <jstl>1.2</jstl>
     </properties>
 
     <build>
@@ -138,6 +140,16 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson-datatype-jsr310}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet-api}</version>
+        </dependency>
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${jstl}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
