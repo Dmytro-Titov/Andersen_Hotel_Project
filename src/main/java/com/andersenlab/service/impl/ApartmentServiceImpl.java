@@ -45,14 +45,6 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public void save(List<Apartment> apartments) {
-        apartments.forEach(apartment -> {
-            apartmentDao.save(apartment);
-            IdGenerator.generateApartmentId();
-        });
-    }
-
-    @Override
     public Apartment update(Apartment apartment) {
         return apartmentDao.update(apartment)
                 .orElseThrow(() -> new IdDoesNotExistException("Apartment with this id doesn't exist. Id: " + apartment.getId()));
