@@ -9,8 +9,6 @@ public interface PerkService {
 
     Perk save(String name, double price);
 
-    void save(List<Perk> perks);
-
     Perk update(Perk perk);
 
     Perk changePrice(long id, double price);
