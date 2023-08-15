@@ -102,35 +102,45 @@ public class ConfigData {
     }
 
     public static class PostgresDB {
-       private String POSTGRES_USER;
-       private String POSTGRES_PASS;
-       private String DB_URL;
+        private String url;
+        private String username;
+        private String password;
+
+        private int pool;
 
         public PostgresDB() {
         }
 
-        public String getPOSTGRES_USER() {
-            return POSTGRES_USER;
+        public String getUrl() {
+            return url;
         }
 
-        public void setPOSTGRES_USER(String POSTGRES_USER) {
-            this.POSTGRES_USER = POSTGRES_USER;
+        public void setUrl(String url) {
+            this.url = url;
         }
 
-        public String getPOSTGRES_PASS() {
-            return POSTGRES_PASS;
+        public String getUsername() {
+            return username;
         }
 
-        public void setPOSTGRES_PASS(String POSTGRES_PASS) {
-            this.POSTGRES_PASS = POSTGRES_PASS;
+        public void setUsername(String username) {
+            this.username = username;
         }
 
-        public String getDB_URL() {
-            return DB_URL;
+        public String getPassword() {
+            return password;
         }
 
-        public void setDB_URL(String DB_URL) {
-            this.DB_URL = DB_URL;
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public int getPool() {
+            return pool;
+        }
+
+        public void setPool(int pool) {
+            this.pool = pool;
         }
     }
 }

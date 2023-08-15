@@ -8,6 +8,7 @@ saveOption:
   saveOnDisk: true
 
 postgresDatabase:
-  POSTGRES_USER: "postgres"
-  POSTGRES_PASS: "password"
-  DB_URL: "jdbc:postgresql://localhost:5432/db_hotel_Andersen"
+  username: "postgres"
+  password: "password"
+  url: "jdbc:postgresql://localhost:5432/db_hotel_Andersen"
+  pool: 30
