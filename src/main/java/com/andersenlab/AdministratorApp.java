@@ -16,6 +16,7 @@ public class AdministratorApp {
         HotelFactory hotelFactory = new HotelFactory(config);
         OnDiskJsonHandler onDiskJsonHandler = new OnDiskJsonHandlerImp(hotelFactory);
 
+
         onDiskJsonHandler.load();
         new Console(hotelFactory).start();
     }

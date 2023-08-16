@@ -26,6 +26,7 @@
         <source>17</source>
         <maven-jar-plugin>3.2.0</maven-jar-plugin>
         <maven-surefire-plugin>3.1.2</maven-surefire-plugin>
+        <postgresql>42.6.0</postgresql>
         <tomcat.version>8.5.38</tomcat.version>
     </properties>
 
@@ -153,6 +154,16 @@
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jasper</artifactId>
             <version>${tomcat.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.1</version>
         </dependency>
     </dependencies>
 </project>

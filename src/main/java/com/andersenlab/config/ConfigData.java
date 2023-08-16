@@ -8,6 +8,8 @@ public class ConfigData {
 
     private SaveOptionConfig saveOption;
 
+    private PostgresDB postgresDatabase;
+
     public ConfigData() {
     }
 
@@ -33,6 +35,14 @@ public class ConfigData {
 
     public void setSaveOption(SaveOptionConfig saveOption) {
         this.saveOption = saveOption;
+    }
+
+    public PostgresDB getPostgresDatabase() {
+        return postgresDatabase;
+    }
+
+    public void setPostgresDatabase(PostgresDB postgresDatabase) {
+        this.postgresDatabase = postgresDatabase;
     }
 
     public static class DatabaseConfig {
@@ -88,6 +98,49 @@ public class ConfigData {
 
         public void setSaveOnDisk(boolean saveOnDisk) {
             this.saveOnDisk = saveOnDisk;
+        }
+    }
+
+    public static class PostgresDB {
+        private String url;
+        private String username;
+        private String password;
+
+        private int pool;
+
+        public PostgresDB() {
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public int getPool() {
+            return pool;
+        }
+
+        public void setPool(int pool) {
+            this.pool = pool;
         }
     }
 }
