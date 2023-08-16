@@ -50,6 +50,7 @@ public class OnDiskClientDaoImpl implements ClientDao {
         existingClient.ifPresent(updClient -> {
             existingClient.get().setName(client.getName());
             existingClient.get().setCheckOutDate(client.getCheckOutDate());
+            existingClient.get().setCheckInDate(client.getCheckInDate());
             existingClient.get().setStatus(client.getStatus());
             existingClient.get().setApartment(client.getApartment());
             existingClient.get().setStayCost(client.getStayCost());
