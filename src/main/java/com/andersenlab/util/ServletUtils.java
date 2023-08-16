@@ -14,8 +14,6 @@ public class ServletUtils {
         HotelFactory hotelFactory = new HotelFactory(config);
         return hotelFactory;
     }
-
-
     public static String readBody(BufferedReader reader) throws IOException {
         StringBuilder jsonBody = new StringBuilder();
         String line;
