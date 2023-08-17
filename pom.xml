@@ -103,7 +103,7 @@
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <version>4.23.0</version>
                 <configuration>
-                    <changeLogFile>src/main/resources/liquibase/changelog.sql</changeLogFile>
+                    <changeLogFile>src/main/resources/sql/initial_db_creation.sql</changeLogFile>
                     <url>jdbc:postgresql://localhost:5432/db_hotel_Andersen</url>
                     <username>postgres</username>
                     <password>password</password>
