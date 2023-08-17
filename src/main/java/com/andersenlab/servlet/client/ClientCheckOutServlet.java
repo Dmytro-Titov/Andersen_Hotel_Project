@@ -23,9 +23,12 @@ public class ClientCheckOutServlet extends HttpServlet {
     //EXAMPLE: http://localhost:8080/clients/checkout?clientId=2 for checkOutApartment()
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String id = req.getParameter("id");
+        String id = req.getParameter("clientId");
         try {
             double stayCost = hotelFactory.getClientService().checkOutApartment(Long.parseLong(id));
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.setContentType("application/json");
+            objectMapper.writeValue(resp.getWriter(), stayCost);
         } catch (IdDoesNotExistException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } catch (InnerLogicException e) {

@@ -12,7 +12,7 @@ import java.util.Optional;
 public class OnDiskClientDaoImpl implements ClientDao {
     private final OnDiskJsonHandler onDiskJsonHandler;
     public OnDiskClientDaoImpl(HotelFactory hotelFactory) {
-        this.onDiskJsonHandler = new OnDiskJsonHandlerImp(hotelFactory);
+        this.onDiskJsonHandler = new OnDiskJsonHandler(hotelFactory);
     }
 
     @Override

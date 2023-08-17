@@ -1,6 +1,9 @@
 package com.andersenlab.factory;
 
 import com.andersenlab.config.Config;
+import com.andersenlab.dao.JDBCImpl.JdbcApartmentDaoImpl;
+import com.andersenlab.dao.JDBCImpl.JdbcClientDaoImpl;
+import com.andersenlab.dao.JDBCImpl.JdbcPerkDaoImpl;
 import com.andersenlab.dao.inMemoryImpl.InMemoryApartmentDaoImpl;
 import com.andersenlab.dao.inMemoryImpl.InMemoryClientDaoImpl;
 import com.andersenlab.dao.inMemoryImpl.InMemoryPerkDaoImpl;
@@ -24,9 +27,9 @@ public class HotelFactory {
             perkService = new PerkServiceImpl(new OnDiskPerkDaoImpl(this), this);
             clientService = new ClientServiceImpl(new OnDiskClientDaoImpl(this), this);
         } else {
-            apartmentService = new ApartmentServiceImpl(new InMemoryApartmentDaoImpl(), this);
-            perkService = new PerkServiceImpl(new InMemoryPerkDaoImpl(), this);
-            clientService = new ClientServiceImpl(new InMemoryClientDaoImpl(), this);
+            apartmentService = new ApartmentServiceImpl(new JdbcApartmentDaoImpl(this), this);
+            perkService = new PerkServiceImpl(new JdbcPerkDaoImpl(this), this);
+            clientService = new ClientServiceImpl(new JdbcClientDaoImpl(this), this);
         }
     }
 
