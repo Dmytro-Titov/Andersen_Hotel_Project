@@ -88,6 +88,7 @@ public class ConfigData {
     public static class SaveOptionConfig {
 
         private boolean saveOnDisk;
+        private boolean saveJdbc;
 
         public SaveOptionConfig() {
         }
@@ -96,8 +97,16 @@ public class ConfigData {
             return saveOnDisk;
         }
 
+        public boolean isSaveJdbc() {
+            return saveJdbc;
+        }
+
         public void setSaveOnDisk(boolean saveOnDisk) {
             this.saveOnDisk = saveOnDisk;
+        }
+
+        public void setSaveJdbc(boolean saveJdbc) {
+            this.saveJdbc = saveJdbc;
         }
     }
 

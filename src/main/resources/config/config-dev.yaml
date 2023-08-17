@@ -6,6 +6,7 @@ apartment:
 
 saveOption:
   saveOnDisk: false
+  saveJdbc: true
 
 postgresDatabase:
   username: "postgres"
