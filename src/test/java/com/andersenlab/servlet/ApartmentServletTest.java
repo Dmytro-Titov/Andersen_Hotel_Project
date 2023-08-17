@@ -10,7 +10,6 @@ import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.ServletUtils;
 import io.restassured.http.ContentType;
 import org.json.simple.JSONObject;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,11 +20,11 @@ import static io.restassured.RestAssured.given;
 
 public class ApartmentServletTest {
 
-    private static HotelFactory hotelFactory = ServletUtils.getHotelFactoryInstance();
+    private final HotelFactory hotelFactory = ServletUtils.getHotelFactoryInstance();
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         if (hotelFactory.getConfig().getConfigData().getSaveOption().isSaveOnDisk()) {
             OnDiskClientDaoImpl onDiskClientDao = new OnDiskClientDaoImpl(hotelFactory);
             for (Client client : hotelFactory.getClientService().getAll()) {
@@ -49,27 +48,8 @@ public class ApartmentServletTest {
     }
 
 
-    @AfterEach
-    public void teardown() {
-        if (hotelFactory.getConfig().getConfigData().getSaveOption().isSaveOnDisk()) {
-            OnDiskClientDaoImpl onDiskClientDao = new OnDiskClientDaoImpl(hotelFactory);
-            for (Client client : hotelFactory.getClientService().getAll()) {
-                onDiskClientDao.remove(client.getId());
-            }
-            OnDiskApartmentDaoImpl onDiskApartmentDao = new OnDiskApartmentDaoImpl(hotelFactory);
-            for (Apartment apartment : hotelFactory.getApartmentService().getAll()) {
-                onDiskApartmentDao.remove(apartment.getId());
-            }
-            OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory);
-            for (Perk perk : hotelFactory.getPerkService().getAll()) {
-                onDiskPerkDao.remove(perk.getId());
-            }
-        }
-    }
-
-
     @Test
-    public void add_new_apartment() {
+    void add_new_apartment() {
         Integer expected = 3;
         JSONObject requestBody = new JSONObject();
         requestBody.put("capacity", 10);
@@ -87,7 +67,7 @@ public class ApartmentServletTest {
 
 
     @Test
-    public void get_apartment_by_id() {
+    void get_apartment_by_id() {
         Apartment expected = hotelFactory.getApartmentService().getById(1);
         Apartment actual =
                 given()
@@ -106,7 +86,7 @@ public class ApartmentServletTest {
 
 
     @Test
-    public void update_apartment_by_id() {
+    void update_apartment_by_id() {
         JSONObject requestBody = new JSONObject();
         requestBody.put("capacity", 11);
         requestBody.put("price", 5300.0);
@@ -130,7 +110,7 @@ public class ApartmentServletTest {
 
 
     @Test
-    public void change_apartment_price() {
+    void change_apartment_price() {
         Double expected = 2500.0;
         JSONObject requestBody = new JSONObject();
         requestBody.put("price", 2500);
@@ -153,7 +133,7 @@ public class ApartmentServletTest {
 
 
     @Test
-    public void change_apartment_status() {
+    void change_apartment_status() {
         Apartment actual =
                 given()
                         .contentType(ContentType.JSON)
@@ -172,7 +152,7 @@ public class ApartmentServletTest {
 
 
     @Test
-    public void get_all_apartments() {
+    void get_all_apartments() {
         Integer expected = 2;
         List apartments = given()
                 .contentType(ContentType.JSON)
@@ -191,7 +171,7 @@ public class ApartmentServletTest {
 
 
     @Test
-    public void get_all_sorted_apartments_by_id() {
+    void get_all_sorted_apartments_by_id() {
         Integer expected = 2;
         List apartments = given()
                 .contentType(ContentType.JSON)
@@ -210,7 +190,7 @@ public class ApartmentServletTest {
 
 
     @Test
-    public void get_all_sorted_apartments_by_price() {
+    void get_all_sorted_apartments_by_price() {
         Integer expected = 2;
         List apartments = given()
                 .contentType(ContentType.JSON)
@@ -229,7 +209,7 @@ public class ApartmentServletTest {
 
 
     @Test
-    public void get_all_sorted_apartments_by_capacity() {
+    void get_all_sorted_apartments_by_capacity() {
         Integer expected = 2;
         List apartments = given()
                 .contentType(ContentType.JSON)
@@ -248,7 +228,7 @@ public class ApartmentServletTest {
 
 
     @Test
-    public void get_all_sorted_apartments_by_status() {
+    void get_all_sorted_apartments_by_status() {
         Integer expected = 2;
         List apartments = given()
                 .contentType(ContentType.JSON)

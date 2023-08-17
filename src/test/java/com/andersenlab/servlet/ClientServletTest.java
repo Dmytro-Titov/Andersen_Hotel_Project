@@ -11,7 +11,6 @@ import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.ServletUtils;
 import io.restassured.http.ContentType;
 import org.json.simple.JSONObject;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,11 +21,11 @@ import static io.restassured.RestAssured.given;
 
 public class ClientServletTest {
 
-    private HotelFactory hotelFactory = ServletUtils.getHotelFactoryInstance();
+    private final HotelFactory hotelFactory = ServletUtils.getHotelFactoryInstance();
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         if (hotelFactory.getConfig().getConfigData().getSaveOption().isSaveOnDisk()) {
             OnDiskClientDaoImpl onDiskClientDao = new OnDiskClientDaoImpl(hotelFactory);
             for (Client client : hotelFactory.getClientService().getAll()) {
@@ -50,26 +49,8 @@ public class ClientServletTest {
     }
 
 
-    @AfterEach
-    public void teardown() {
-        if (hotelFactory.getConfig().getConfigData().getSaveOption().isSaveOnDisk()) {
-            OnDiskClientDaoImpl onDiskClientDao = new OnDiskClientDaoImpl(hotelFactory);
-            for (Client client : hotelFactory.getClientService().getAll()) {
-                onDiskClientDao.remove(client.getId());
-            }
-            OnDiskApartmentDaoImpl onDiskApartmentDao = new OnDiskApartmentDaoImpl(hotelFactory);
-            for (Apartment apartment : hotelFactory.getApartmentService().getAll()) {
-                onDiskApartmentDao.remove(apartment.getId());
-            }
-            OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory);
-            for (Perk perk : hotelFactory.getPerkService().getAll()) {
-                onDiskPerkDao.remove(perk.getId());
-            }
-        }
-    }
-
     @Test
-    public void add_new_client() {
+    void add_new_client() {
         int expected = 3;
         JSONObject requestBody = new JSONObject();
         requestBody.put("name", "Petr");
@@ -89,7 +70,7 @@ public class ClientServletTest {
 
 
     @Test
-    public void get_client_by_id() {
+    void get_client_by_id() {
         Client expected = hotelFactory.getClientService().getById(1);
         Client actual =
                 given()
@@ -108,7 +89,7 @@ public class ClientServletTest {
 
 
     @Test
-    public void update_client_by_id() {
+    void update_client_by_id() {
         JSONObject requestBody = new JSONObject();
         requestBody.put("name", "Test");
         requestBody.put("quantityOfPeople", 4);
@@ -131,7 +112,7 @@ public class ClientServletTest {
 
 
     @Test
-    public void get_stay_coast_for_client() {
+    void get_stay_coast_for_client() {
         Double expected = 20000.0;
         hotelFactory.getClientService().checkInApartment(1, 5, 1);
         Double actual =
@@ -151,8 +132,7 @@ public class ClientServletTest {
 
 
     @Test
-    public void add_perk_to_client() {
-
+    void add_perk_to_client() {
         hotelFactory.getClientService().checkInApartment(1, 5, 1);
         Perk expected = hotelFactory.getPerkService().getById(1);
         Perk actual =
@@ -172,7 +152,7 @@ public class ClientServletTest {
 
 
     @Test
-    public void get_perks_for_client() {
+    void get_perks_for_client() {
         hotelFactory.getClientService().checkInApartment(1, 5, 1);
         hotelFactory.getClientService().addPerk(1, 1);
         Integer expected = 1;
@@ -193,7 +173,7 @@ public class ClientServletTest {
 
 
     @Test
-    public void check_in_apartments() {
+    void check_in_apartments() {
         Client actual =
                 given()
                         .contentType(ContentType.JSON)
@@ -212,7 +192,7 @@ public class ClientServletTest {
 
 
     @Test
-    public void check_in_any_free_apartments() {
+    void check_in_any_free_apartments() {
         Client actual =
                 given()
                         .contentType(ContentType.JSON)
@@ -231,9 +211,10 @@ public class ClientServletTest {
 
 
     @Test
-    public void check_out_apartments() {
+    void check_out_apartments() {
         hotelFactory.getClientService().checkInApartment(1, 5, 1);
-        Client actual =
+        Double expected = 20000.0;
+        Double actual =
                 given()
                         .contentType(ContentType.JSON)
                         .when()
@@ -242,8 +223,7 @@ public class ClientServletTest {
                         .statusCode(200)
                         .extract()
                         .body()
-                        .as(Client.class);
-        Client expected = hotelFactory.getClientService().getById(1);
+                        .as(Double.class);
         Assertions.assertEquals(expected, actual);
         System.out.println("check_out_apartments");
         hotelFactory.getClientService().getAll().forEach(System.out::println);
@@ -251,7 +231,7 @@ public class ClientServletTest {
 
 
     @Test
-    public void get_all_clients() {
+    void get_all_clients() {
         Integer expected = 2;
         List clients = given()
                 .contentType(ContentType.JSON)
@@ -269,7 +249,7 @@ public class ClientServletTest {
 
 
     @Test
-    public void get_all_sorted_clients_by_name() {
+    void get_all_sorted_clients_by_name() {
         Integer expected = 2;
         List clients = given()
                 .contentType(ContentType.JSON)
@@ -287,7 +267,7 @@ public class ClientServletTest {
     }
 
     @Test
-    public void get_all_sorted_clients_by_status() {
+    void get_all_sorted_clients_by_status() {
         Integer expected = 2;
         List clients = given()
                 .contentType(ContentType.JSON)
@@ -306,7 +286,7 @@ public class ClientServletTest {
 
 
     @Test
-    public void get_all_sorted_clients_by_id() {
+    void get_all_sorted_clients_by_id() {
         Integer expected = 2;
         List clients = given()
                 .contentType(ContentType.JSON)
@@ -325,7 +305,7 @@ public class ClientServletTest {
 
 
     @Test
-    public void get_all_sorted_clients_by_check_out_date() {
+    void get_all_sorted_clients_by_check_out_date() {
         Integer expected = 2;
         hotelFactory.getClientService().checkInApartment(1, 5, 1);
         hotelFactory.getClientService().checkInApartment(2, 1, 2);

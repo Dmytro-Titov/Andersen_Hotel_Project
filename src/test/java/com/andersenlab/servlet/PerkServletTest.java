@@ -10,7 +10,6 @@ import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.ServletUtils;
 import io.restassured.http.ContentType;
 import org.json.simple.JSONObject;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,7 @@ public class PerkServletTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         if (hotelFactory.getConfig().getConfigData().getSaveOption().isSaveOnDisk()) {
             OnDiskClientDaoImpl onDiskClientDao = new OnDiskClientDaoImpl(hotelFactory);
             for (Client client : hotelFactory.getClientService().getAll()) {
@@ -49,27 +48,8 @@ public class PerkServletTest {
     }
 
 
-    @AfterEach
-    public void teardown() {
-        if (hotelFactory.getConfig().getConfigData().getSaveOption().isSaveOnDisk()) {
-            OnDiskClientDaoImpl onDiskClientDao = new OnDiskClientDaoImpl(hotelFactory);
-            for (Client client : hotelFactory.getClientService().getAll()) {
-                onDiskClientDao.remove(client.getId());
-            }
-            OnDiskApartmentDaoImpl onDiskApartmentDao = new OnDiskApartmentDaoImpl(hotelFactory);
-            for (Apartment apartment : hotelFactory.getApartmentService().getAll()) {
-                onDiskApartmentDao.remove(apartment.getId());
-            }
-            OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory);
-            for (Perk perk : hotelFactory.getPerkService().getAll()) {
-                onDiskPerkDao.remove(perk.getId());
-            }
-        }
-    }
-
-
     @Test
-    public void add_new_perk() {
+    void add_new_perk() {
         Integer expected = 3;
         JSONObject requestBody = new JSONObject();
         requestBody.put("name", "ironing");
@@ -89,7 +69,7 @@ public class PerkServletTest {
 
 
     @Test
-    public void get_perk_by_id() {
+    void get_perk_by_id() {
         Perk expected = hotelFactory.getPerkService().getById(1);
         Perk actual =
                 given()
@@ -108,7 +88,7 @@ public class PerkServletTest {
 
 
     @Test
-    public void update_perk_by_id() {
+    void update_perk_by_id() {
         JSONObject requestBody = new JSONObject();
         requestBody.put("id", 1);
         requestBody.put("name", "Test");
@@ -132,7 +112,7 @@ public class PerkServletTest {
 
 
     @Test
-    public void change_perk_price() {
+    void change_perk_price() {
         Double expected = 200.0;
         JSONObject requestBody = new JSONObject();
         requestBody.put("price", 200);
@@ -155,7 +135,7 @@ public class PerkServletTest {
 
 
     @Test
-    public void get_all_perks() {
+    void get_all_perks() {
         Integer expected = 2;
         List perks = given()
                 .contentType(ContentType.JSON)
@@ -174,7 +154,7 @@ public class PerkServletTest {
 
 
     @Test
-    public void get_all_sorted_perks_by_id() {
+    void get_all_sorted_perks_by_id() {
         Integer expected = 2;
         List perks = given()
                 .contentType(ContentType.JSON)
@@ -193,7 +173,7 @@ public class PerkServletTest {
 
 
     @Test
-    public void get_all_sorted_perks_by_name() {
+    void get_all_sorted_perks_by_name() {
         Integer expected = 2;
         List perks = given()
                 .contentType(ContentType.JSON)
@@ -211,7 +191,7 @@ public class PerkServletTest {
     }
 
     @Test
-    public void get_all_sorted_perks_by_price() {
+    void get_all_sorted_perks_by_price() {
         Integer expected = 2;
         List perks = given()
                 .contentType(ContentType.JSON)
