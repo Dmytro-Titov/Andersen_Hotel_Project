@@ -5,7 +5,7 @@ apartment:
   allowApartmentStatusChange: true
 
 saveOption:
-  saveOnDisk: true
+  saveOnDisk: false
 
 postgresDatabase:
   username: "postgres"

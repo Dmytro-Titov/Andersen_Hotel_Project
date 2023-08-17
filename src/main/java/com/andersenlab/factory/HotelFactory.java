@@ -23,13 +23,13 @@ public class HotelFactory {
     public HotelFactory(Config config) {
         this.config = config;
         if (this.config.getConfigData().getSaveOption().isSaveOnDisk()) {
+            apartmentService = new ApartmentServiceImpl(new OnDiskApartmentDaoImpl(this), this);
+            perkService = new PerkServiceImpl(new OnDiskPerkDaoImpl(this), this);
+            clientService = new ClientServiceImpl(new OnDiskClientDaoImpl(this), this);
+        } else {
             apartmentService = new ApartmentServiceImpl(new JdbcApartmentDaoImpl(this), this);
             perkService = new PerkServiceImpl(new JdbcPerkDaoImpl(this), this);
             clientService = new ClientServiceImpl(new JdbcClientDaoImpl(this), this);
-        } else {
-            apartmentService = new ApartmentServiceImpl(new InMemoryApartmentDaoImpl(), this);
-            perkService = new PerkServiceImpl(new InMemoryPerkDaoImpl(), this);
-            clientService = new ClientServiceImpl(new InMemoryClientDaoImpl(), this);
         }
     }
 
