@@ -1,2 +1,67 @@
 {
+  "apartmentsList" : [ {
+    "id" : 1,
+    "capacity" : 1,
+    "price" : 200.0,
+    "status" : "UNAVAILABLE"
+  } ],
+  "clientsList" : [ {
+    "id" : 1,
+    "name" : "Denis",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 1
+  }, {
+    "id" : 2,
+    "name" : "Semen",
+    "checkOutDate" : [ 2023, 8, 18, 11, 58, 45, 869639400 ],
+    "checkInDate" : null,
+    "status" : "CHECKED_IN",
+    "apartment" : {
+      "id" : 1,
+      "capacity" : 1,
+      "price" : 100.0,
+      "status" : "UNAVAILABLE"
+    },
+    "perks" : [ {
+      "id" : 1,
+      "name" : "minibar",
+      "price" : 20.0
+    } ],
+    "stayCost" : 320.0,
+    "quantityOfPeople" : 1
+  }, {
+    "id" : 3,
+    "name" : "Egor",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 1
+  }, {
+    "id" : 1,
+    "name" : "Den",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 1
+  } ],
+  "perksList" : [ {
+    "id" : 1,
+    "name" : "minibar",
+    "price" : 20.0
+  }, {
+    "id" : 2,
+    "name" : "laundry",
+    "price" : 15.0
+  } ]
 }
