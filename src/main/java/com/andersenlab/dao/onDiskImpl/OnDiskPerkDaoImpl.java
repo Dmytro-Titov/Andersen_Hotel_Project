@@ -11,7 +11,7 @@ import java.util.Optional;
 public class OnDiskPerkDaoImpl implements PerkDao {
     private final OnDiskJsonHandler onDiskJsonHandler;
     public OnDiskPerkDaoImpl(HotelFactory hotelFactory) {
-        this.onDiskJsonHandler = new OnDiskJsonHandlerImp(hotelFactory);
+        this.onDiskJsonHandler = new OnDiskJsonHandler(hotelFactory);
     }
 
     @Override

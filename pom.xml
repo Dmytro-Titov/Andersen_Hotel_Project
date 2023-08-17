@@ -165,5 +165,15 @@
             <artifactId>HikariCP</artifactId>
             <version>5.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>4.23.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-maven-plugin</artifactId>
+            <version>4.23.1</version>
+        </dependency>
     </dependencies>
 </project>

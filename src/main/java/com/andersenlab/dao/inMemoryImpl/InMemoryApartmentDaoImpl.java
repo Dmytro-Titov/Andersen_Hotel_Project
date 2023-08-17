@@ -36,22 +36,35 @@ public class InMemoryApartmentDaoImpl implements ApartmentDao {
     @Override
     public Optional<Apartment> update(Apartment apartment) {
         Optional<Apartment> existingApartment = getById(apartment.getId());
-        existingApartment.ifPresent(apt -> {
-            if (apartment.getPrice() != 0.0) {
-                apt.setPrice(apartment.getPrice());
-            }
-            if (apartment.getCapacity() != 0) {
-                apt.setCapacity(apartment.getCapacity());
-            }
-            if (apartment.getStatus() != null) {
-                apt.setStatus(apartment.getStatus());
-            }
-        });
+        existingApartment.ifPresent(apt -> updateApartmentFields(apt, apartment));
+//        existingApartment.ifPresent(apt -> {
+//            if (apartment.getPrice() != 0.0) {
+//                apt.setPrice(apartment.getPrice());
+//            }
+//            if (apartment.getCapacity() != 0) {
+//                apt.setCapacity(apartment.getCapacity());
+//            }
+//            if (apartment.getStatus() != null) {
+//                apt.setStatus(apartment.getStatus());
+//            }
+//        });
         return existingApartment;
     }
 
     @Override
     public boolean remove(long id) {
         return apartments.removeIf(apartment -> apartment.getId() == id);
+    }
+
+    private void updateApartmentFields(Apartment existingApartment, Apartment updatedApartment) {
+        if (updatedApartment.getPrice() != 0.0) {
+            existingApartment.setPrice(updatedApartment.getPrice());
+        }
+        if (updatedApartment.getCapacity() != 0) {
+            existingApartment.setCapacity(updatedApartment.getCapacity());
+        }
+        if (updatedApartment.getStatus() != null) {
+            existingApartment.setStatus(updatedApartment.getStatus());
+        }
     }
 }
