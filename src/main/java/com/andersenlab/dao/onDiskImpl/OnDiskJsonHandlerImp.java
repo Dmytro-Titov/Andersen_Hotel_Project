@@ -48,7 +48,7 @@ public final class OnDiskJsonHandlerImp implements OnDiskJsonHandler {
     }
 
     @Override
-    public Boolean checkIfExistsJson() {
+    public boolean checkIfExistsJson() {
         return  new File(pathJson).exists();
     }
 }

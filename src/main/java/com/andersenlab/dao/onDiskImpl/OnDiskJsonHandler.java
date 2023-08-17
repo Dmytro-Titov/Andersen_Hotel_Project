@@ -5,5 +5,5 @@ public interface OnDiskJsonHandler {
 
     StateEntity load();
 
-    Boolean checkIfExistsJson();
+    boolean checkIfExistsJson();
 }
