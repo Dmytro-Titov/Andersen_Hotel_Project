@@ -28,25 +28,21 @@ public class HotelFactory {
         this.config = config;
         switch (this.config.getConfigData().getSaveOption()) {
             case DISK -> {
-                System.out.println("Disk save ok");
                 apartmentService = new ApartmentServiceImpl(new OnDiskApartmentDaoImpl(this), this);
                 perkService = new PerkServiceImpl(new OnDiskPerkDaoImpl(this), this);
                 clientService = new ClientServiceImpl(new OnDiskClientDaoImpl(this), this);
             }
             case JDBC -> {
-                System.out.println("JDBC save ok");
                 apartmentService = new ApartmentServiceImpl(new JdbcApartmentDaoImpl(this), this);
                 perkService = new PerkServiceImpl(new JdbcPerkDaoImpl(this), this);
                 clientService = new ClientServiceImpl(new JdbcClientDaoImpl(this), this);
             }
             case HIBERNATE -> {
-                System.out.println("Hibernate save ok");
                 apartmentService = new ApartmentServiceImpl(new HibernateApartmentDaoImpl(), this);
                 perkService = new PerkServiceImpl(new HibernatePerkDaoImpl(), this);
                 clientService = new ClientServiceImpl(new HibernateClientDaoImpl(), this);
             }
             default -> {
-                System.out.println("Memory save ok");
                 this.apartmentService = new ApartmentServiceImpl(new InMemoryApartmentDaoImpl(), this);
                 this.perkService = new PerkServiceImpl(new InMemoryPerkDaoImpl(), this);
                 this.clientService = new ClientServiceImpl(new InMemoryClientDaoImpl(), this);

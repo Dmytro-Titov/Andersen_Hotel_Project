@@ -50,7 +50,7 @@ public class ClientsServlet extends HttpServlet {
 
     private void getAll(HttpServletResponse resp) throws IOException {
         List<Client> clients = hotelFactory.getClientService().getAll();
-        System.out.println(clients);
+//        System.out.println(clients);
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("application/json");
         objectMapper.writeValue(resp.getWriter(), clients);
