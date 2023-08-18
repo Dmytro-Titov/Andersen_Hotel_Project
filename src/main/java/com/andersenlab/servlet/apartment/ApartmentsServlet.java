@@ -55,7 +55,7 @@ public class ApartmentsServlet extends HttpServlet {
     private void getSortedApartments(HttpServletResponse resp, String sortType) throws IOException {
         try {
             List<Apartment> apartments = hotelFactory.getApartmentService()
-                    .getSorted(ApartmentService.ApartmentSortType.valueOf(sortType));
+                    .getSorted(sortType);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), apartments);

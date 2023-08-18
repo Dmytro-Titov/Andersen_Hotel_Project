@@ -10,9 +10,7 @@ import com.andersenlab.service.ApartmentService;
 import com.andersenlab.util.EntityValidityCheck;
 import com.andersenlab.util.IdGenerator;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
 
 public class ApartmentServiceImpl implements ApartmentService {
 
@@ -61,24 +59,21 @@ public class ApartmentServiceImpl implements ApartmentService {
     public Apartment changeStatus(long id) {
         boolean allowStatusChange = hotelFactory.getConfig().getConfigData().getApartment().isAllowApartmentStatusChange();
         if (!allowStatusChange) {
-            throw new ConfigurationRestrictionException("Configuration does not allow change of status");}
+            throw new ConfigurationRestrictionException("Configuration does not allow change of status");
+        }
         ApartmentStatus newStatus = getById(id).getStatus() == ApartmentStatus.AVAILABLE ?
                 ApartmentStatus.UNAVAILABLE : ApartmentStatus.AVAILABLE;
         return update(new Apartment(id, newStatus));
     }
 
     @Override
-    public List<Apartment> getSorted(ApartmentSortType type) {
-        return switch (type) {
-            case ID -> getAll();
-            case PRICE -> sortBy(Apartment::getPrice);
-            case CAPACITY -> sortBy(Apartment::getCapacity);
-            case STATUS -> sortBy(Apartment::getStatus);
-        };
-    }
-    private List<Apartment> sortBy(Function<Apartment, Comparable> extractor) {
-        return getAll().stream()
-                .sorted(Comparator.comparing(extractor))
-                .toList();
+    public List<Apartment> getSorted(String type) {
+        return apartmentDao.getSortedBy(
+                switch (type.toLowerCase()) {
+                    case "price" -> ApartmentDao.ApartmentSortType.PRICE;
+                    case "capacity" -> ApartmentDao.ApartmentSortType.CAPACITY;
+                    case "status" -> ApartmentDao.ApartmentSortType.STATUS;
+                    default -> ApartmentDao.ApartmentSortType.ID;
+                });
     }
 }

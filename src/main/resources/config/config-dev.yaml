@@ -15,6 +15,6 @@ saveOption: JDBC
 
 postgresDatabase:
   username: "postgres"
-  password: "postgres"
+  password: "password"
   url: "jdbc:postgresql://localhost:5432/db_hotel_Andersen"
   pool: 300

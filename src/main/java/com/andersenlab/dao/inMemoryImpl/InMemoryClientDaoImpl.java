@@ -57,7 +57,7 @@ public class InMemoryClientDaoImpl implements ClientDao {
     @Override
     public List<Client> getSortedBy(ClientSortType type) {
         return switch (type) {
-            case ID -> getAll();
+            case ID -> sortBy(Client::getId);
             case CHECK_OUT_DATE -> sortByCheckOutDate();
             case NAME -> sortBy(Client::getName);
             case STATUS -> sortBy(Client::getStatus);

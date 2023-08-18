@@ -59,7 +59,7 @@ public class ClientsServlet extends HttpServlet {
     private void getSortedClients(HttpServletResponse resp, String sortType) throws IOException {
         try {
             List<Client> clients = hotelFactory.getClientService()
-                    .getSorted(ClientService.ClientSortType.valueOf(sortType));
+                    .getSorted(sortType);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), clients);

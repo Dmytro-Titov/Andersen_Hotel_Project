@@ -4,8 +4,10 @@ import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.entity.Apartment;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class InMemoryApartmentDaoImpl implements ApartmentDao {
 
@@ -66,5 +68,21 @@ public class InMemoryApartmentDaoImpl implements ApartmentDao {
         if (updatedApartment.getStatus() != null) {
             existingApartment.setStatus(updatedApartment.getStatus());
         }
+    }
+
+    @Override
+    public List<Apartment> getSortedBy(ApartmentSortType type) {
+        return switch (type) {
+            case ID -> sortBy(Apartment::getId);
+            case PRICE -> sortBy(Apartment::getPrice);
+            case CAPACITY -> sortBy(Apartment::getCapacity);
+            case STATUS -> sortBy(Apartment::getStatus);
+        };
+    }
+
+    private List<Apartment> sortBy(Function<Apartment, Comparable> extractor) {
+        return getAll().stream()
+                .sorted(Comparator.comparing(extractor))
+                .toList();
     }
 }

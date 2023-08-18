@@ -51,7 +51,7 @@ public class PerksServlet extends HttpServlet {
 
     private void getSortedPerks(HttpServletResponse resp, String sortType) throws IOException {
         try {
-            List<Perk> perks = hotelFactory.getPerkService().getSorted(PerkService.PerkSortType.valueOf(sortType));
+            List<Perk> perks = hotelFactory.getPerkService().getSorted(sortType);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), perks);

@@ -6,14 +6,17 @@ import com.andersenlab.dao.PerkDao;
 import com.andersenlab.dao.conection.ConnectionPool;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
+import com.andersenlab.entity.ClientStatus;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class JdbcClientDaoImpl implements ClientDao {
 
@@ -270,5 +273,28 @@ public class JdbcClientDaoImpl implements ClientDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<Client> getSortedBy(ClientSortType type) {
+        return switch (type) {
+            case ID -> sortBy(Client::getId);
+            case CHECK_OUT_DATE -> sortByCheckOutDate();
+            case NAME -> sortBy(Client::getName);
+            case STATUS -> sortBy(Client::getStatus);
+        };
+    }
+
+    private List<Client> sortBy(Function<Client, Comparable> extractor) {
+        return getAll().stream()
+                .sorted(Comparator.comparing(extractor))
+                .toList();
+    }
+
+    private List<Client> sortByCheckOutDate() {
+        return getAll().stream()
+                .filter(client -> client.getStatus() != ClientStatus.NEW)
+                .sorted(Comparator.comparing(Client::getCheckOutDate))
+                .toList();
     }
 }
