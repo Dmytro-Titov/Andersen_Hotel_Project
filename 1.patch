@@ -1,0 +1,364 @@
+Subject: [PATCH] 1
+---
+Index: src/main/java/com/andersenlab/service/impl/ClientServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/andersenlab/service/impl/ClientServiceImpl.java b/src/main/java/com/andersenlab/service/impl/ClientServiceImpl.java
+--- a/src/main/java/com/andersenlab/service/impl/ClientServiceImpl.java	(revision c7ff383c54a066867b00bf9478e275d9b7b04c43)
++++ b/src/main/java/com/andersenlab/service/impl/ClientServiceImpl.java	(date 1692359763326)
+@@ -13,10 +13,8 @@
+ 
+ import java.time.LocalDateTime;
+ import java.util.ArrayList;
+-import java.util.Comparator;
+ import java.util.List;
+ import java.util.Optional;
+-import java.util.function.Function;
+ 
+ public class ClientServiceImpl implements ClientService {
+ 
+@@ -148,23 +146,13 @@
+     }
+ 
+     @Override
+-    public List<Client> getSorted(ClientSortType type) {
+-        return switch (type) {
+-            case ID -> getAll();
+-            case CHECK_OUT_DATE -> sortByCheckOutDate();
+-            case NAME -> sortBy(Client::getName);
+-            case STATUS -> sortBy(Client::getStatus);
+-        };
+-    }
+-    private List<Client> sortBy(Function<Client, Comparable> extractor) {
+-        return getAll().stream()
+-                .sorted(Comparator.comparing(extractor))
+-                .toList();
+-    }
+-    private List<Client> sortByCheckOutDate() {
+-        return getAll().stream()
+-                .filter(client -> client.getStatus() != ClientStatus.NEW)
+-                .sorted(Comparator.comparing(Client::getCheckOutDate))
+-                .toList();
++    public List<Client> getSorted(String type) {
++        return clientDao.getSortedBy(
++                switch (type.toLowerCase()) {
++                    case "name" -> ClientDao.ClientSortType.NAME;
++                    case "checkoutdate" -> ClientDao.ClientSortType.CHECK_OUT_DATE;
++                    case "status" -> ClientDao.ClientSortType.STATUS;
++                    default -> ClientDao.ClientSortType.ID;
++                });
+     }
+ }
+\ No newline at end of file
+Index: src/main/java/com/andersenlab/dao/inMemoryImpl/InMemoryPerkDaoImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/andersenlab/dao/inMemoryImpl/InMemoryPerkDaoImpl.java b/src/main/java/com/andersenlab/dao/inMemoryImpl/InMemoryPerkDaoImpl.java
+--- a/src/main/java/com/andersenlab/dao/inMemoryImpl/InMemoryPerkDaoImpl.java	(revision c7ff383c54a066867b00bf9478e275d9b7b04c43)
++++ b/src/main/java/com/andersenlab/dao/inMemoryImpl/InMemoryPerkDaoImpl.java	(date 1692359357683)
+@@ -4,8 +4,10 @@
+ import com.andersenlab.entity.Perk;
+ 
+ import java.util.ArrayList;
++import java.util.Comparator;
+ import java.util.List;
+ import java.util.Optional;
++import java.util.function.Function;
+ 
+ public class InMemoryPerkDaoImpl implements PerkDao {
+ 
+@@ -49,4 +51,19 @@
+     public boolean remove(long id) {
+         return perks.removeIf(perk -> perk.getId() == id);
+     }
++
++    @Override
++    public List<Perk> getSortedBy(PerkSortType type) {
++        return switch (type) {
++            case ID -> getAll();
++            case NAME -> sortBy(Perk::getName);
++            case PRICE -> sortBy(Perk::getPrice);
++        };
++    }
++
++    private List<Perk> sortBy(Function<Perk, Comparable> extractor) {
++        return getAll().stream()
++                .sorted(Comparator.comparing(extractor))
++                .toList();
++    }
+ }
+Index: src/main/java/com/andersenlab/service/impl/PerkServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/andersenlab/service/impl/PerkServiceImpl.java b/src/main/java/com/andersenlab/service/impl/PerkServiceImpl.java
+--- a/src/main/java/com/andersenlab/service/impl/PerkServiceImpl.java	(revision c7ff383c54a066867b00bf9478e275d9b7b04c43)
++++ b/src/main/java/com/andersenlab/service/impl/PerkServiceImpl.java	(date 1692360251223)
+@@ -1,6 +1,8 @@
+ package com.andersenlab.service.impl;
+ 
++import com.andersenlab.dao.ClientDao;
+ import com.andersenlab.dao.PerkDao;
++import com.andersenlab.entity.Client;
+ import com.andersenlab.entity.Perk;
+ import com.andersenlab.exceptions.IdDoesNotExistException;
+ import com.andersenlab.factory.HotelFactory;
+@@ -49,17 +51,12 @@
+     }
+ 
+     @Override
+-    public List<Perk> getSorted(PerkSortType type) {
+-        return switch (type) {
+-            case ID -> getAll();
+-            case NAME -> sortBy(Perk::getName);
+-            case PRICE -> sortBy(Perk::getPrice);
+-        };
+-    }
+-
+-    private List<Perk> sortBy(Function<Perk, Comparable> extractor) {
+-        return getAll().stream()
+-                .sorted(Comparator.comparing(extractor))
+-                .toList();
++    public List<Perk> getSorted(String type) {
++        return perkDao.getSortedBy(
++                switch (type.toLowerCase()) {
++                    case "name" -> PerkDao.PerkSortType.NAME;
++                    case "price" -> PerkDao.PerkSortType.PRICE;
++                    default -> PerkDao.PerkSortType.ID;
++                });
+     }
+ }
+Index: src/main/java/com/andersenlab/dao/inMemoryImpl/InMemoryClientDaoImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/andersenlab/dao/inMemoryImpl/InMemoryClientDaoImpl.java b/src/main/java/com/andersenlab/dao/inMemoryImpl/InMemoryClientDaoImpl.java
+--- a/src/main/java/com/andersenlab/dao/inMemoryImpl/InMemoryClientDaoImpl.java	(revision c7ff383c54a066867b00bf9478e275d9b7b04c43)
++++ b/src/main/java/com/andersenlab/dao/inMemoryImpl/InMemoryClientDaoImpl.java	(date 1692359357692)
+@@ -2,10 +2,13 @@
+ 
+ import com.andersenlab.dao.ClientDao;
+ import com.andersenlab.entity.Client;
++import com.andersenlab.entity.ClientStatus;
+ 
+ import java.util.ArrayList;
++import java.util.Comparator;
+ import java.util.List;
+ import java.util.Optional;
++import java.util.function.Function;
+ 
+ public class InMemoryClientDaoImpl implements ClientDao {
+ 
+@@ -50,4 +53,25 @@
+     public boolean remove(long id) {
+         return clients.removeIf(client -> client.getId() == id);
+     }
++
++    @Override
++    public List<Client> getSortedBy(ClientSortType type) {
++        return switch (type) {
++            case ID -> getAll();
++            case CHECK_OUT_DATE -> sortByCheckOutDate();
++            case NAME -> sortBy(Client::getName);
++            case STATUS -> sortBy(Client::getStatus);
++        };
++    }
++    private List<Client> sortBy(Function<Client, Comparable> extractor) {
++        return getAll().stream()
++                .sorted(Comparator.comparing(extractor))
++                .toList();
++    }
++    private List<Client> sortByCheckOutDate() {
++        return getAll().stream()
++                .filter(client -> client.getStatus() != ClientStatus.NEW)
++                .sorted(Comparator.comparing(Client::getCheckOutDate))
++                .toList();
++    }
+ }
+Index: src/main/java/com/andersenlab/service/ClientService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/andersenlab/service/ClientService.java b/src/main/java/com/andersenlab/service/ClientService.java
+--- a/src/main/java/com/andersenlab/service/ClientService.java	(revision c7ff383c54a066867b00bf9478e275d9b7b04c43)
++++ b/src/main/java/com/andersenlab/service/ClientService.java	(date 1692359357703)
+@@ -1,5 +1,6 @@
+ package com.andersenlab.service;
+ 
++import com.andersenlab.dao.ClientDao;
+ import com.andersenlab.entity.Client;
+ import com.andersenlab.entity.Perk;
+ 
+@@ -27,9 +28,6 @@
+ 
+     List<Perk> getAllPerks(long clientId);
+ 
+-    List<Client> getSorted(ClientSortType type);
++    List<Client> getSorted(String type);
+ 
+-    enum ClientSortType {
+-        ID, NAME, CHECK_OUT_DATE, STATUS
+-    }
+ }
+Index: src/main/java/com/andersenlab/service/ApartmentService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/andersenlab/service/ApartmentService.java b/src/main/java/com/andersenlab/service/ApartmentService.java
+--- a/src/main/java/com/andersenlab/service/ApartmentService.java	(revision c7ff383c54a066867b00bf9478e275d9b7b04c43)
++++ b/src/main/java/com/andersenlab/service/ApartmentService.java	(date 1692359357723)
+@@ -1,5 +1,6 @@
+ package com.andersenlab.service;
+ 
++import com.andersenlab.dao.ApartmentDao;
+ import com.andersenlab.entity.Apartment;
+ 
+ import java.util.List;
+@@ -18,9 +19,6 @@
+ 
+     Apartment changeStatus(long id);
+ 
+-    List<Apartment> getSorted(ApartmentSortType type);
++    List<Apartment> getSorted(String type);
+ 
+-    enum ApartmentSortType {
+-        ID, PRICE, CAPACITY, STATUS
+-    }
+ }
+Index: src/main/java/com/andersenlab/dao/ClientDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/andersenlab/dao/ClientDao.java b/src/main/java/com/andersenlab/dao/ClientDao.java
+--- a/src/main/java/com/andersenlab/dao/ClientDao.java	(revision c7ff383c54a066867b00bf9478e275d9b7b04c43)
++++ b/src/main/java/com/andersenlab/dao/ClientDao.java	(date 1692359357794)
+@@ -14,4 +14,9 @@
+     Optional<Client> update(Client client);
+ 
+     boolean remove(long id);
++
++    List<Client> getSortedBy(ClientSortType type);
++    enum ClientSortType {
++        ID, NAME, CHECK_OUT_DATE, STATUS
++    }
+ }
+Index: src/main/java/com/andersenlab/service/PerkService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/andersenlab/service/PerkService.java b/src/main/java/com/andersenlab/service/PerkService.java
+--- a/src/main/java/com/andersenlab/service/PerkService.java	(revision c7ff383c54a066867b00bf9478e275d9b7b04c43)
++++ b/src/main/java/com/andersenlab/service/PerkService.java	(date 1692359357479)
+@@ -1,5 +1,6 @@
+ package com.andersenlab.service;
+ 
++import com.andersenlab.dao.PerkDao;
+ import com.andersenlab.entity.Perk;
+ 
+ import java.util.*;
+@@ -15,9 +16,6 @@
+ 
+     List<Perk> getAll();
+ 
+-    List<Perk> getSorted(PerkSortType type);
++    List<Perk> getSorted(String type);
+ 
+-    enum PerkSortType {
+-        ID, NAME, PRICE
+-    }
+ }
+Index: src/main/java/com/andersenlab/view/Console.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/andersenlab/view/Console.java b/src/main/java/com/andersenlab/view/Console.java
+--- a/src/main/java/com/andersenlab/view/Console.java	(revision c7ff383c54a066867b00bf9478e275d9b7b04c43)
++++ b/src/main/java/com/andersenlab/view/Console.java	(date 1692360251234)
+@@ -118,13 +118,7 @@
+                     case "getperks" ->
+                         ConsolePrinter.printClientPerks(clientService.getAllPerks(Long.parseLong(commandArray[2])));
+                     case "list" -> {
+-                        List<Client> list = switch (commandArray[2].toLowerCase()) {
+-                            case "id" -> clientService.getSorted(ClientService.ClientSortType.ID);
+-                            case "name" -> clientService.getSorted(ClientService.ClientSortType.NAME);
+-                            case "checkout" -> clientService.getSorted(ClientService.ClientSortType.CHECK_OUT_DATE);
+-                            case "status" -> clientService.getSorted(ClientService.ClientSortType.STATUS);
+-                            default -> throw new UnknownCommandException(commandArray[2]);
+-                        };
++                        List<Client> list =  clientService.getSorted(commandArray[2]);
+                         ConsolePrinter.printList(list);
+                     }
+                     default -> throw new UnknownCommandException(commandArray[1]);
+@@ -187,13 +181,7 @@
+                     case "get" ->
+                         ConsolePrinter.printEntity(apartmentService.getById(Long.parseLong(commandArray[2])));
+                     case "list" -> {
+-                        List<Apartment> list = switch (commandArray[2].toLowerCase()) {
+-                            case "id" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.ID);
+-                            case "price" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.PRICE);
+-                            case "capacity" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.CAPACITY);
+-                            case "status" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.STATUS);
+-                            default -> throw new UnknownCommandException(commandArray[2]);
+-                        };
++                        List<Apartment> list = apartmentService.getSorted(commandArray[2].toLowerCase());
+                         ConsolePrinter.printList(list);
+                     }
+                     case "price" ->
+Index: src/main/java/com/andersenlab/dao/PerkDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/andersenlab/dao/PerkDao.java b/src/main/java/com/andersenlab/dao/PerkDao.java
+--- a/src/main/java/com/andersenlab/dao/PerkDao.java	(revision c7ff383c54a066867b00bf9478e275d9b7b04c43)
++++ b/src/main/java/com/andersenlab/dao/PerkDao.java	(date 1692359357630)
+@@ -14,4 +14,10 @@
+     Optional<Perk> update(Perk perk);
+ 
+     boolean remove(long id);
++
++    List<Perk> getSortedBy(PerkSortType type);
++
++    enum PerkSortType {
++        ID, NAME, PRICE
++    }
+ }
+Index: src/main/java/com/andersenlab/dao/ApartmentDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/andersenlab/dao/ApartmentDao.java b/src/main/java/com/andersenlab/dao/ApartmentDao.java
+--- a/src/main/java/com/andersenlab/dao/ApartmentDao.java	(revision c7ff383c54a066867b00bf9478e275d9b7b04c43)
++++ b/src/main/java/com/andersenlab/dao/ApartmentDao.java	(date 1692359357519)
+@@ -1,6 +1,8 @@
+ package com.andersenlab.dao;
+ 
+ import com.andersenlab.entity.Apartment;
++import com.andersenlab.entity.Client;
++import com.andersenlab.service.ApartmentService;
+ 
+ import java.util.List;
+ import java.util.Optional;
+@@ -15,4 +17,10 @@
+     Optional<Apartment> update(Apartment apartment);
+ 
+     boolean remove(long id);
++
++    List<Apartment> getSortedBy(ApartmentSortType type);
++
++    enum ApartmentSortType {
++        ID, PRICE, CAPACITY, STATUS
++    }
+ }
