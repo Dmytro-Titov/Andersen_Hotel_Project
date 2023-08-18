@@ -1,5 +1,6 @@
 package com.andersenlab.service;
 
+import com.andersenlab.dao.ClientDao;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
 
@@ -27,9 +28,6 @@ public interface ClientService {
 
     List<Perk> getAllPerks(long clientId);
 
-    List<Client> getSorted(ClientSortType type);
+    List<Client> getSorted(String type);
 
-    enum ClientSortType {
-        ID, NAME, CHECK_OUT_DATE, STATUS
-    }
 }

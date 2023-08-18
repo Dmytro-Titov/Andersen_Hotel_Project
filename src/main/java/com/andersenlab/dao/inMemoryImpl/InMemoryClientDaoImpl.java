@@ -2,10 +2,13 @@ package com.andersenlab.dao.inMemoryImpl;
 
 import com.andersenlab.dao.ClientDao;
 import com.andersenlab.entity.Client;
+import com.andersenlab.entity.ClientStatus;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class InMemoryClientDaoImpl implements ClientDao {
 
@@ -49,5 +52,26 @@ public class InMemoryClientDaoImpl implements ClientDao {
     @Override
     public boolean remove(long id) {
         return clients.removeIf(client -> client.getId() == id);
+    }
+
+    @Override
+    public List<Client> getSortedBy(ClientSortType type) {
+        return switch (type) {
+            case ID -> getAll();
+            case CHECK_OUT_DATE -> sortByCheckOutDate();
+            case NAME -> sortBy(Client::getName);
+            case STATUS -> sortBy(Client::getStatus);
+        };
+    }
+    private List<Client> sortBy(Function<Client, Comparable> extractor) {
+        return getAll().stream()
+                .sorted(Comparator.comparing(extractor))
+                .toList();
+    }
+    private List<Client> sortByCheckOutDate() {
+        return getAll().stream()
+                .filter(client -> client.getStatus() != ClientStatus.NEW)
+                .sorted(Comparator.comparing(Client::getCheckOutDate))
+                .toList();
     }
 }

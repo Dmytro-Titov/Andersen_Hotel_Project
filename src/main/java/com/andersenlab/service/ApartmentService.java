@@ -1,5 +1,6 @@
 package com.andersenlab.service;
 
+import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.entity.Apartment;
 
 import java.util.List;
@@ -18,9 +19,6 @@ public interface ApartmentService {
 
     Apartment changeStatus(long id);
 
-    List<Apartment> getSorted(ApartmentSortType type);
+    List<Apartment> getSorted(String type);
 
-    enum ApartmentSortType {
-        ID, PRICE, CAPACITY, STATUS
-    }
 }
