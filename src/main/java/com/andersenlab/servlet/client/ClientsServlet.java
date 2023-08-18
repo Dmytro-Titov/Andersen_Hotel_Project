@@ -56,7 +56,7 @@ public class ClientsServlet extends HttpServlet {
 
     private void getSortedClients(HttpServletResponse resp, String sortType) throws IOException {
         try {
-            List<Client> clients = clientService.getSorted(ClientService.ClientSortType.valueOf(sortType));
+            List<Client> clients = clientService.getSorted(sortType);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), clients);

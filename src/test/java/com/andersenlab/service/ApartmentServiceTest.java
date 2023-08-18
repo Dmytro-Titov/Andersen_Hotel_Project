@@ -142,7 +142,7 @@ public class ApartmentServiceTest {
         expectedApartments.add(apartment3);
         expectedApartments.add(apartment4);
 
-        List<Apartment> actualApartments = apartmentService.getSorted(ApartmentService.ApartmentSortType.ID);
+        List<Apartment> actualApartments = apartmentService.getSorted("id");
 
         assertEquals(expectedApartments, actualApartments);
     }
@@ -160,7 +160,7 @@ public class ApartmentServiceTest {
         expectedApartments.add(apartment4);
         expectedApartments.add(apartment3);
 
-        List<Apartment> actualApartments = apartmentService.getSorted(ApartmentService.ApartmentSortType.CAPACITY);
+        List<Apartment> actualApartments = apartmentService.getSorted("capacity");
 
         assertEquals(expectedApartments, actualApartments);
     }
@@ -179,7 +179,7 @@ public class ApartmentServiceTest {
         expectedApartments.add(apartment2);
         expectedApartments.add(apartment3);
 
-        List<Apartment> actualApartments = apartmentService.getSorted(ApartmentService.ApartmentSortType.PRICE);
+        List<Apartment> actualApartments = apartmentService.getSorted("price");
 
         assertEquals(expectedApartments, actualApartments);
     }
@@ -201,7 +201,7 @@ public class ApartmentServiceTest {
         apartmentService.changeStatus(1);
         apartmentService.changeStatus(2);
         apartmentService.changeStatus(3);
-        List<Apartment> actualApartments = apartmentService.getSorted(ApartmentService.ApartmentSortType.STATUS);
+        List<Apartment> actualApartments = apartmentService.getSorted("status");
         assertEquals(expectedApartments, actualApartments);
     }
 }

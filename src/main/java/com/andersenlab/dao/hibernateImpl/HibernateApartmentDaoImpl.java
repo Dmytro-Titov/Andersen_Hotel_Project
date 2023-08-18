@@ -31,4 +31,9 @@ public class HibernateApartmentDaoImpl implements ApartmentDao {
     public boolean remove(long id) {
         return false;
     }
+
+    @Override
+    public List<Apartment> getSortedBy(ApartmentSortType type) {
+        return null;
+    }
 }

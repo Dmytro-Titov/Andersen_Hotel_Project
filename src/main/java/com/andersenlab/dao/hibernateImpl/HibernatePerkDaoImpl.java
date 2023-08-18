@@ -31,4 +31,9 @@ public class HibernatePerkDaoImpl implements PerkDao {
     public boolean remove(long id) {
         return false;
     }
+
+    @Override
+    public List<Perk> getSortedBy(PerkSortType type) {
+        return null;
+    }
 }

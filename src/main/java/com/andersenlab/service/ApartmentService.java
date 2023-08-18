@@ -18,9 +18,6 @@ public interface ApartmentService {
 
     Apartment changeStatus(long id);
 
-    List<Apartment> getSorted(ApartmentSortType type);
+    List<Apartment> getSorted(String type);
 
-    enum ApartmentSortType {
-        ID, PRICE, CAPACITY, STATUS
-    }
 }
