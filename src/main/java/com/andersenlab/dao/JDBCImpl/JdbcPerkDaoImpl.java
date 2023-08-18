@@ -5,10 +5,7 @@ import com.andersenlab.dao.conection.ConnectionPool;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -77,6 +74,8 @@ public class JdbcPerkDaoImpl implements PerkDao {
             preparedStatement.setString(1, String.valueOf(perk.getName()));
             preparedStatement.setDouble(2, perk.getPrice());
             preparedStatement.executeUpdate();
+
+            perk.setId(getPerkCount());
             return perk;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -136,5 +135,23 @@ public class JdbcPerkDaoImpl implements PerkDao {
         return getAll().stream()
                 .sorted(Comparator.comparing(extractor))
                 .toList();
+    }
+
+    private int getPerkCount() {
+        String query = "SELECT COUNT(*) FROM perk";
+        int totalCount = 0;
+        try {
+            Connection connection = connectionPool.getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                totalCount = resultSet.getInt(1);
+            }
+
+            return totalCount;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

@@ -6,10 +6,7 @@ import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.factory.HotelFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -84,10 +81,12 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
             preparedStatement.setDouble(2, apartment.getPrice());
             preparedStatement.setString(3, String.valueOf(apartment.getStatus()));
             preparedStatement.executeUpdate();
+
+            apartment.setId(getApartmentCount());
+            return apartment;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return apartment;
     }
 
     @Override
@@ -181,5 +180,23 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
         return getAll().stream()
                 .sorted(Comparator.comparing(extractor))
                 .toList();
+    }
+
+    private int getApartmentCount() {
+        String query = "SELECT COUNT(*) FROM apartment";
+        int totalCount = 0;
+        try {
+            Connection connection = connectionPool.getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                totalCount = resultSet.getInt(1);
+            }
+
+            return totalCount;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

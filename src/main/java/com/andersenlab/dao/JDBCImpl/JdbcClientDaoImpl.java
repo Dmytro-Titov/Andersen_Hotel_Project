@@ -172,6 +172,7 @@ public class JdbcClientDaoImpl implements ClientDao {
             preparedStatement.setInt(6, client.getQuantityOfPeople());
 
             preparedStatement.executeUpdate();
+            client.setId(getClientCount());
             return client;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -296,5 +297,23 @@ public class JdbcClientDaoImpl implements ClientDao {
                 .filter(client -> client.getStatus() != ClientStatus.NEW)
                 .sorted(Comparator.comparing(Client::getCheckOutDate))
                 .toList();
+    }
+
+    private int getClientCount() {
+        String query = "SELECT COUNT(*) FROM client";
+        int totalCount = 0;
+        try {
+            Connection connection = connectionPool.getConnection();
+            Statement statement = connection.createStatement();
+           ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                totalCount = resultSet.getInt(1);
+            }
+
+            return totalCount;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
