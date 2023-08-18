@@ -17,13 +17,12 @@ public class JdbcPerkDaoImpl implements PerkDao {
     private final ConnectionPool connectionPool;
 
     public JdbcPerkDaoImpl(HotelFactory hotelFactory) {
-        this.connectionPool = new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
+        this.connectionPool = ConnectionPool.getInstance(hotelFactory);
     }
 
     @Override
     public Optional<Perk> getById(long id) {
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()){
             PreparedStatement preparedStatement = connection
                     .prepareStatement("SELECT * FROM Perk WHERE perk_id = ?");
             preparedStatement.setLong(1, id);
@@ -46,8 +45,7 @@ public class JdbcPerkDaoImpl implements PerkDao {
     @Override
     public List<Perk> getAll() {
         List<Perk> perks = new ArrayList<>();
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()){
             PreparedStatement preparedStatement = connection
                     .prepareStatement("SELECT * FROM Perk");
 
@@ -67,8 +65,7 @@ public class JdbcPerkDaoImpl implements PerkDao {
 
         @Override
     public Perk save(Perk perk) {
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()){
             PreparedStatement preparedStatement = connection
                    .prepareStatement("insert into perk (name, price) values (?, ?)");
 
@@ -108,8 +105,7 @@ public class JdbcPerkDaoImpl implements PerkDao {
     @Override
     public boolean remove(long id) {
         int answer;
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()) {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("DELETE FROM Perk WHERE perk_id=?");
             preparedStatement.setLong(1, id);

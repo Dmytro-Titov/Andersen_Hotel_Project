@@ -22,7 +22,7 @@ public class JdbcClientDaoImpl implements ClientDao {
     private final PerkDao perkDao;
 
     public JdbcClientDaoImpl(HotelFactory hotelFactory) {
-        this.connectionPool = new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
+        this.connectionPool = ConnectionPool.getInstance(hotelFactory);
         this.apartmentDao = new JdbcApartmentDaoImpl(hotelFactory);
         this.perkDao = new JdbcPerkDaoImpl(hotelFactory);
     }
@@ -31,8 +31,7 @@ public class JdbcClientDaoImpl implements ClientDao {
     @Override
     public Optional<Client> getById(long id) {
 
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()){
             PreparedStatement preparedStatement = connection
                     .prepareStatement("SELECT * FROM Client WHERE client_id = ?");
             preparedStatement.setLong(1, id);
@@ -72,8 +71,7 @@ public class JdbcClientDaoImpl implements ClientDao {
 
     private List<Perk> getPerksForClient(long clientId) {
         List<Perk> perks = new ArrayList<>();
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT p.* FROM Perk p " +
                     "INNER JOIN Client_Perk cp ON p.perk_id = cp.perk_id " +
                     "WHERE cp.client_id = ?");
@@ -96,8 +94,7 @@ public class JdbcClientDaoImpl implements ClientDao {
     @Override
     public List<Client> getAll() {
         List<Client> clients = new ArrayList<>();
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "SELECT * FROM Client");
 
@@ -138,8 +135,7 @@ public class JdbcClientDaoImpl implements ClientDao {
 
     @Override
     public Client save(Client client) {
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement
                     ("INSERT INTO client (name, checkin, checkout, apartment_id, staycost, quantityofpeople) VALUES (?,?,?,?,?,?)");
 
@@ -243,8 +239,7 @@ public class JdbcClientDaoImpl implements ClientDao {
     }
 
     public void addPerkToClient(long clientId, long perkId) {
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "INSERT INTO Client_Perk (client_id, perk_id) VALUES (?, ?)");
 
@@ -260,8 +255,7 @@ public class JdbcClientDaoImpl implements ClientDao {
     @Override
     public boolean remove(long id) {
 
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()){
             PreparedStatement preparedStatement = connection
                     .prepareStatement("DELETE FROM Client WHERE client_id=?");
 
