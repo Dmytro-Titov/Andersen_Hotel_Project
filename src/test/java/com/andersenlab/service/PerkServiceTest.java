@@ -1,6 +1,7 @@
 package com.andersenlab.service;
 
 import com.andersenlab.config.Config;
+import com.andersenlab.config.SaveOption;
 import com.andersenlab.dao.onDiskImpl.OnDiskPerkDaoImpl;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
@@ -35,11 +36,9 @@ public class PerkServiceTest {
 
     @AfterEach
     void teardown() {
-        if (hotelFactory.getConfig().getConfigData().getSaveOption().isSaveOnDisk()) {
-            OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory);
-            for (Perk perk : perkService.getAll()) {
-                onDiskPerkDao.remove(perk.getId());
-            }
+        if (this.hotelFactory.getConfig().getConfigData().getSaveOption() == SaveOption.DISK) {
+                OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory);
+                perkService.getAll().forEach(perk -> onDiskPerkDao.remove(perk.getId()));
         }
     }
     @Test
