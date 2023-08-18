@@ -12,7 +12,6 @@ public class ConnectionPool {
     private final HikariDataSource dataSource;
 
     public ConnectionPool(PostgresDB configDB) {
-        System.out.println("Pool created");
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(configDB.getUrl());
         config.setUsername(configDB.getUsername());
