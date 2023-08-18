@@ -2,8 +2,8 @@ package com.andersenlab.servlet.apartment;
 
 
 import com.andersenlab.entity.Apartment;
-import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
+import com.andersenlab.factory.ServletFactory;
 import com.andersenlab.util.ServletUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -19,7 +19,7 @@ import java.util.List;
         urlPatterns = {"/apartments"}
 )
 public class ApartmentsServlet extends HttpServlet {
-    private HotelFactory hotelFactory = ServletUtils.getHotelFactoryInstance();
+    private ApartmentService apartmentService = ServletFactory.INSTANCE.getApartmentService();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     //EXAMPLE: http://localhost:8080/apartments for getAll() and http://localhost:8080/apartments?type=capacity for getSorted()
@@ -37,16 +37,14 @@ public class ApartmentsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Apartment newApartment = objectMapper.readValue(ServletUtils.readBody(req.getReader()), Apartment.class);
-        Apartment savedApartment = hotelFactory.getApartmentService()
-                .save(newApartment.getCapacity(), newApartment.getPrice());
-
+        Apartment savedApartment = apartmentService.save(newApartment.getCapacity(), newApartment.getPrice());
         resp.setStatus(HttpServletResponse.SC_CREATED);
         resp.setContentType("application/json");
         objectMapper.writeValue(resp.getWriter(), savedApartment);
     }
 
     private void getAll(HttpServletResponse resp) throws IOException {
-        List<Apartment> apartments = hotelFactory.getApartmentService().getAll();
+        List<Apartment> apartments = apartmentService.getAll();
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("application/json");
         objectMapper.writeValue(resp.getWriter(), apartments);
@@ -54,7 +52,7 @@ public class ApartmentsServlet extends HttpServlet {
 
     private void getSortedApartments(HttpServletResponse resp, String sortType) throws IOException {
         try {
-            List<Apartment> apartments = hotelFactory.getApartmentService()
+            List<Apartment> apartments = apartmentService
                     .getSorted(ApartmentService.ApartmentSortType.valueOf(sortType));
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");

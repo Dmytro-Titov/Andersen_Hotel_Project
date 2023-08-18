@@ -1,8 +1,8 @@
 package com.andersenlab.servlet.client;
 
 import com.andersenlab.entity.Client;
-import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ClientService;
+import com.andersenlab.factory.ServletFactory;
 import com.andersenlab.util.ServletUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -20,7 +20,7 @@ import java.util.List;
         urlPatterns = {"/clients"}
 )
 public class ClientsServlet extends HttpServlet {
-    private HotelFactory hotelFactory = ServletUtils.getHotelFactoryInstance();
+    private ClientService clientService = ServletFactory.INSTANCE.getClientService();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     //EXAMPLE: http://localhost:8080/clients for getAll() and http://localhost:8080/clients?type=name for getSorted()
@@ -41,16 +41,14 @@ public class ClientsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         objectMapper.registerModule(new JavaTimeModule());
         Client newClient = objectMapper.readValue(ServletUtils.readBody(req.getReader()), Client.class);
-        Client savedClient = hotelFactory.getClientService()
-                .save(newClient.getName(), newClient.getQuantityOfPeople());
+        Client savedClient = clientService.save(newClient.getName(), newClient.getQuantityOfPeople());
         resp.setStatus(HttpServletResponse.SC_CREATED);
         resp.setContentType("application/json");
         objectMapper.writeValue(resp.getWriter(), savedClient);
     }
 
     private void getAll(HttpServletResponse resp) throws IOException {
-        List<Client> clients = hotelFactory.getClientService().getAll();
-//        System.out.println(clients);
+        List<Client> clients = clientService.getAll();
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("application/json");
         objectMapper.writeValue(resp.getWriter(), clients);
@@ -58,8 +56,7 @@ public class ClientsServlet extends HttpServlet {
 
     private void getSortedClients(HttpServletResponse resp, String sortType) throws IOException {
         try {
-            List<Client> clients = hotelFactory.getClientService()
-                    .getSorted(ClientService.ClientSortType.valueOf(sortType));
+            List<Client> clients = clientService.getSorted(ClientService.ClientSortType.valueOf(sortType));
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), clients);

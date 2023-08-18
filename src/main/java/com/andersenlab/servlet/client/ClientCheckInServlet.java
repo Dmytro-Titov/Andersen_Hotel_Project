@@ -2,13 +2,12 @@ package com.andersenlab.servlet.client;
 
 import com.andersenlab.entity.Client;
 import com.andersenlab.exceptions.IdDoesNotExistException;
-import com.andersenlab.factory.HotelFactory;
-import com.andersenlab.util.ServletUtils;
+import com.andersenlab.service.ClientService;
+import com.andersenlab.factory.ServletFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +19,7 @@ import java.io.IOException;
         urlPatterns = {"/clients/checkin"}
 )
 public class ClientCheckInServlet extends HttpServlet {
-    private HotelFactory hotelFactory = ServletUtils.getHotelFactoryInstance();
+    private ClientService clientService = ServletFactory.INSTANCE.getClientService();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     //EXAMPLE: http://localhost:8080/clients/checkin?clientId=1&duration=5&apartmentId=2 for checkInApartment()
@@ -41,7 +40,7 @@ public class ClientCheckInServlet extends HttpServlet {
 
     private void checkInAnyFreeApartment(HttpServletResponse resp, String clientId, String duration) throws IOException {
         try {
-            Client client = hotelFactory.getClientService().checkInAnyFreeApartment(Long.parseLong(clientId),
+            Client client = clientService.checkInAnyFreeApartment(Long.parseLong(clientId),
                     Integer.parseInt(duration));
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
@@ -58,7 +57,7 @@ public class ClientCheckInServlet extends HttpServlet {
     private void checkInApartment(HttpServletResponse resp, String clientId,
                                   String apartmentId, String duration) throws IOException {
         try {
-            Client client = hotelFactory.getClientService().checkInApartment(Long.parseLong(clientId),
+            Client client = clientService.checkInApartment(Long.parseLong(clientId),
                     Integer.parseInt(duration), Long.parseLong(apartmentId));
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
