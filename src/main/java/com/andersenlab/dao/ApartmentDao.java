@@ -1,8 +1,6 @@
 package com.andersenlab.dao;
 
 import com.andersenlab.entity.Apartment;
-import com.andersenlab.entity.Client;
-import com.andersenlab.service.ApartmentService;
 
 import java.util.List;
 import java.util.Optional;

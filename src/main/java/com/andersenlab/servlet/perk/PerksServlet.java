@@ -2,7 +2,6 @@ package com.andersenlab.servlet.perk;
 
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
-import com.andersenlab.service.PerkService;
 import com.andersenlab.util.ServletUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

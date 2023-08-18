@@ -2,7 +2,6 @@ package com.andersenlab.servlet.client;
 
 import com.andersenlab.entity.Client;
 import com.andersenlab.factory.HotelFactory;
-import com.andersenlab.service.ClientService;
 import com.andersenlab.util.ServletUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

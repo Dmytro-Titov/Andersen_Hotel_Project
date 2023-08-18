@@ -1,7 +1,6 @@
 package com.andersenlab.servlet.apartment;
 
 import com.andersenlab.entity.Apartment;
-import com.andersenlab.entity.Perk;
 import com.andersenlab.exceptions.IdDoesNotExistException;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.ServletUtils;

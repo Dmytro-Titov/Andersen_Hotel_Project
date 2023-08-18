@@ -3,7 +3,6 @@ package com.andersenlab.servlet.apartment;
 
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.factory.HotelFactory;
-import com.andersenlab.service.ApartmentService;
 import com.andersenlab.util.ServletUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

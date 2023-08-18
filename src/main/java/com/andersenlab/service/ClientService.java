@@ -1,6 +1,5 @@
 package com.andersenlab.service;
 
-import com.andersenlab.dao.ClientDao;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
 
