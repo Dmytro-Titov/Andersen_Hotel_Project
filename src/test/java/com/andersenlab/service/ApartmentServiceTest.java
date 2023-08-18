@@ -1,6 +1,7 @@
 package com.andersenlab.service;
 
 import com.andersenlab.config.Config;
+import com.andersenlab.config.SaveOption;
 import com.andersenlab.dao.onDiskImpl.OnDiskApartmentDaoImpl;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
@@ -38,11 +39,9 @@ public class ApartmentServiceTest {
 
     @AfterEach
     void teardown() {
-        if (hotelFactory.getConfig().getConfigData().getSaveOption().isSaveOnDisk()) {
+        if (this.hotelFactory.getConfig().getConfigData().getSaveOption() == SaveOption.DISK) {
             OnDiskApartmentDaoImpl onDiskApartmentDao = new OnDiskApartmentDaoImpl(hotelFactory);
-            for (Apartment apartment : apartmentService.getAll()) {
-                onDiskApartmentDao.remove(apartment.getId());
-            }
+            apartmentService.getAll().forEach(apartment -> onDiskApartmentDao.remove(apartment.getId()));
         }
     }
 
