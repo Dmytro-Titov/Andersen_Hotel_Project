@@ -17,6 +17,7 @@ CREATE TABLE Client (
                         checkin TIMESTAMP,
                         checkout TIMESTAMP,
                         apartment_id BIGINT,
+                        status VARCHAR NOT NULL,
                         staycost DOUBLE PRECISION,
                         quantityofpeople INT,
                         FOREIGN KEY (apartment_id) REFERENCES Apartment(apartment_id)
