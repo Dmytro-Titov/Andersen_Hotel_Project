@@ -55,7 +55,7 @@ public class InMemoryPerkDaoImpl implements PerkDao {
     @Override
     public List<Perk> getSortedBy(PerkSortType type) {
         return switch (type) {
-            case ID -> getAll();
+            case ID -> sortBy(Perk::getId);
             case NAME -> sortBy(Perk::getName);
             case PRICE -> sortBy(Perk::getPrice);
         };

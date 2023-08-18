@@ -2,15 +2,15 @@ package com.andersenlab.dao.onDiskImpl;
 
 import com.andersenlab.dao.ClientDao;
 import com.andersenlab.entity.Client;
+import com.andersenlab.entity.ClientStatus;
 import com.andersenlab.factory.HotelFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 
 public class OnDiskClientDaoImpl implements ClientDao {
     private final OnDiskJsonHandler onDiskJsonHandler;
+
     public OnDiskClientDaoImpl(HotelFactory hotelFactory) {
         this.onDiskJsonHandler = new OnDiskJsonHandler(hotelFactory);
     }
@@ -69,5 +69,27 @@ public class OnDiskClientDaoImpl implements ClientDao {
 
         onDiskJsonHandler.save(stateEntity);
         return answer;
+    }
+
+    public List<Client> getSortedBy(ClientSortType type) {
+        return switch (type) {
+            case ID -> sortBy(Client::getId);
+            case CHECK_OUT_DATE -> sortByCheckOutDate();
+            case NAME -> sortBy(Client::getName);
+            case STATUS -> sortBy(Client::getStatus);
+        };
+    }
+
+    private List<Client> sortBy(Function<Client, Comparable> extractor) {
+        return getAll().stream()
+                .sorted(Comparator.comparing(extractor))
+                .toList();
+    }
+
+    private List<Client> sortByCheckOutDate() {
+        return getAll().stream()
+                .filter(client -> client.getStatus() != ClientStatus.NEW)
+                .sorted(Comparator.comparing(Client::getCheckOutDate))
+                .toList();
     }
 }

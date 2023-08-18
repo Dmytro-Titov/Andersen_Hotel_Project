@@ -248,7 +248,7 @@ public class ClientServiceTest {
         expectedClients.add(new Client(3, "Petr", 3));
         expectedClients.add(new Client(4, "Lola", 5));
 
-        List<Client> actualClients = clientService.getSorted(ClientService.ClientSortType.ID);
+        List<Client> actualClients = clientService.getSorted("id");
 
         assertEquals(expectedClients, actualClients);
     }
@@ -262,7 +262,7 @@ public class ClientServiceTest {
         expectedClients.add(new Client(1, "Oleg", 8));
         expectedClients.add(new Client(3, "Petr", 3));
 
-        List<Client> actualClients = clientService.getSorted(ClientService.ClientSortType.NAME);
+        List<Client> actualClients = clientService.getSorted("name");
 
         assertEquals(expectedClients, actualClients);
     }
@@ -289,7 +289,7 @@ public class ClientServiceTest {
         expectedClients.add(client4);
         expectedClients.add(client2);
 
-        List<Client> actualClients = clientService.getSorted(ClientService.ClientSortType.CHECK_OUT_DATE);
+        List<Client> actualClients = clientService.getSorted("checkOUTdate");
 
         for (int i = 0; i < actualClients.size(); i++) {
             assertSame(actualClients.get(i).getCheckOutDate().getDayOfMonth(),
@@ -317,7 +317,7 @@ public class ClientServiceTest {
         clientService.checkInApartment(3, 10, 4);
         clientService.checkOutApartment(3);
         clientService.checkInApartment(4, 7, 4);
-        List<Client> actualClients = clientService.getSorted(ClientService.ClientSortType.STATUS);
+        List<Client> actualClients = clientService.getSorted("status");
 
         for (int i = 0; i < actualClients.size(); i++) {
             assertSame(actualClients.get(i).getStatus(), expectedClients.get(i).getStatus());

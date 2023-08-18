@@ -108,7 +108,7 @@ public class PerkServiceTest {
         expectedPerks.add(perk2);
         expectedPerks.add(perk3);
 
-        List<Perk> actualPerks = perkService.getSorted(PerkService.PerkSortType.ID);
+        List<Perk> actualPerks = perkService.getSorted("id");
 
         assertEquals(expectedPerks, actualPerks);
     }
@@ -124,7 +124,7 @@ public class PerkServiceTest {
         expectedPerks.add(perk3);
         expectedPerks.add(perk1);
 
-        List<Perk> actualPerks = perkService.getSorted(PerkService.PerkSortType.NAME);
+        List<Perk> actualPerks = perkService.getSorted("name");
 
         assertEquals(expectedPerks, actualPerks);
     }
@@ -140,7 +140,7 @@ public class PerkServiceTest {
         expectedPerks.add(perk2);
         expectedPerks.add(perk1);
 
-        List<Perk> actualPerks = perkService.getSorted(PerkService.PerkSortType.PRICE);
+        List<Perk> actualPerks = perkService.getSorted("price");
 
         assertEquals(expectedPerks, actualPerks);
     }

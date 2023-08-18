@@ -231,12 +231,7 @@ public class Console {
                     case "price" ->
                         ConsolePrinter.printPerkPrice(perkService.getById(Long.parseLong(commandArray[2])));
                     case "list" -> {
-                        List<Perk> list = switch (commandArray[2].toLowerCase()) {
-                            case "id" -> perkService.getSorted(PerkService.PerkSortType.ID);
-                            case "name" -> perkService.getSorted(PerkService.PerkSortType.NAME);
-                            case "price" -> perkService.getSorted(PerkService.PerkSortType.PRICE);
-                            default -> throw new UnknownCommandException(commandArray[2]);
-                        };
+                        List<Perk> list = perkService.getSorted(commandArray[2].toLowerCase());
                         ConsolePrinter.printList(list);
                     }
                     default -> throw new UnknownCommandException(commandArray[1]);
