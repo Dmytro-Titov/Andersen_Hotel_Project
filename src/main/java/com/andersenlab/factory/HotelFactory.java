@@ -1,9 +1,13 @@
 package com.andersenlab.factory;
 
 import com.andersenlab.config.Config;
+import com.andersenlab.config.SaveOption;
 import com.andersenlab.dao.JDBCImpl.JdbcApartmentDaoImpl;
 import com.andersenlab.dao.JDBCImpl.JdbcClientDaoImpl;
 import com.andersenlab.dao.JDBCImpl.JdbcPerkDaoImpl;
+import com.andersenlab.dao.hibernateImpl.HibernateApartmentDaoImpl;
+import com.andersenlab.dao.hibernateImpl.HibernateClientDaoImpl;
+import com.andersenlab.dao.hibernateImpl.HibernatePerkDaoImpl;
 import com.andersenlab.dao.inMemoryImpl.InMemoryApartmentDaoImpl;
 import com.andersenlab.dao.inMemoryImpl.InMemoryClientDaoImpl;
 import com.andersenlab.dao.inMemoryImpl.InMemoryPerkDaoImpl;
@@ -22,14 +26,27 @@ public class HotelFactory {
 
     public HotelFactory(Config config) {
         this.config = config;
-        if (this.config.getConfigData().getSaveOption().isSaveOnDisk()) {
-            apartmentService = new ApartmentServiceImpl(new OnDiskApartmentDaoImpl(this), this);
-            perkService = new PerkServiceImpl(new OnDiskPerkDaoImpl(this), this);
-            clientService = new ClientServiceImpl(new OnDiskClientDaoImpl(this), this);
-        } else {
-            apartmentService = new ApartmentServiceImpl(new JdbcApartmentDaoImpl(this), this);
-            perkService = new PerkServiceImpl(new JdbcPerkDaoImpl(this), this);
-            clientService = new ClientServiceImpl(new JdbcClientDaoImpl(this), this);
+        switch (this.config.getConfigData().getSaveOption()) {
+            case DISK -> {
+                apartmentService = new ApartmentServiceImpl(new OnDiskApartmentDaoImpl(this), this);
+                perkService = new PerkServiceImpl(new OnDiskPerkDaoImpl(this), this);
+                clientService = new ClientServiceImpl(new OnDiskClientDaoImpl(this), this);
+            }
+            case JDBC -> {
+                apartmentService = new ApartmentServiceImpl(new JdbcApartmentDaoImpl(this), this);
+                perkService = new PerkServiceImpl(new JdbcPerkDaoImpl(this), this);
+                clientService = new ClientServiceImpl(new JdbcClientDaoImpl(this), this);
+            }
+            case HIBERNATE -> {
+                apartmentService = new ApartmentServiceImpl(new HibernateApartmentDaoImpl(), this);
+                perkService = new PerkServiceImpl(new HibernatePerkDaoImpl(), this);
+                clientService = new ClientServiceImpl(new HibernateClientDaoImpl(), this);
+            }
+            default -> {
+                this.apartmentService = new ApartmentServiceImpl(new InMemoryApartmentDaoImpl(), this);
+                this.perkService = new PerkServiceImpl(new InMemoryPerkDaoImpl(), this);
+                this.clientService = new ClientServiceImpl(new InMemoryClientDaoImpl(), this);
+            }
         }
     }
 
