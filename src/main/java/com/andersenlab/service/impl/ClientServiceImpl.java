@@ -13,10 +13,8 @@ import com.andersenlab.util.IdGenerator;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 public class ClientServiceImpl implements ClientService {
 
@@ -148,23 +146,13 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<Client> getSorted(ClientSortType type) {
-        return switch (type) {
-            case ID -> getAll();
-            case CHECK_OUT_DATE -> sortByCheckOutDate();
-            case NAME -> sortBy(Client::getName);
-            case STATUS -> sortBy(Client::getStatus);
-        };
-    }
-    private List<Client> sortBy(Function<Client, Comparable> extractor) {
-        return getAll().stream()
-                .sorted(Comparator.comparing(extractor))
-                .toList();
-    }
-    private List<Client> sortByCheckOutDate() {
-        return getAll().stream()
-                .filter(client -> client.getStatus() != ClientStatus.NEW)
-                .sorted(Comparator.comparing(Client::getCheckOutDate))
-                .toList();
+    public List<Client> getSorted(String type) {
+        return clientDao.getSortedBy(
+                switch (type.toLowerCase()) {
+                    case "name" -> ClientDao.ClientSortType.NAME;
+                    case "checkoutdate" -> ClientDao.ClientSortType.CHECK_OUT_DATE;
+                    case "status" -> ClientDao.ClientSortType.STATUS;
+                    default -> ClientDao.ClientSortType.ID;
+                });
     }
 }

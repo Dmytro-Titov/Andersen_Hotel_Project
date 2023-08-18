@@ -27,9 +27,6 @@ public interface ClientService {
 
     List<Perk> getAllPerks(long clientId);
 
-    List<Client> getSorted(ClientSortType type);
+    List<Client> getSorted(String type);
 
-    enum ClientSortType {
-        ID, NAME, CHECK_OUT_DATE, STATUS
-    }
 }

@@ -2,7 +2,6 @@ package com.andersenlab.servlet.client;
 
 import com.andersenlab.entity.Client;
 import com.andersenlab.factory.HotelFactory;
-import com.andersenlab.service.ClientService;
 import com.andersenlab.util.ServletUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -59,7 +58,7 @@ public class ClientsServlet extends HttpServlet {
     private void getSortedClients(HttpServletResponse resp, String sortType) throws IOException {
         try {
             List<Client> clients = hotelFactory.getClientService()
-                    .getSorted(ClientService.ClientSortType.valueOf(sortType));
+                    .getSorted(sortType);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), clients);

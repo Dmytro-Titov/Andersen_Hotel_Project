@@ -1,7 +1,6 @@
 package com.andersenlab.factory;
 
 import com.andersenlab.config.Config;
-import com.andersenlab.config.SaveOption;
 import com.andersenlab.dao.JDBCImpl.JdbcApartmentDaoImpl;
 import com.andersenlab.dao.JDBCImpl.JdbcClientDaoImpl;
 import com.andersenlab.dao.JDBCImpl.JdbcPerkDaoImpl;

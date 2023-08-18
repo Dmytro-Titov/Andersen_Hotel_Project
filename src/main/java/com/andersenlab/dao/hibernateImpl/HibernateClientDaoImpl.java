@@ -31,4 +31,9 @@ public class HibernateClientDaoImpl implements ClientDao {
     public boolean remove(long id) {
         return false;
     }
+
+    @Override
+    public List<Client> getSortedBy(ClientSortType type) {
+        return null;
+    }
 }

@@ -1,6 +1,5 @@
 package com.andersenlab.servlet.client;
 
-import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.exceptions.IdDoesNotExistException;
 import com.andersenlab.factory.HotelFactory;

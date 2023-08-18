@@ -2,7 +2,6 @@ package com.andersenlab.servlet.perk;
 
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
-import com.andersenlab.service.PerkService;
 import com.andersenlab.util.ServletUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -51,7 +50,7 @@ public class PerksServlet extends HttpServlet {
 
     private void getSortedPerks(HttpServletResponse resp, String sortType) throws IOException {
         try {
-            List<Perk> perks = hotelFactory.getPerkService().getSorted(PerkService.PerkSortType.valueOf(sortType));
+            List<Perk> perks = hotelFactory.getPerkService().getSorted(sortType);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), perks);
