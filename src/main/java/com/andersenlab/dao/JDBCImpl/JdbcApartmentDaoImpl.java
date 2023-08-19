@@ -1,6 +1,5 @@
 package com.andersenlab.dao.JDBCImpl;
 
-import com.andersenlab.config.Config;
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.dao.conection.ConnectionPool;
 import com.andersenlab.entity.Apartment;
@@ -22,8 +21,7 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
     @Override
     public Optional<Apartment> getById(long id) {
         Apartment apartment;
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()) {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("SELECT * FROM Apartment WHERE apartment_id = ?");
             preparedStatement.setLong(1, id);
@@ -48,8 +46,7 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
     public List<Apartment> getAll() {
         List<Apartment> apartments = new ArrayList<>();
 
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()) {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("SELECT * FROM Apartment");
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -71,8 +68,7 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
     @Override
     public Apartment save(Apartment apartment) {
 
-        try {
-            Connection connection = connectionPool.getConnection();
+        try(Connection connection = connectionPool.getConnection()) {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("insert into apartment (capacity, price, status) values (?, ?, ?)");
 
@@ -148,8 +144,7 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
     public boolean remove(long id) {
         int answer;
 
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()) {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("DELETE FROM Apartment WHERE apartment_id=?");
             preparedStatement.setLong(1, id);
