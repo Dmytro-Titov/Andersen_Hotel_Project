@@ -2,7 +2,8 @@ package com.andersenlab.servlet.apartment;
 
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.exceptions.IdDoesNotExistException;
-import com.andersenlab.factory.HotelFactory;
+import com.andersenlab.service.ApartmentService;
+import com.andersenlab.factory.ServletFactory;
 import com.andersenlab.util.ServletUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -17,7 +18,7 @@ import java.io.IOException;
         urlPatterns = {"/apartments/id"}
 )
 public class ApartmentByIdServlet extends HttpServlet {
-    private HotelFactory hotelFactory = ServletUtils.getHotelFactoryInstance();
+    private ApartmentService apartmentService = ServletFactory.INSTANCE.getApartmentService();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     //EXAMPLE: http://localhost:8080/apartments/id?id=3 for getById()
@@ -25,7 +26,7 @@ public class ApartmentByIdServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");
         try {
-            Apartment apartment = hotelFactory.getApartmentService().getById(Long.parseLong(id));
+            Apartment apartment = apartmentService.getById(Long.parseLong(id));
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), apartment);
@@ -41,7 +42,7 @@ public class ApartmentByIdServlet extends HttpServlet {
         String id = req.getParameter("id");
         try {
             apartment.setId(Long.parseLong(id));
-            Apartment updatedApartment = hotelFactory.getApartmentService().update(apartment);
+            Apartment updatedApartment = apartmentService.update(apartment);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), updatedApartment);
@@ -57,8 +58,7 @@ public class ApartmentByIdServlet extends HttpServlet {
         String id = req.getParameter("id");
         try {
             apartment.setId(Long.parseLong(id));
-            Apartment changedPriceApartment = hotelFactory.getApartmentService()
-                    .changePrice(apartment.getId(), apartment.getPrice());
+            Apartment changedPriceApartment = apartmentService.changePrice(apartment.getId(), apartment.getPrice());
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), changedPriceApartment);

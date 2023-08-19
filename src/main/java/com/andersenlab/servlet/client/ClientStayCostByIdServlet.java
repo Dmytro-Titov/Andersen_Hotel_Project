@@ -1,8 +1,8 @@
 package com.andersenlab.servlet.client;
 
 import com.andersenlab.exceptions.IdDoesNotExistException;
-import com.andersenlab.factory.HotelFactory;
-import com.andersenlab.util.ServletUtils;
+import com.andersenlab.service.ClientService;
+import com.andersenlab.factory.ServletFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +16,7 @@ import java.io.IOException;
         urlPatterns = {"/clients/stay-cost/id"}
 )
 public class ClientStayCostByIdServlet extends HttpServlet {
-    private HotelFactory hotelFactory = ServletUtils.getHotelFactoryInstance();
+    private ClientService clientService = ServletFactory.INSTANCE.getClientService();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     //EXAMPLE: http://localhost:8080/clients/stay-cost/id?id=1 for getStayCost()
@@ -24,7 +24,7 @@ public class ClientStayCostByIdServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");
         try {
-            double stayCost = hotelFactory.getClientService().getStayCost(Long.parseLong(id));
+            double stayCost = clientService.getStayCost(Long.parseLong(id));
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), stayCost);

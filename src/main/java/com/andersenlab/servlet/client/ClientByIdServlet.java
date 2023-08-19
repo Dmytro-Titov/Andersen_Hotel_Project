@@ -2,7 +2,8 @@ package com.andersenlab.servlet.client;
 
 import com.andersenlab.entity.Client;
 import com.andersenlab.exceptions.IdDoesNotExistException;
-import com.andersenlab.factory.HotelFactory;
+import com.andersenlab.service.ClientService;
+import com.andersenlab.factory.ServletFactory;
 import com.andersenlab.util.ServletUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -19,7 +20,7 @@ import java.io.IOException;
         urlPatterns = {"/clients/id"}
 )
 public class ClientByIdServlet extends HttpServlet {
-    private HotelFactory hotelFactory = ServletUtils.getHotelFactoryInstance();
+    private ClientService clientService = ServletFactory.INSTANCE.getClientService();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     //EXAMPLE: http://localhost:8080/clients/id?id=1 for getById()
@@ -29,7 +30,7 @@ public class ClientByIdServlet extends HttpServlet {
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         String id = req.getParameter("id");
         try {
-            Client client = hotelFactory.getClientService().getById(Long.parseLong(id));
+            Client client = clientService.getById(Long.parseLong(id));
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), client);
@@ -47,7 +48,7 @@ public class ClientByIdServlet extends HttpServlet {
         String id = req.getParameter("id");
         try {
             client.setId(Long.parseLong(id));
-            Client updatedClient = hotelFactory.getClientService().update(client);
+            Client updatedClient = clientService.update(client);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), updatedClient);
