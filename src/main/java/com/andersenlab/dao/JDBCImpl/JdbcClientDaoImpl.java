@@ -2,7 +2,6 @@ package com.andersenlab.dao.JDBCImpl;
 
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.dao.ClientDao;
-import com.andersenlab.dao.PerkDao;
 import com.andersenlab.dao.conection.ConnectionPool;
 import com.andersenlab.entity.*;
 import com.andersenlab.exceptions.InappropriateValueException;
@@ -28,44 +27,50 @@ public class JdbcClientDaoImpl implements ClientDao {
     @Override
     public Optional<Client> getById(long id) {
 
-        try (Connection connection = connectionPool.getConnection()) {
+        try (Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("SELECT * FROM Client WHERE client_id = ?");
-            preparedStatement.setLong(1, id);
+                    .prepareStatement("SELECT * FROM Client WHERE client_id = ?")) {
 
+            preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                Client client = new Client();
-                client.setId(resultSet.getLong("client_id"));
-                client.setName(String.valueOf(resultSet.getString("name")));
-                Timestamp timestamp = resultSet.getTimestamp("checkin");
-                if (timestamp != null) {
-                    LocalDateTime dateTime = timestamp.toLocalDateTime();
-                    client.setCheckInDate(dateTime);
-                }
-                timestamp = resultSet.getTimestamp("checkout");
-                if (timestamp != null) {
-                    LocalDateTime dateTime = timestamp.toLocalDateTime();
-                    client.setCheckOutDate(dateTime);
-                }
-                long apartmentId = resultSet.getLong("apartment_id");
-                client.setApartment(apartmentDao.getById(apartmentId).orElse(null));
-
-                client.setStatus(ClientStatus.valueOf(resultSet.getString("status")));
-
-                List<Perk> perks = getPerksForClient(id);
-                client.setPerks(perks);
-
-                client.setStayCost(resultSet.getDouble("staycost"));
-                client.setQuantityOfPeople(resultSet.getInt("quantityofpeople"));
-
-                return Optional.of(client);
+                return Optional.of(setClientFields(resultSet));
             } else {
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filed to get Client by the ID!");
         }
+    }
+
+    private Client setClientFields(ResultSet resultSet) throws SQLException {
+        Client client = new Client();
+        client.setId(resultSet.getLong("client_id"));
+        client.setName(resultSet.getString("name"));
+
+        Timestamp checkinTimestamp = resultSet.getTimestamp("checkin");
+        if (checkinTimestamp != null) {
+            LocalDateTime checkinDateTime = checkinTimestamp.toLocalDateTime();
+            client.setCheckInDate(checkinDateTime);
+        }
+
+        Timestamp checkoutTimestamp = resultSet.getTimestamp("checkout");
+        if (checkoutTimestamp != null) {
+            LocalDateTime checkoutDateTime = checkoutTimestamp.toLocalDateTime();
+            client.setCheckOutDate(checkoutDateTime);
+        }
+
+        long apartmentId = resultSet.getLong("apartment_id");
+        client.setApartment(apartmentDao.getById(apartmentId).orElse(null));
+
+        client.setStatus(ClientStatus.valueOf(resultSet.getString("status")));
+
+        List<Perk> perks = getPerksForClient(client.getId());
+        client.setPerks(perks);
+
+        client.setStayCost(resultSet.getDouble("staycost"));
+        client.setQuantityOfPeople(resultSet.getInt("quantityofpeople"));
+        return client;
     }
 
     private List<Perk> getPerksForClient(long clientId) {
@@ -86,59 +91,33 @@ public class JdbcClientDaoImpl implements ClientDao {
             }
             return perks;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filed to get Perks of the Client!");
         }
     }
 
     @Override
     public List<Client> getAll() {
         List<Client> clients = new ArrayList<>();
-        try (Connection connection = connectionPool.getConnection()) {
+        try (Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "SELECT * FROM Client");
+            ResultSet resultSet = preparedStatement.executeQuery()) {
 
-            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Client client = new Client();
-                client.setId(resultSet.getLong("client_id"));
-                client.setName(resultSet.getString("name"));
-
-                Timestamp checkinTimestamp = resultSet.getTimestamp("checkin");
-                if (checkinTimestamp != null) {
-                    LocalDateTime checkinDateTime = checkinTimestamp.toLocalDateTime();
-                    client.setCheckInDate(checkinDateTime);
-                }
-
-                Timestamp checkoutTimestamp = resultSet.getTimestamp("checkout");
-                if (checkoutTimestamp != null) {
-                    LocalDateTime checkoutDateTime = checkoutTimestamp.toLocalDateTime();
-                    client.setCheckOutDate(checkoutDateTime);
-                }
-
-                long apartmentId = resultSet.getLong("apartment_id");
-                client.setApartment(apartmentDao.getById(apartmentId).orElse(null));
-
-                client.setStatus(ClientStatus.valueOf(resultSet.getString("status")));
-
-                List<Perk> perks = getPerksForClient(client.getId());
-                client.setPerks(perks);
-
-                client.setStayCost(resultSet.getDouble("staycost"));
-                client.setQuantityOfPeople(resultSet.getInt("quantityofpeople"));
-
-                clients.add(client);
+                clients.add(setClientFields(resultSet));
             }
             return clients;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filer to list Clients");
         }
     }
 
     @Override
     public Client save(Client client) {
-        try (Connection connection = connectionPool.getConnection()) {
+        try (Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement
-                    ("INSERT INTO client (name, checkin, checkout, apartment_id, status, staycost, quantityofpeople) VALUES (?,?,?,?,?,?,?)");
+                    ("INSERT INTO client (name, checkin, checkout, apartment_id, " +
+                            "status, staycost, quantityofpeople) VALUES (?,?,?,?,?,?,?)")) {
 
             preparedStatement.setString(1, client.getName());
 
@@ -161,23 +140,21 @@ public class JdbcClientDaoImpl implements ClientDao {
             } else {
                 preparedStatement.setNull(4, Types.INTEGER);
             }
-            System.out.println("!!! SAVE - "+client.getStatus());
-            preparedStatement.setString(5, String.valueOf(client.getStatus()));
 
+            preparedStatement.setString(5, String.valueOf(client.getStatus()));
             preparedStatement.setDouble(6, client.getStayCost());
             preparedStatement.setInt(7, client.getQuantityOfPeople());
 
             preparedStatement.executeUpdate();
             return client;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filed to add a Client");
         }
     }
 
 
     @Override
     public Optional<Client> update(Client client) {
-
         List<Perk> perkListFromDB = getPerksForClient(client.getId());
         List<Perk> clientPerks = client.getPerks();
 
@@ -190,9 +167,9 @@ public class JdbcClientDaoImpl implements ClientDao {
             if (perkListFromDB.contains(addedPerk)) {
                 throw new InappropriateValueException("Perk was already served to this client!");
             } else {
-                try (Connection connection = connectionPool.getConnection()) {
+                try (Connection connection = connectionPool.getConnection();
                     PreparedStatement preparedStatement = connection.prepareStatement(
-                            "INSERT INTO client_perk (client_id, perk_id) VALUES (?, ?)");
+                            "INSERT INTO client_perk (client_id, perk_id) VALUES (?, ?)")) {
 
                     preparedStatement.setLong(1, client.getId());
                     preparedStatement.setLong(2, addedPerk.getId());
@@ -200,7 +177,7 @@ public class JdbcClientDaoImpl implements ClientDao {
                     preparedStatement.executeUpdate();
                     return updateClientWithoutPerks(client);
                 } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException("Filer to add the Perk to the Client!");
                 }
             }
         }
@@ -254,9 +231,8 @@ public class JdbcClientDaoImpl implements ClientDao {
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to update the Client");
         }
-
         return Optional.of(client);
     }
 
@@ -267,7 +243,7 @@ public class JdbcClientDaoImpl implements ClientDao {
             preparedStatement.setLong(1, id);
             return preparedStatement.executeUpdate() != 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to remove all perks id ClientId");
+            throw new RuntimeException("Failed to remove all perks by ClientId!");
         }
     }
 
@@ -279,7 +255,7 @@ public class JdbcClientDaoImpl implements ClientDao {
             preparedStatement.setLong(1, id);
             return preparedStatement.executeUpdate() != 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to change Apartment status after checkout!");
         }
     }
 
@@ -292,7 +268,7 @@ public class JdbcClientDaoImpl implements ClientDao {
             preparedStatement.setLong(1, id);
             return preparedStatement.executeUpdate() != 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filed to remove the Client!");
         }
     }
 }
