@@ -82,7 +82,7 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
             preparedStatement.setString(3, String.valueOf(apartment.getStatus()));
             preparedStatement.executeUpdate();
 
-            apartment.setId(getApartmentCount());
+            apartment.setId(getApartmentLastId());
             return apartment;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -182,18 +182,18 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
                 .toList();
     }
 
-    private int getApartmentCount() {
-        String query = "SELECT COUNT(*) FROM apartment";
-        int totalCount = 0;
-        try {
-            Connection connection = connectionPool.getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+    private int getApartmentLastId() {
+        String query = "SELECT MAX(apartment_id) FROM apartment";
+        int lastId = 0;
+        try (Connection connection = connectionPool.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
             while (resultSet.next()) {
-                totalCount = resultSet.getInt(1);
+                lastId = resultSet.getInt(1);
             }
 
-            return totalCount;
+            return lastId;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

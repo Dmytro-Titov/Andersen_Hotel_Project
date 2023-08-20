@@ -75,7 +75,7 @@ public class JdbcPerkDaoImpl implements PerkDao {
             preparedStatement.setDouble(2, perk.getPrice());
             preparedStatement.executeUpdate();
 
-            perk.setId(getPerkCount());
+            perk.setId(getPerkLastId());
             return perk;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -137,18 +137,18 @@ public class JdbcPerkDaoImpl implements PerkDao {
                 .toList();
     }
 
-    private int getPerkCount() {
-        String query = "SELECT COUNT(*) FROM perk";
-        int totalCount = 0;
-        try {
-            Connection connection = connectionPool.getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+    private int getPerkLastId() {
+        String query = "SELECT MAX(perk_id) FROM perk";
+        int lastId = 0;
+        try (Connection connection = connectionPool.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
             while (resultSet.next()) {
-                totalCount = resultSet.getInt(1);
+                lastId = resultSet.getInt(1);
             }
 
-            return totalCount;
+            return lastId;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

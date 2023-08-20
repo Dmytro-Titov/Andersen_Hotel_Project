@@ -172,7 +172,7 @@ public class JdbcClientDaoImpl implements ClientDao {
             preparedStatement.setInt(6, client.getQuantityOfPeople());
 
             preparedStatement.executeUpdate();
-            client.setId(getClientCount());
+            client.setId(getClientLastId());
             return client;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -299,18 +299,18 @@ public class JdbcClientDaoImpl implements ClientDao {
                 .toList();
     }
 
-    private int getClientCount() {
-        String query = "SELECT COUNT(*) FROM client";
-        int totalCount = 0;
-        try {
-            Connection connection = connectionPool.getConnection();
-            Statement statement = connection.createStatement();
-           ResultSet resultSet = statement.executeQuery(query);
+    private int getClientLastId() {
+        String query = "SELECT MAX(client_id) FROM client";
+        int lastId = 0;
+        try (Connection connection = connectionPool.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
             while (resultSet.next()) {
-                totalCount = resultSet.getInt(1);
+                lastId = resultSet.getInt(1);
             }
 
-            return totalCount;
+            return lastId;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
