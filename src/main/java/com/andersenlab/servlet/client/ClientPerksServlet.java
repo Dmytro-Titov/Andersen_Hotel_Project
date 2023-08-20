@@ -1,8 +1,8 @@
 package com.andersenlab.servlet.client;
 
 import com.andersenlab.entity.Perk;
+import com.andersenlab.exceptions.HotelException;
 import com.andersenlab.exceptions.IdDoesNotExistException;
-import com.andersenlab.exceptions.InnerLogicException;
 import com.andersenlab.service.ClientService;
 import com.andersenlab.factory.ServletFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,7 +48,7 @@ public class ClientPerksServlet extends HttpServlet {
             objectMapper.writeValue(resp.getWriter(), perk);
         } catch (IdDoesNotExistException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        } catch (InnerLogicException e) {
+        } catch (HotelException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
