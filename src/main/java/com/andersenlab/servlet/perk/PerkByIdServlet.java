@@ -2,7 +2,8 @@ package com.andersenlab.servlet.perk;
 
 import com.andersenlab.entity.Perk;
 import com.andersenlab.exceptions.IdDoesNotExistException;
-import com.andersenlab.factory.HotelFactory;
+import com.andersenlab.service.PerkService;
+import com.andersenlab.factory.ServletFactory;
 import com.andersenlab.util.ServletUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -17,7 +18,7 @@ import java.io.IOException;
         urlPatterns = {"/perks/id"}
 )
 public class PerkByIdServlet extends HttpServlet {
-    private HotelFactory hotelFactory = ServletUtils.getHotelFactoryInstance();
+    private PerkService perkService = ServletFactory.INSTANCE.getPerkService();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     //EXAMPLE: http://localhost:8080/perks/id?id=2 for getById()
@@ -25,7 +26,7 @@ public class PerkByIdServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");
         try {
-            Perk perk = hotelFactory.getPerkService().getById(Long.parseLong(id));
+            Perk perk = perkService.getById(Long.parseLong(id));
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), perk);
@@ -41,7 +42,7 @@ public class PerkByIdServlet extends HttpServlet {
         String id = req.getParameter("id");
         try {
             perk.setId(Long.parseLong(id));
-            Perk updatedPerk = hotelFactory.getPerkService().update(perk);
+            Perk updatedPerk = perkService.update(perk);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), updatedPerk);
@@ -57,7 +58,7 @@ public class PerkByIdServlet extends HttpServlet {
         String id = req.getParameter("id");
         try {
             perk.setId(Long.parseLong(id));
-            Perk changedPricePerk = hotelFactory.getPerkService().changePrice(perk.getId(), perk.getPrice());
+            Perk changedPricePerk = perkService.changePrice(perk.getId(), perk.getPrice());
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), changedPricePerk);
