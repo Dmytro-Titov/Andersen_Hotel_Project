@@ -116,7 +116,7 @@ public class JdbcClientDaoImpl implements ClientDao {
             }
             return clients;
         } catch (SQLException e) {
-            throw new RuntimeException("Filer to list Clients");
+            throw new RuntimeException("Filed to list Clients");
         }
     }
 
@@ -227,7 +227,7 @@ public class JdbcClientDaoImpl implements ClientDao {
                 removeAllPerksById(client.getId(), connection);
                 setApartmentSatusAvailableAfterCheckout(client.getId(), connection);
             }
-            preparedStatement.setString(5, String.valueOf(client.getStatus()));
+            preparedStatement.setInt(5, client.getStatus().ordinal());
 
             preparedStatement.setDouble(6, client.getStayCost());
             preparedStatement.setInt(7, client.getQuantityOfPeople());
@@ -258,7 +258,7 @@ public class JdbcClientDaoImpl implements ClientDao {
     private boolean setApartmentSatusAvailableAfterCheckout(long id, Connection connection) {
         try {
             PreparedStatement preparedStatement = connection.
-                    prepareStatement("UPDATE apartment SET status = 'AVAILABLE' FROM apartment ap JOIN client c " +
+                    prepareStatement("UPDATE apartment SET status = 1 FROM apartment ap JOIN client c " +
                             "ON ap.apartment_id = c.apartment_id WHERE client_id = ?");
             preparedStatement.setLong(1, id);
             return preparedStatement.executeUpdate() != 0;

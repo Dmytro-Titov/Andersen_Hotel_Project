@@ -64,7 +64,7 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
         apartment.setCapacity(resultSet.getInt("capacity"));
         apartment.setPrice(resultSet.getDouble("price"));
         int statusValue = resultSet.getInt("status");
-        String statusString = (statusValue == 1) ? "AVAILABLE" : "UNAVAILABLE";
+        String statusString = (statusValue == 0) ? "AVAILABLE" : "UNAVAILABLE";
         apartment.setStatus(ApartmentStatus.valueOf(statusString));
 
         return apartment;
@@ -97,7 +97,7 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
                 updateField(connection, apartment.getId(), "capacity", apartment.getCapacity());
             }
             if (apartment.getStatus() != null) {
-                updateField(connection, apartment.getId(), "status", String.valueOf(apartment.getStatus()));
+                updateField(connection, apartment.getId(), "status", apartment.getStatus().ordinal());
             }
         } catch (SQLException e) {
             throw new RuntimeException("Filed to Update the Apartment!");
