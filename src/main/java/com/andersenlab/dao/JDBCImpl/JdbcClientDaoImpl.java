@@ -144,7 +144,7 @@ public class JdbcClientDaoImpl implements ClientDao {
         try {
             Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement
-                    ("INSERT INTO client (name, checkin, checkout, apartment_id, staycost, quantityofpeople) VALUES (?,?,?,?,?,?)");
+                    ("INSERT INTO client (name, checkin, checkout, apartment_id, status, staycost, quantityofpeople) VALUES (?,?,?,?,?,?,?)");
 
             preparedStatement.setString(1, client.getName());
 
@@ -168,8 +168,9 @@ public class JdbcClientDaoImpl implements ClientDao {
                 preparedStatement.setNull(4, Types.INTEGER);
             }
 
-            preparedStatement.setDouble(5, client.getStayCost());
-            preparedStatement.setInt(6, client.getQuantityOfPeople());
+            preparedStatement.setDouble(5, client.getStatus().ordinal());
+            preparedStatement.setDouble(6, client.getStayCost());
+            preparedStatement.setInt(7, client.getQuantityOfPeople());
 
             preparedStatement.executeUpdate();
             client.setId(getClientLastId());
