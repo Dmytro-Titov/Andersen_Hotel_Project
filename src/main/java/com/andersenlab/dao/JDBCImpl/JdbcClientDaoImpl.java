@@ -2,12 +2,9 @@ package com.andersenlab.dao.JDBCImpl;
 
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.dao.ClientDao;
-import com.andersenlab.dao.PerkDao;
 import com.andersenlab.dao.conection.ConnectionPool;
-import com.andersenlab.entity.Apartment;
-import com.andersenlab.entity.Client;
-import com.andersenlab.entity.ClientStatus;
-import com.andersenlab.entity.Perk;
+import com.andersenlab.entity.*;
+import com.andersenlab.exceptions.InappropriateValueException;
 import com.andersenlab.factory.HotelFactory;
 
 import java.sql.*;
@@ -17,66 +14,76 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class JdbcClientDaoImpl implements ClientDao {
 
     private final ConnectionPool connectionPool;
     private final ApartmentDao apartmentDao;
-    private final PerkDao perkDao;
 
     public JdbcClientDaoImpl(HotelFactory hotelFactory) {
         this.connectionPool = new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
         this.apartmentDao = new JdbcApartmentDaoImpl(hotelFactory);
-        this.perkDao = new JdbcPerkDaoImpl(hotelFactory);
     }
 
 
     @Override
     public Optional<Client> getById(long id) {
 
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("SELECT * FROM Client WHERE client_id = ?");
-            preparedStatement.setLong(1, id);
+                    .prepareStatement("SELECT * FROM Client WHERE client_id = ?")) {
 
+            preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                Client client = new Client();
-                client.setId(resultSet.getLong("client_id"));
-                client.setName(String.valueOf(resultSet.getString("name")));
-                Timestamp timestamp = resultSet.getTimestamp("checkin");
-                if (timestamp != null) {
-                    LocalDateTime dateTime = timestamp.toLocalDateTime();
-                    client.setCheckInDate(dateTime);
-                }
-                timestamp = resultSet.getTimestamp("checkout");
-                if (timestamp != null) {
-                    LocalDateTime dateTime = timestamp.toLocalDateTime();
-                    client.setCheckOutDate(dateTime);
-                }
-                long apartmentId = resultSet.getLong("apartment_id");
-                client.setApartment(apartmentDao.getById(apartmentId).orElse(null));
-
-                List<Perk> perks = getPerksForClient(id);
-                client.setPerks(perks);
-
-                client.setStayCost(resultSet.getDouble("staycost"));
-                client.setQuantityOfPeople(resultSet.getInt("quantityofpeople"));
-
-                return Optional.of(client);
+                return Optional.of(setClientFields(resultSet));
             } else {
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filed to get Client by the ID!");
         }
+    }
+
+    private Client setClientFields(ResultSet resultSet) throws SQLException {
+        Client client = new Client();
+        client.setId(resultSet.getLong("client_id"));
+        client.setName(resultSet.getString("name"));
+
+        Timestamp checkinTimestamp = resultSet.getTimestamp("checkin");
+        if (checkinTimestamp != null) {
+            LocalDateTime checkinDateTime = checkinTimestamp.toLocalDateTime();
+            client.setCheckInDate(checkinDateTime);
+        }
+
+        Timestamp checkoutTimestamp = resultSet.getTimestamp("checkout");
+        if (checkoutTimestamp != null) {
+            LocalDateTime checkoutDateTime = checkoutTimestamp.toLocalDateTime();
+            client.setCheckOutDate(checkoutDateTime);
+        }
+
+        long apartmentId = resultSet.getLong("apartment_id");
+        client.setApartment(apartmentDao.getById(apartmentId).orElse(null));
+
+        int statusValue = resultSet.getInt("status");
+        switch (statusValue) {
+            case 0 -> client.setStatus(ClientStatus.NEW);
+            case 1 -> client.setStatus(ClientStatus.CHECKED_IN);
+            case 2 -> client.setStatus(ClientStatus.CHECKED_OUT);
+        }
+
+        List<Perk> perks = getPerksForClient(client.getId());
+        client.setPerks(perks);
+
+        client.setStayCost(resultSet.getDouble("staycost"));
+        client.setQuantityOfPeople(resultSet.getInt("quantityofpeople"));
+        return client;
     }
 
     private List<Perk> getPerksForClient(long clientId) {
         List<Perk> perks = new ArrayList<>();
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT p.* FROM Perk p " +
                     "INNER JOIN Client_Perk cp ON p.perk_id = cp.perk_id " +
                     "WHERE cp.client_id = ?");
@@ -92,59 +99,33 @@ public class JdbcClientDaoImpl implements ClientDao {
             }
             return perks;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filed to get Perks of the Client!");
         }
     }
 
     @Override
     public List<Client> getAll() {
         List<Client> clients = new ArrayList<>();
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "SELECT * FROM Client");
+            ResultSet resultSet = preparedStatement.executeQuery()) {
 
-            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Client client = new Client();
-                client.setId(resultSet.getLong("client_id"));
-                client.setName(resultSet.getString("name"));
-
-                Timestamp checkinTimestamp = resultSet.getTimestamp("checkin");
-                if (checkinTimestamp != null) {
-                    LocalDateTime checkinDateTime = checkinTimestamp.toLocalDateTime();
-                    client.setCheckInDate(checkinDateTime);
-                }
-
-                Timestamp checkoutTimestamp = resultSet.getTimestamp("checkout");
-                if (checkoutTimestamp != null) {
-                    LocalDateTime checkoutDateTime = checkoutTimestamp.toLocalDateTime();
-                    client.setCheckOutDate(checkoutDateTime);
-                }
-
-                long apartmentId = resultSet.getLong("apartment_id");
-                client.setApartment(apartmentDao.getById(apartmentId).orElse(null));
-
-                List<Perk> perks = getPerksForClient(client.getId());
-                client.setPerks(perks);
-
-                client.setStayCost(resultSet.getDouble("staycost"));
-                client.setQuantityOfPeople(resultSet.getInt("quantityofpeople"));
-
-                clients.add(client);
+                clients.add(setClientFields(resultSet));
             }
             return clients;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filed to list Clients");
         }
     }
 
     @Override
     public Client save(Client client) {
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement
-                    ("INSERT INTO client (name, checkin, checkout, apartment_id, status, staycost, quantityofpeople) VALUES (?,?,?,?,?,?,?)");
+                    ("INSERT INTO client (name, checkin, checkout, apartment_id, " +
+                            "status, staycost, quantityofpeople) VALUES (?,?,?,?,?,?,?)")) {
 
             preparedStatement.setString(1, client.getName());
 
@@ -168,7 +149,7 @@ public class JdbcClientDaoImpl implements ClientDao {
                 preparedStatement.setNull(4, Types.INTEGER);
             }
 
-            preparedStatement.setDouble(5, client.getStatus().ordinal());
+            preparedStatement.setInt(5, client.getStatus().ordinal());
             preparedStatement.setDouble(6, client.getStayCost());
             preparedStatement.setInt(7, client.getQuantityOfPeople());
 
@@ -176,37 +157,46 @@ public class JdbcClientDaoImpl implements ClientDao {
             client.setId(getClientLastId());
             return client;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filed to add a Client");
         }
     }
 
 
     @Override
     public Optional<Client> update(Client client) {
-        List<Perk> perkList = client.getPerks();
         List<Perk> perkListFromDB = getPerksForClient(client.getId());
+        List<Perk> clientPerks = client.getPerks();
 
-        if (client.getPerks().size() != perkListFromDB.size()) {
-            for (int i = 0; i < perkList.size(); i++) {
-                if (perkListFromDB.size() <= i || perkList.get(i).getId() != perkListFromDB.get(i).getId()) {
-                    try (Connection connection = connectionPool.getConnection()) {
-                        PreparedStatement preparedStatement = connection.prepareStatement(
-                                "INSERT INTO client_perk (client_id, perk_id) VALUES (?, ?)");
+        //checking if perks of client are the same
+        if (clientPerks.equals(perkListFromDB) || client.getStatus().equals(ClientStatus.CHECKED_OUT)) {
+            return updateClientWithoutPerks(client);
+        } else {
+            Perk addedPerk = clientPerks.get(clientPerks.size() - 1);
 
-                        preparedStatement.setLong(1, client.getId());
-                        preparedStatement.setLong(2, perkList.get(i).getId());
+            if (perkListFromDB.contains(addedPerk)) {
+                throw new InappropriateValueException("Perk was already served to this client!");
+            } else {
+                try (Connection connection = connectionPool.getConnection();
+                    PreparedStatement preparedStatement = connection.prepareStatement(
+                            "INSERT INTO client_perk (client_id, perk_id) VALUES (?, ?)")) {
 
-                        preparedStatement.executeUpdate();
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
+                    preparedStatement.setLong(1, client.getId());
+                    preparedStatement.setLong(2, addedPerk.getId());
+
+                    preparedStatement.executeUpdate();
+                    return updateClientWithoutPerks(client);
+                } catch (SQLException e) {
+                    throw new RuntimeException("Filer to add the Perk to the Client!");
                 }
             }
         }
+    }
 
+    private Optional<Client> updateClientWithoutPerks(Client client) {
         try (Connection connection = connectionPool.getConnection()) {
+            connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement(
-                    "UPDATE Client SET name=?, checkin=?, checkout=?, apartment_id=?, staycost=?, quantityofpeople=?" +
+                    "UPDATE Client SET name=?, checkin=?, checkout=?, apartment_id=?, status=?, staycost=?, quantityofpeople=?" +
                             " WHERE client_id=?");
 
             preparedStatement.setString(1, client.getName());
@@ -234,46 +224,60 @@ public class JdbcClientDaoImpl implements ClientDao {
                 preparedStatement.setNull(4, Types.BIGINT);
             }
 
-            preparedStatement.setDouble(5, client.getStayCost());
-            preparedStatement.setInt(6, client.getQuantityOfPeople());
+            if (client.getStatus().equals(ClientStatus.CHECKED_OUT)) {
+                removeAllPerksById(client.getId(), connection);
+                setApartmentSatusAvailableAfterCheckout(client.getId(), connection);
+            }
+            preparedStatement.setInt(5, client.getStatus().ordinal());
 
-            preparedStatement.setLong(7, client.getId());
+            preparedStatement.setDouble(6, client.getStayCost());
+            preparedStatement.setInt(7, client.getQuantityOfPeople());
+
+            preparedStatement.setLong(8, client.getId());
 
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update the Client");
+        }
         return Optional.of(client);
     }
 
-    public void addPerkToClient(long clientId, long perkId) {
+    private boolean removeAllPerksById(long id, Connection connection) {
         try {
-            Connection connection = connectionPool.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "INSERT INTO Client_Perk (client_id, perk_id) VALUES (?, ?)");
-
-            preparedStatement.setLong(1, clientId);
-            preparedStatement.setLong(2, perkId);
-
-            preparedStatement.executeUpdate();
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("DELETE FROM Client_Perk WHERE client_id=?");
+            preparedStatement.setLong(1, id);
+            return preparedStatement.executeUpdate() != 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to remove all perks by ClientId!");
+        }
+    }
+
+    private boolean setApartmentSatusAvailableAfterCheckout(long id, Connection connection) {
+        try {
+            PreparedStatement preparedStatement = connection.
+                    prepareStatement("UPDATE apartment SET status = 1 FROM apartment ap JOIN client c " +
+                            "ON ap.apartment_id = c.apartment_id WHERE client_id = ?");
+            preparedStatement.setLong(1, id);
+            return preparedStatement.executeUpdate() != 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to change Apartment status after checkout!");
         }
     }
 
     @Override
     public boolean remove(long id) {
 
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection()) {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("DELETE FROM Client WHERE client_id=?");
-
-            int answer = preparedStatement.executeUpdate();
-            return answer != 0;
+            preparedStatement.setLong(1, id);
+            return preparedStatement.executeUpdate() != 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filed to remove the Client!");
         }
     }
 

@@ -22,106 +22,72 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
 
     @Override
     public Optional<Apartment> getById(long id) {
-        Apartment apartment;
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("SELECT * FROM Apartment WHERE apartment_id = ?");
-            preparedStatement.setLong(1, id);
+                    .prepareStatement("SELECT * FROM Apartment WHERE apartment_id = ?")) {
 
+            preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                apartment = new Apartment();
-                apartment.setId(resultSet.getLong("apartment_id"));
-                apartment.setCapacity(resultSet.getInt("capacity"));
-                apartment.setPrice(resultSet.getDouble("price"));
-                apartment.setStatus(ApartmentStatus.valueOf(resultSet.getString("status")));
+                return Optional.of(setApartmentFields(resultSet));
             } else {
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to get the Apartment by ID!");
         }
-        return Optional.of(apartment);
     }
 
     @Override
     public List<Apartment> getAll() {
         List<Apartment> apartments = new ArrayList<>();
-
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection
                     .prepareStatement("SELECT * FROM Apartment");
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery()) {
 
-            while (resultSet.next()) {
-                Apartment apartment = new Apartment();
-                apartment.setId(resultSet.getLong("apartment_id"));
-                apartment.setCapacity(resultSet.getInt("capacity"));
-                apartment.setPrice(resultSet.getDouble("price"));
-                apartment.setStatus(ApartmentStatus.valueOf(resultSet.getString("status")));
-                apartments.add(apartment);
+            while(resultSet.next()) {
+                apartments.add(setApartmentFields(resultSet));
             }
+            return apartments;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to list Apartments!");
         }
-        return apartments;
+    }
+
+    private Apartment setApartmentFields(ResultSet resultSet) throws SQLException {
+        Apartment apartment = new Apartment();
+        apartment.setId(resultSet.getLong("apartment_id"));
+        apartment.setCapacity(resultSet.getInt("capacity"));
+        apartment.setPrice(resultSet.getDouble("price"));
+        int statusValue = resultSet.getInt("status");
+        String statusString = (statusValue == 0) ? "AVAILABLE" : "UNAVAILABLE";
+        apartment.setStatus(ApartmentStatus.valueOf(statusString));
+
+        return apartment;
     }
 
     @Override
     public Apartment save(Apartment apartment) {
 
-        try {
-            Connection connection = connectionPool.getConnection();
+        try(Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("insert into apartment (capacity, price, status) values (?, ?, ?)");
+                    .prepareStatement("insert into apartment (capacity, price, status) values (?, ?, ?)")) {
 
             preparedStatement.setInt(1, apartment.getCapacity());
             preparedStatement.setDouble(2, apartment.getPrice());
-            preparedStatement.setString(3, String.valueOf(apartment.getStatus()));
+            preparedStatement.setInt(3, apartment.getStatus().ordinal());
             preparedStatement.executeUpdate();
 
             apartment.setId(getApartmentLastId());
             return apartment;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to save the Apartment!");
         }
     }
 
     @Override
     public Optional<Apartment> update(Apartment apartment) {
-//        try {
-//            if (apartment.getPrice() != 0.0) {
-//                Connection connection = connectionPool.getConnection();
-//                PreparedStatement preparedStatement = connection
-//                        .prepareStatement("UPDATE Apartment SET price=? WHERE apartment_id=?");
-//                preparedStatement.setDouble(1, apartment.getPrice());
-//                preparedStatement.setLong(2, apartment.getId());
-//                preparedStatement.executeUpdate();
-//            }
-//            if (apartment.getCapacity() != 0) {
-//                Connection connection = connectionPool.getConnection();
-//                PreparedStatement preparedStatement = connection
-//                        .prepareStatement("UPDATE Apartment SET capacity=? WHERE apartment_id=?");
-//                preparedStatement.setInt(1, apartment.getCapacity());
-//                preparedStatement.setLong(2, apartment.getId());
-//                preparedStatement.executeUpdate();
-//            }
-//            if (apartment.getStatus() != null) {
-//                Connection connection = connectionPool.getConnection();
-//                PreparedStatement preparedStatement = connection
-//                        .prepareStatement("UPDATE Apartment SET status=? WHERE apartment_id=?");
-//                preparedStatement.setString(1, String.valueOf(apartment.getStatus()));
-//                preparedStatement.setLong(2, apartment.getId());
-//                preparedStatement.executeUpdate();
-//            }
-//
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return Optional.of(apartment);
-//    }
         try (Connection connection = connectionPool.getConnection()) {
             if (apartment.getPrice() != 0.0) {
                 updateField(connection, apartment.getId(), "price", apartment.getPrice());
@@ -130,10 +96,10 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
                 updateField(connection, apartment.getId(), "capacity", apartment.getCapacity());
             }
             if (apartment.getStatus() != null) {
-                updateField(connection, apartment.getId(), "status", String.valueOf(apartment.getStatus()));
+                updateField(connection, apartment.getId(), "status", apartment.getStatus().ordinal());
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filed to Update the Apartment!");
         }
         return Optional.of(apartment);
     }
@@ -149,20 +115,15 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
 
     @Override
     public boolean remove(long id) {
-        int answer;
-
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("DELETE FROM Apartment WHERE apartment_id=?");
+                    .prepareStatement("DELETE FROM Apartment WHERE apartment_id=?")) {
+
             preparedStatement.setLong(1, id);
-
-            answer = preparedStatement.executeUpdate();
+            return preparedStatement.executeUpdate() != 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to remove the Apartment!");
         }
-
-        return answer != 0;
     }
 
 

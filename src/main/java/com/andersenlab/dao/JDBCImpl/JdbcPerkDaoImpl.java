@@ -21,55 +21,52 @@ public class JdbcPerkDaoImpl implements PerkDao {
 
     @Override
     public Optional<Perk> getById(long id) {
-        try {
-            Connection connection = connectionPool.getConnection();
-            PreparedStatement preparedStatement = connection
-                    .prepareStatement("SELECT * FROM Perk WHERE perk_id = ?");
-            preparedStatement.setLong(1, id);
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement preparedStatement = connection
+                     .prepareStatement("SELECT * FROM Perk WHERE perk_id = ?")) {
 
+            preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                Perk perk = new Perk();
-                perk.setId(resultSet.getLong("perk_id"));
-                perk.setName(String.valueOf(resultSet.getString("name")));
-                perk.setPrice(resultSet.getDouble("price"));
-                return Optional.of(perk);
+                return Optional.of(setPerkFields(resultSet));
             } else {
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to get Perk by ID!");
         }
     }
 
     @Override
     public List<Perk> getAll() {
         List<Perk> perks = new ArrayList<>();
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection
                     .prepareStatement("SELECT * FROM Perk");
+            ResultSet resultSet = preparedStatement.executeQuery()) {
 
-            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                var perk = new Perk();
-                perk.setId(resultSet.getLong("perk_id"));
-                perk.setName(String.valueOf(resultSet.getString("name")));
-                perk.setPrice(resultSet.getDouble("price"));
-                perks.add(perk);
+                perks.add(setPerkFields(resultSet));
             }
             return perks;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filed to list Perks!");
         }
+    }
+
+    private Perk setPerkFields(ResultSet resultSet) throws SQLException {
+        Perk perk = new Perk();
+        perk.setId(resultSet.getLong("perk_id"));
+        perk.setName(String.valueOf(resultSet.getString("name")));
+        perk.setPrice(resultSet.getDouble("price"));
+        return perk;
     }
 
     @Override
     public Perk save(Perk perk) {
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("insert into perk (name, price) values (?, ?)");
+                   .prepareStatement("insert into perk (name, price) values (?, ?)")) {
 
             preparedStatement.setString(1, String.valueOf(perk.getName()));
             preparedStatement.setDouble(2, perk.getPrice());
@@ -78,7 +75,7 @@ public class JdbcPerkDaoImpl implements PerkDao {
             perk.setId(getPerkLastId());
             return perk;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filed to save the Perk!");
         }
     }
 
@@ -93,13 +90,14 @@ public class JdbcPerkDaoImpl implements PerkDao {
             }
             return Optional.of(perk);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filed to update the Perk!");
         }
     }
 
     private void updateField(Connection connection, long perkId, String fieldName, Object value) throws SQLException {
-        String query = "UPDATE Perk SET " + fieldName + "=? WHERE perk_id=?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (PreparedStatement preparedStatement = connection
+                .prepareStatement("UPDATE Perk SET " + fieldName + "=? WHERE perk_id=?")) {
+
             preparedStatement.setObject(1, value);
             preparedStatement.setLong(2, perkId);
             preparedStatement.executeUpdate();
@@ -108,17 +106,14 @@ public class JdbcPerkDaoImpl implements PerkDao {
 
     @Override
     public boolean remove(long id) {
-        int answer;
-        try {
-            Connection connection = connectionPool.getConnection();
+        try (Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("DELETE FROM Perk WHERE perk_id=?");
-            preparedStatement.setLong(1, id);
+                    .prepareStatement("DELETE FROM Perk WHERE perk_id=?")) {
 
-            answer = preparedStatement.executeUpdate();
-            return answer != 0;
+            preparedStatement.setLong(1, id);
+            return preparedStatement.executeUpdate() != 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Filed to remove the Perk!");
         }
     }
 
