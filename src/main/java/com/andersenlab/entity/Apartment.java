@@ -1,11 +1,21 @@
 package com.andersenlab.entity;
 
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
+@Entity
+@Table(name = "Apartment")
 public class Apartment {
+    @Id
+    @Column(name = "apartment_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "capacity")
     private int capacity;
+    @Column(name = "price")
     private double price;
+    @Column(name = "status")
     private ApartmentStatus status;
 
     public Apartment() {
