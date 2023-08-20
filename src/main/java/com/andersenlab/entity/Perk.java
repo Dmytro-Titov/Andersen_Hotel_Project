@@ -1,11 +1,20 @@
 package com.andersenlab.entity;
 
+
+import jakarta.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "Perk")
 public class Perk {
-    private long id;
-    private String name;
-    private double price;
+    @Id
+    @Column(name = "perk_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long id;
+    @Column(name = "name")
+    public String name;
+    @Column(name = "price")
+    public double price;
 
     public Perk(long id, String name, double price) {
         this.id = id;
