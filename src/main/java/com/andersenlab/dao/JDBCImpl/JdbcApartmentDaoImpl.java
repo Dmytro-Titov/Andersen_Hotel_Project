@@ -127,20 +127,29 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
         }
     }
 
-
     @Override
     public List<Apartment> getSortedBy(ApartmentSortType type) {
         return switch (type) {
-            case ID -> sortBy(Apartment::getId);
-            case PRICE -> sortBy(Apartment::getPrice);
-            case CAPACITY -> sortBy(Apartment::getCapacity);
-            case STATUS -> sortBy(Apartment::getStatus);
+            case ID -> sortBy("apartment_id");
+            case PRICE -> sortBy("price");
+            case CAPACITY -> sortBy("capacity");
+            case STATUS -> sortBy("status");
         };
     }
 
-    private List<Apartment> sortBy(Function<Apartment, Comparable> extractor) {
-        return getAll().stream()
-                .sorted(Comparator.comparing(extractor))
-                .toList();
+    private List<Apartment> sortBy(String fieldName) {
+        String query = "SELECT * FROM apartment ORDER BY " + fieldName;
+        try (Connection connection = connectionPool.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                List<Apartment> apartments = new ArrayList<>();
+                while(resultSet.next()) {
+                    apartments.add(setApartmentFields(resultSet));
+                }
+                return apartments;
+        } catch (SQLException e) {
+            throw new RuntimeException("Filed to sort Apartments");
+        }
     }
 }
