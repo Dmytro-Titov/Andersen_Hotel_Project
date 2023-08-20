@@ -15,8 +15,11 @@ import java.util.function.Function;
 public class JdbcPerkDaoImpl implements PerkDao {
     private final ConnectionPool connectionPool;
 
+    private long lastID;
+
     public JdbcPerkDaoImpl(HotelFactory hotelFactory) {
         this.connectionPool = new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
+        lastID = getPerkLastId();
     }
 
     @Override
@@ -72,7 +75,7 @@ public class JdbcPerkDaoImpl implements PerkDao {
             preparedStatement.setDouble(2, perk.getPrice());
             preparedStatement.executeUpdate();
 
-            perk.setId(getPerkLastId());
+            perk.setId(++lastID);
             return perk;
         } catch (SQLException e) {
             throw new RuntimeException("Filed to save the Perk!");
@@ -133,20 +136,18 @@ public class JdbcPerkDaoImpl implements PerkDao {
     }
 
     private int getPerkLastId() {
-        String query = "SELECT MAX(perk_id) FROM perk";
-        int lastId = 0;
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+             ResultSet resultSet = statement.executeQuery("SELECT MAX(perk_id) FROM perk")) {
 
-            while (resultSet.next()) {
-                lastId = resultSet.getInt(1);
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            } else {
+                return 0;
             }
 
-            return lastId;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 }

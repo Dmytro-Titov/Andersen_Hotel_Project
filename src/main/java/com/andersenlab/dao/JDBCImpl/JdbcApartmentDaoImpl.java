@@ -16,8 +16,11 @@ import java.util.function.Function;
 public class JdbcApartmentDaoImpl implements ApartmentDao {
     private final ConnectionPool connectionPool;
 
+    private long lastID;
+
     public JdbcApartmentDaoImpl(HotelFactory hotelFactory) {
         this.connectionPool = new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
+        lastID = getApartmentLastId();
     }
 
     @Override
@@ -79,7 +82,7 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
             preparedStatement.setInt(3, apartment.getStatus().ordinal());
             preparedStatement.executeUpdate();
 
-            apartment.setId(getApartmentLastId());
+            apartment.setId(++lastID);
             return apartment;
         } catch (SQLException e) {
             throw new RuntimeException("Failed to save the Apartment!");
@@ -144,20 +147,18 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
     }
 
     private int getApartmentLastId() {
-        String query = "SELECT MAX(apartment_id) FROM apartment";
-        int lastId = 0;
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+             ResultSet resultSet = statement.executeQuery("SELECT MAX(apartment_id) FROM apartment")) {
 
-            while (resultSet.next()) {
-                lastId = resultSet.getInt(1);
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            } else {
+                return 0;
             }
 
-            return lastId;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 }
