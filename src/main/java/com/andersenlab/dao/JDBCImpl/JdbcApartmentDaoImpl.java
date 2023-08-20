@@ -79,7 +79,7 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
 
             preparedStatement.setInt(1, apartment.getCapacity());
             preparedStatement.setDouble(2, apartment.getPrice());
-            preparedStatement.setString(3, String.valueOf(apartment.getStatus()));
+            preparedStatement.setInt(3, apartment.getStatus().ordinal());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Failed to save the Apartment!");

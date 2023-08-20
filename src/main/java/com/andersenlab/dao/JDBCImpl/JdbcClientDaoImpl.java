@@ -149,7 +149,7 @@ public class JdbcClientDaoImpl implements ClientDao {
                 preparedStatement.setNull(4, Types.INTEGER);
             }
 
-            preparedStatement.setString(5, String.valueOf(client.getStatus()));
+            preparedStatement.setInt(5, client.getStatus().ordinal());
             preparedStatement.setDouble(6, client.getStayCost());
             preparedStatement.setInt(7, client.getQuantityOfPeople());
 
