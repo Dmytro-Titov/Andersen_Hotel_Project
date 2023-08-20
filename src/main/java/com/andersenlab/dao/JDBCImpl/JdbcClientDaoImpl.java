@@ -66,7 +66,12 @@ public class JdbcClientDaoImpl implements ClientDao {
         long apartmentId = resultSet.getLong("apartment_id");
         client.setApartment(apartmentDao.getById(apartmentId).orElse(null));
 
-        client.setStatus(ClientStatus.valueOf(resultSet.getString("status")));
+        int statusValue = resultSet.getInt("status");
+        switch (statusValue) {
+            case 0 -> client.setStatus(ClientStatus.NEW);
+            case 1 -> client.setStatus(ClientStatus.CHECKED_IN);
+            case 2 -> client.setStatus(ClientStatus.CHECKED_OUT);
+        }
 
         List<Perk> perks = getPerksForClient(client.getId());
         client.setPerks(perks);

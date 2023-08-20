@@ -63,7 +63,10 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
         apartment.setId(resultSet.getLong("apartment_id"));
         apartment.setCapacity(resultSet.getInt("capacity"));
         apartment.setPrice(resultSet.getDouble("price"));
-        apartment.setStatus(ApartmentStatus.valueOf(resultSet.getString("status")));
+        int statusValue = resultSet.getInt("status");
+        String statusString = (statusValue == 1) ? "AVAILABLE" : "UNAVAILABLE";
+        apartment.setStatus(ApartmentStatus.valueOf(statusString));
+
         return apartment;
     }
 
