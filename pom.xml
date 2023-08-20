@@ -27,7 +27,7 @@
         <maven-jar-plugin>3.2.0</maven-jar-plugin>
         <maven-surefire-plugin>3.1.2</maven-surefire-plugin>
         <postgresql>42.6.0</postgresql>
-        <tomcat.version>8.5.38</tomcat.version>
+        <tomcat.version>10.1.12</tomcat.version>
     </properties>
 
     <build>
@@ -98,7 +98,7 @@
                     </execution>
                 </executions>
             </plugin>
-<!--            To create DB, use "mvn liquibase:update" command-->
+            <!--            To create DB, use "mvn liquibase:update" command-->
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
@@ -107,7 +107,7 @@
                     <changeLogFile>src/main/resources/sql/initial_db_creation.sql</changeLogFile>
                     <url>jdbc:postgresql://localhost:5432/db_hotel_Andersen</url>
                     <username>postgres</username>
-                    <password>password</password>
+                    <password>postgres</password>
                 </configuration>
             </plugin>
         </plugins>
@@ -186,6 +186,11 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-maven-plugin</artifactId>
             <version>4.23.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.2.7.Final</version>
         </dependency>
     </dependencies>
 </project>
