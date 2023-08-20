@@ -1,20 +1,41 @@
 package com.andersenlab.entity;
 
+
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "Client")
 public class Client {
+    @Id
+    @Column(name = "client_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "checkout")
     private LocalDateTime checkOutDate;
+    @Column(name = "checkin")
     private LocalDateTime checkInDate;
+    @Column(name = "status")
     private ClientStatus status;
+    @OneToOne
+    @JoinColumn(name = "apartment_id")
     private Apartment apartment;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "client_perk",
+            joinColumns = @JoinColumn (name = "client_id"),
+            inverseJoinColumns = @JoinColumn (name = "perk_id")
+    )
     private List<Perk> perks;
+    @Column(name = "staycost")
     private double stayCost;
+    @Column(name = "quantityofpeople")
     private int quantityOfPeople;
 
     public Client() {
