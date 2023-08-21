@@ -15,4 +15,10 @@ public interface ApartmentDao {
     Optional<Apartment> update(Apartment apartment);
 
     boolean remove(long id);
+
+    List<Apartment> getSortedBy(ApartmentSortType type);
+
+    enum ApartmentSortType {
+        ID, PRICE, CAPACITY, STATUS
+    }
 }

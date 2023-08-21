@@ -1,6 +1,7 @@
 package com.andersenlab.servlet;
 
 
+import com.andersenlab.config.Config;
 import com.andersenlab.dao.onDiskImpl.OnDiskApartmentDaoImpl;
 import com.andersenlab.dao.onDiskImpl.OnDiskClientDaoImpl;
 import com.andersenlab.dao.onDiskImpl.OnDiskPerkDaoImpl;
@@ -8,6 +9,10 @@ import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
+import com.andersenlab.service.ApartmentService;
+import com.andersenlab.service.ClientService;
+import com.andersenlab.service.PerkService;
+import com.andersenlab.util.ConfigHandler;
 import com.andersenlab.util.ServletUtils;
 import io.restassured.http.ContentType;
 import org.json.simple.JSONObject;
@@ -21,25 +26,35 @@ import static io.restassured.RestAssured.given;
 
 public class ClientServletTest {
 
-    private final HotelFactory hotelFactory = ServletUtils.getHotelFactoryInstance();
+    private HotelFactory hotelFactory;
+    private ClientService clientService;
 
 
     @BeforeEach
     void setup() {
-        if (hotelFactory.getConfig().getConfigData().getSaveOption().isSaveOnDisk()) {
-            OnDiskClientDaoImpl onDiskClientDao = new OnDiskClientDaoImpl(hotelFactory);
-            for (Client client : hotelFactory.getClientService().getAll()) {
-                onDiskClientDao.remove(client.getId());
-            }
-            OnDiskApartmentDaoImpl onDiskApartmentDao = new OnDiskApartmentDaoImpl(hotelFactory);
-            for (Apartment apartment : hotelFactory.getApartmentService().getAll()) {
-                onDiskApartmentDao.remove(apartment.getId());
-            }
-            OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory);
-            for (Perk perk : hotelFactory.getPerkService().getAll()) {
-                onDiskPerkDao.remove(perk.getId());
-            }
-        }
+        Config config = new Config();
+        config.setConfigData(ConfigHandler.createConfig("src/main/resources/config/config-dev.yaml"));
+        hotelFactory = new HotelFactory(config);
+//        clientService = hotelFactory.getClientService();
+//        ApartmentService apartmentService = hotelFactory.getApartmentService();
+//        PerkService perkService = hotelFactory.getPerkService();
+
+
+
+//        if (hotelFactory.getConfig().getConfigData().getSaveOption().isSaveOnDisk()) {
+//            OnDiskClientDaoImpl onDiskClientDao = new OnDiskClientDaoImpl(hotelFactory);
+//            for (Client client : hotelFactory.getClientService().getAll()) {
+//                onDiskClientDao.remove(client.getId());
+//            }
+//            OnDiskApartmentDaoImpl onDiskApartmentDao = new OnDiskApartmentDaoImpl(hotelFactory);
+//            for (Apartment apartment : hotelFactory.getApartmentService().getAll()) {
+//                onDiskApartmentDao.remove(apartment.getId());
+//            }
+//            OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory);
+//            for (Perk perk : hotelFactory.getPerkService().getAll()) {
+//                onDiskPerkDao.remove(perk.getId());
+//            }
+//        }
         hotelFactory.getClientService().save("Alex", 2);
         hotelFactory.getApartmentService().save(4, 4000.0);
         hotelFactory.getPerkService().save("laundry", 50);

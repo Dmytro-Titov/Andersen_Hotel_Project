@@ -1,11 +1,11 @@
 package com.andersenlab.service;
 
 import com.andersenlab.config.Config;
+import com.andersenlab.config.SaveOption;
 import com.andersenlab.dao.onDiskImpl.OnDiskApartmentDaoImpl;
 import com.andersenlab.dao.onDiskImpl.OnDiskClientDaoImpl;
 import com.andersenlab.dao.onDiskImpl.OnDiskPerkDaoImpl;
 import com.andersenlab.entity.*;
-import com.andersenlab.exceptions.ConfigurationRestrictionException;
 import com.andersenlab.exceptions.InnerLogicException;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.ConfigHandler;
@@ -48,19 +48,13 @@ public class ClientServiceTest {
 
     @AfterEach
     public void teardown() {
-        if (hotelFactory.getConfig().getConfigData().getSaveOption().isSaveOnDisk()) {
+        if (this.hotelFactory.getConfig().getConfigData().getSaveOption() == SaveOption.DISK) {
             OnDiskClientDaoImpl onDiskClientDao = new OnDiskClientDaoImpl(hotelFactory);
-            for (Client client : clientService.getAll()) {
-                onDiskClientDao.remove(client.getId());
-            }
+            clientService.getAll().forEach(client -> onDiskClientDao.remove(client.getId()));
             OnDiskApartmentDaoImpl onDiskApartmentDao = new OnDiskApartmentDaoImpl(hotelFactory);
-            for (Apartment apartment : hotelFactory.getApartmentService().getAll()) {
-                onDiskApartmentDao.remove(apartment.getId());
-            }
+            hotelFactory.getApartmentService().getAll().forEach(apartment -> onDiskApartmentDao.remove(apartment.getId()));
             OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory);
-            for (Perk perk : hotelFactory.getPerkService().getAll()) {
-                onDiskPerkDao.remove(perk.getId());
-            }
+            hotelFactory.getPerkService().getAll().forEach(perk -> onDiskPerkDao.remove(perk.getId()));
         }
     }
 
@@ -254,7 +248,7 @@ public class ClientServiceTest {
         expectedClients.add(new Client(3, "Petr", 3));
         expectedClients.add(new Client(4, "Lola", 5));
 
-        List<Client> actualClients = clientService.getSorted(ClientService.ClientSortType.ID);
+        List<Client> actualClients = clientService.getSorted("id");
 
         assertEquals(expectedClients, actualClients);
     }
@@ -268,7 +262,7 @@ public class ClientServiceTest {
         expectedClients.add(new Client(1, "Oleg", 8));
         expectedClients.add(new Client(3, "Petr", 3));
 
-        List<Client> actualClients = clientService.getSorted(ClientService.ClientSortType.NAME);
+        List<Client> actualClients = clientService.getSorted("name");
 
         assertEquals(expectedClients, actualClients);
     }
@@ -295,7 +289,7 @@ public class ClientServiceTest {
         expectedClients.add(client4);
         expectedClients.add(client2);
 
-        List<Client> actualClients = clientService.getSorted(ClientService.ClientSortType.CHECK_OUT_DATE);
+        List<Client> actualClients = clientService.getSorted("checkOUTdate");
 
         for (int i = 0; i < actualClients.size(); i++) {
             assertSame(actualClients.get(i).getCheckOutDate().getDayOfMonth(),
@@ -323,7 +317,7 @@ public class ClientServiceTest {
         clientService.checkInApartment(3, 10, 4);
         clientService.checkOutApartment(3);
         clientService.checkInApartment(4, 7, 4);
-        List<Client> actualClients = clientService.getSorted(ClientService.ClientSortType.STATUS);
+        List<Client> actualClients = clientService.getSorted("status");
 
         for (int i = 0; i < actualClients.size(); i++) {
             assertSame(actualClients.get(i).getStatus(), expectedClients.get(i).getStatus());

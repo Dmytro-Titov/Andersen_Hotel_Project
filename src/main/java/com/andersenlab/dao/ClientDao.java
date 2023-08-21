@@ -14,4 +14,9 @@ public interface ClientDao {
     Optional<Client> update(Client client);
 
     boolean remove(long id);
+
+    List<Client> getSortedBy(ClientSortType type);
+    enum ClientSortType {
+        ID, NAME, CHECK_OUT_DATE, STATUS
+    }
 }

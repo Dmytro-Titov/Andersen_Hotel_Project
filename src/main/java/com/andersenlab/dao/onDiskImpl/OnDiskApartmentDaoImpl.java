@@ -5,8 +5,10 @@ import com.andersenlab.entity.Apartment;
 import com.andersenlab.factory.HotelFactory;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class OnDiskApartmentDaoImpl implements ApartmentDao {
     private final OnDiskJsonHandler onDiskJsonHandler;
@@ -70,5 +72,21 @@ public class OnDiskApartmentDaoImpl implements ApartmentDao {
 
         onDiskJsonHandler.save(entityState);
         return answer;
+    }
+
+    @Override
+    public List<Apartment> getSortedBy(ApartmentSortType type) {
+        return switch (type) {
+            case ID -> sortBy(Apartment::getId);
+            case PRICE -> sortBy(Apartment::getPrice);
+            case CAPACITY -> sortBy(Apartment::getCapacity);
+            case STATUS -> sortBy(Apartment::getStatus);
+        };
+    }
+
+    private List<Apartment> sortBy(Function<Apartment, Comparable> extractor) {
+        return getAll().stream()
+                .sorted(Comparator.comparing(extractor))
+                .toList();
     }
 }

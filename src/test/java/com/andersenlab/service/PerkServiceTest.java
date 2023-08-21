@@ -1,6 +1,7 @@
 package com.andersenlab.service;
 
 import com.andersenlab.config.Config;
+import com.andersenlab.config.SaveOption;
 import com.andersenlab.dao.onDiskImpl.OnDiskPerkDaoImpl;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
@@ -35,11 +36,9 @@ public class PerkServiceTest {
 
     @AfterEach
     void teardown() {
-        if (hotelFactory.getConfig().getConfigData().getSaveOption().isSaveOnDisk()) {
-            OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory);
-            for (Perk perk : perkService.getAll()) {
-                onDiskPerkDao.remove(perk.getId());
-            }
+        if (this.hotelFactory.getConfig().getConfigData().getSaveOption() == SaveOption.DISK) {
+                OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory);
+                perkService.getAll().forEach(perk -> onDiskPerkDao.remove(perk.getId()));
         }
     }
     @Test
@@ -109,7 +108,7 @@ public class PerkServiceTest {
         expectedPerks.add(perk2);
         expectedPerks.add(perk3);
 
-        List<Perk> actualPerks = perkService.getSorted(PerkService.PerkSortType.ID);
+        List<Perk> actualPerks = perkService.getSorted("id");
 
         assertEquals(expectedPerks, actualPerks);
     }
@@ -125,7 +124,7 @@ public class PerkServiceTest {
         expectedPerks.add(perk3);
         expectedPerks.add(perk1);
 
-        List<Perk> actualPerks = perkService.getSorted(PerkService.PerkSortType.NAME);
+        List<Perk> actualPerks = perkService.getSorted("name");
 
         assertEquals(expectedPerks, actualPerks);
     }
@@ -141,7 +140,7 @@ public class PerkServiceTest {
         expectedPerks.add(perk2);
         expectedPerks.add(perk1);
 
-        List<Perk> actualPerks = perkService.getSorted(PerkService.PerkSortType.PRICE);
+        List<Perk> actualPerks = perkService.getSorted("price");
 
         assertEquals(expectedPerks, actualPerks);
     }

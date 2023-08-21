@@ -1,6 +1,7 @@
 package com.andersenlab.service;
 
 import com.andersenlab.config.Config;
+import com.andersenlab.config.SaveOption;
 import com.andersenlab.dao.onDiskImpl.OnDiskApartmentDaoImpl;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
@@ -38,11 +39,9 @@ public class ApartmentServiceTest {
 
     @AfterEach
     void teardown() {
-        if (hotelFactory.getConfig().getConfigData().getSaveOption().isSaveOnDisk()) {
+        if (this.hotelFactory.getConfig().getConfigData().getSaveOption() == SaveOption.DISK) {
             OnDiskApartmentDaoImpl onDiskApartmentDao = new OnDiskApartmentDaoImpl(hotelFactory);
-            for (Apartment apartment : apartmentService.getAll()) {
-                onDiskApartmentDao.remove(apartment.getId());
-            }
+            apartmentService.getAll().forEach(apartment -> onDiskApartmentDao.remove(apartment.getId()));
         }
     }
 
@@ -143,7 +142,7 @@ public class ApartmentServiceTest {
         expectedApartments.add(apartment3);
         expectedApartments.add(apartment4);
 
-        List<Apartment> actualApartments = apartmentService.getSorted(ApartmentService.ApartmentSortType.ID);
+        List<Apartment> actualApartments = apartmentService.getSorted("id");
 
         assertEquals(expectedApartments, actualApartments);
     }
@@ -161,7 +160,7 @@ public class ApartmentServiceTest {
         expectedApartments.add(apartment4);
         expectedApartments.add(apartment3);
 
-        List<Apartment> actualApartments = apartmentService.getSorted(ApartmentService.ApartmentSortType.CAPACITY);
+        List<Apartment> actualApartments = apartmentService.getSorted("capacity");
 
         assertEquals(expectedApartments, actualApartments);
     }
@@ -180,7 +179,7 @@ public class ApartmentServiceTest {
         expectedApartments.add(apartment2);
         expectedApartments.add(apartment3);
 
-        List<Apartment> actualApartments = apartmentService.getSorted(ApartmentService.ApartmentSortType.PRICE);
+        List<Apartment> actualApartments = apartmentService.getSorted("price");
 
         assertEquals(expectedApartments, actualApartments);
     }
@@ -202,7 +201,7 @@ public class ApartmentServiceTest {
         apartmentService.changeStatus(1);
         apartmentService.changeStatus(2);
         apartmentService.changeStatus(3);
-        List<Apartment> actualApartments = apartmentService.getSorted(ApartmentService.ApartmentSortType.STATUS);
+        List<Apartment> actualApartments = apartmentService.getSorted("status");
         assertEquals(expectedApartments, actualApartments);
     }
 }

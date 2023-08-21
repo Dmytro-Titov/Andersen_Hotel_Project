@@ -118,13 +118,7 @@ public class Console {
                     case "getperks" ->
                         ConsolePrinter.printClientPerks(clientService.getAllPerks(Long.parseLong(commandArray[2])));
                     case "list" -> {
-                        List<Client> list = switch (commandArray[2].toLowerCase()) {
-                            case "id" -> clientService.getSorted(ClientService.ClientSortType.ID);
-                            case "name" -> clientService.getSorted(ClientService.ClientSortType.NAME);
-                            case "checkout" -> clientService.getSorted(ClientService.ClientSortType.CHECK_OUT_DATE);
-                            case "status" -> clientService.getSorted(ClientService.ClientSortType.STATUS);
-                            default -> throw new UnknownCommandException(commandArray[2]);
-                        };
+                        List<Client> list =  clientService.getSorted(commandArray[2]);
                         ConsolePrinter.printList(list);
                     }
                     default -> throw new UnknownCommandException(commandArray[1]);
@@ -187,13 +181,7 @@ public class Console {
                     case "get" ->
                         ConsolePrinter.printEntity(apartmentService.getById(Long.parseLong(commandArray[2])));
                     case "list" -> {
-                        List<Apartment> list = switch (commandArray[2].toLowerCase()) {
-                            case "id" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.ID);
-                            case "price" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.PRICE);
-                            case "capacity" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.CAPACITY);
-                            case "status" -> apartmentService.getSorted(ApartmentService.ApartmentSortType.STATUS);
-                            default -> throw new UnknownCommandException(commandArray[2]);
-                        };
+                        List<Apartment> list = apartmentService.getSorted(commandArray[2].toLowerCase());
                         ConsolePrinter.printList(list);
                     }
                     case "price" ->
@@ -243,12 +231,7 @@ public class Console {
                     case "price" ->
                         ConsolePrinter.printPerkPrice(perkService.getById(Long.parseLong(commandArray[2])));
                     case "list" -> {
-                        List<Perk> list = switch (commandArray[2].toLowerCase()) {
-                            case "id" -> perkService.getSorted(PerkService.PerkSortType.ID);
-                            case "name" -> perkService.getSorted(PerkService.PerkSortType.NAME);
-                            case "price" -> perkService.getSorted(PerkService.PerkSortType.PRICE);
-                            default -> throw new UnknownCommandException(commandArray[2]);
-                        };
+                        List<Perk> list = perkService.getSorted(commandArray[2].toLowerCase());
                         ConsolePrinter.printList(list);
                     }
                     default -> throw new UnknownCommandException(commandArray[1]);

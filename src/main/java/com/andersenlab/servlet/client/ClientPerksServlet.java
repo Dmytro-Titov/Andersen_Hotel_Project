@@ -3,14 +3,14 @@ package com.andersenlab.servlet.client;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.exceptions.IdDoesNotExistException;
 import com.andersenlab.exceptions.InnerLogicException;
-import com.andersenlab.factory.HotelFactory;
-import com.andersenlab.util.ServletUtils;
+import com.andersenlab.service.ClientService;
+import com.andersenlab.factory.ServletFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
@@ -19,7 +19,7 @@ import java.util.List;
         urlPatterns = {"/clients/perks"}
 )
 public class ClientPerksServlet extends HttpServlet {
-    private HotelFactory hotelFactory = ServletUtils.getHotelFactoryInstance();
+    private ClientService clientService = ServletFactory.INSTANCE.getClientService();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     //EXAMPLE: http://localhost:8080/clients/perks?clientId=1
@@ -27,7 +27,7 @@ public class ClientPerksServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("clientId");
         try {
-            List<Perk> perks = hotelFactory.getClientService().getAllPerks(Long.parseLong(id));
+            List<Perk> perks = clientService.getAllPerks(Long.parseLong(id));
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), perks);
@@ -42,7 +42,7 @@ public class ClientPerksServlet extends HttpServlet {
         String clientId = req.getParameter("clientId");
         String perkId = req.getParameter("perkId");
         try {
-            Perk perk = hotelFactory.getClientService().addPerk(Long.parseLong(clientId), Long.parseLong(perkId));
+            Perk perk = clientService.addPerk(Long.parseLong(clientId), Long.parseLong(perkId));
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), perk);

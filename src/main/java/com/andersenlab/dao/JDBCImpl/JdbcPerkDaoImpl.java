@@ -10,8 +10,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class JdbcPerkDaoImpl implements PerkDao {
     private final ConnectionPool connectionPool;
@@ -65,12 +67,12 @@ public class JdbcPerkDaoImpl implements PerkDao {
         }
     }
 
-        @Override
+    @Override
     public Perk save(Perk perk) {
         try {
             Connection connection = connectionPool.getConnection();
             PreparedStatement preparedStatement = connection
-                   .prepareStatement("insert into perk (name, price) values (?, ?)");
+                    .prepareStatement("insert into perk (name, price) values (?, ?)");
 
             preparedStatement.setString(1, String.valueOf(perk.getName()));
             preparedStatement.setDouble(2, perk.getPrice());
@@ -119,5 +121,20 @@ public class JdbcPerkDaoImpl implements PerkDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<Perk> getSortedBy(PerkSortType type) {
+        return switch (type) {
+            case ID -> sortBy(Perk::getId);
+            case NAME -> sortBy(Perk::getName);
+            case PRICE -> sortBy(Perk::getPrice);
+        };
+    }
+
+    private List<Perk> sortBy(Function<Perk, Comparable> extractor) {
+        return getAll().stream()
+                .sorted(Comparator.comparing(extractor))
+                .toList();
     }
 }

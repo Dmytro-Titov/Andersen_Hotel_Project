@@ -1,5 +1,546 @@
 {
-  "apartmentsList" : [ ],
-  "clientsList" : [ ],
-  "perksList" : [ ]
+  "apartmentsList" : [ {
+    "id" : 1,
+    "capacity" : 4,
+    "price" : 4000.0,
+    "status" : "UNAVAILABLE"
+  }, {
+    "id" : 2,
+    "capacity" : 2,
+    "price" : 3000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 3,
+    "capacity" : 4,
+    "price" : 4000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 4,
+    "capacity" : 2,
+    "price" : 3000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 5,
+    "capacity" : 4,
+    "price" : 4000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 6,
+    "capacity" : 2,
+    "price" : 3000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 7,
+    "capacity" : 4,
+    "price" : 4000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 8,
+    "capacity" : 2,
+    "price" : 3000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 9,
+    "capacity" : 4,
+    "price" : 4000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 10,
+    "capacity" : 2,
+    "price" : 3000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 11,
+    "capacity" : 4,
+    "price" : 4000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 12,
+    "capacity" : 2,
+    "price" : 3000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 13,
+    "capacity" : 4,
+    "price" : 4000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 14,
+    "capacity" : 2,
+    "price" : 3000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 15,
+    "capacity" : 4,
+    "price" : 4000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 16,
+    "capacity" : 2,
+    "price" : 3000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 17,
+    "capacity" : 4,
+    "price" : 4000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 18,
+    "capacity" : 2,
+    "price" : 3000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 19,
+    "capacity" : 4,
+    "price" : 4000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 20,
+    "capacity" : 2,
+    "price" : 3000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 21,
+    "capacity" : 4,
+    "price" : 4000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 22,
+    "capacity" : 2,
+    "price" : 3000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 23,
+    "capacity" : 4,
+    "price" : 4000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 24,
+    "capacity" : 2,
+    "price" : 3000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 25,
+    "capacity" : 4,
+    "price" : 4000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 26,
+    "capacity" : 2,
+    "price" : 3000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 27,
+    "capacity" : 4,
+    "price" : 4000.0,
+    "status" : "AVAILABLE"
+  }, {
+    "id" : 28,
+    "capacity" : 2,
+    "price" : 3000.0,
+    "status" : "AVAILABLE"
+  } ],
+  "clientsList" : [ {
+    "id" : 1,
+    "name" : "Alex",
+    "checkOutDate" : [ 2023, 8, 26, 13, 4, 18, 424570100 ],
+    "checkInDate" : [ 2023, 8, 21, 13, 4, 18, 424570100 ],
+    "status" : "CHECKED_IN",
+    "apartment" : {
+      "id" : 1,
+      "capacity" : 4,
+      "price" : 4000.0,
+      "status" : "UNAVAILABLE"
+    },
+    "perks" : [ {
+      "id" : 1,
+      "name" : "laundry",
+      "price" : 50.0
+    } ],
+    "stayCost" : 20050.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 2,
+    "name" : "Zina",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 3,
+    "name" : "Alex",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 4,
+    "name" : "Zina",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 5,
+    "name" : "Alex",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 6,
+    "name" : "Zina",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 7,
+    "name" : "Alex",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 8,
+    "name" : "Zina",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 9,
+    "name" : "Alex",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 10,
+    "name" : "Zina",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 11,
+    "name" : "Alex",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 12,
+    "name" : "Zina",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 13,
+    "name" : "Alex",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 14,
+    "name" : "Zina",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 15,
+    "name" : "Alex",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 16,
+    "name" : "Zina",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 17,
+    "name" : "Alex",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 18,
+    "name" : "Zina",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 19,
+    "name" : "Alex",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 20,
+    "name" : "Zina",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 21,
+    "name" : "Alex",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 22,
+    "name" : "Zina",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 23,
+    "name" : "Alex",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 24,
+    "name" : "Zina",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 25,
+    "name" : "Alex",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 26,
+    "name" : "Zina",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 27,
+    "name" : "Alex",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  }, {
+    "id" : 28,
+    "name" : "Zina",
+    "checkOutDate" : null,
+    "checkInDate" : null,
+    "status" : "NEW",
+    "apartment" : null,
+    "perks" : [ ],
+    "stayCost" : 0.0,
+    "quantityOfPeople" : 2
+  } ],
+  "perksList" : [ {
+    "id" : 1,
+    "name" : "laundry",
+    "price" : 50.0
+  }, {
+    "id" : 2,
+    "name" : "massage",
+    "price" : 500.0
+  }, {
+    "id" : 3,
+    "name" : "laundry",
+    "price" : 50.0
+  }, {
+    "id" : 4,
+    "name" : "massage",
+    "price" : 500.0
+  }, {
+    "id" : 5,
+    "name" : "laundry",
+    "price" : 50.0
+  }, {
+    "id" : 6,
+    "name" : "massage",
+    "price" : 500.0
+  }, {
+    "id" : 7,
+    "name" : "laundry",
+    "price" : 50.0
+  }, {
+    "id" : 8,
+    "name" : "massage",
+    "price" : 500.0
+  }, {
+    "id" : 9,
+    "name" : "laundry",
+    "price" : 50.0
+  }, {
+    "id" : 10,
+    "name" : "massage",
+    "price" : 500.0
+  }, {
+    "id" : 11,
+    "name" : "laundry",
+    "price" : 50.0
+  }, {
+    "id" : 12,
+    "name" : "massage",
+    "price" : 500.0
+  }, {
+    "id" : 13,
+    "name" : "laundry",
+    "price" : 50.0
+  }, {
+    "id" : 14,
+    "name" : "massage",
+    "price" : 500.0
+  }, {
+    "id" : 15,
+    "name" : "laundry",
+    "price" : 50.0
+  }, {
+    "id" : 16,
+    "name" : "massage",
+    "price" : 500.0
+  }, {
+    "id" : 17,
+    "name" : "laundry",
+    "price" : 50.0
+  }, {
+    "id" : 18,
+    "name" : "massage",
+    "price" : 500.0
+  }, {
+    "id" : 19,
+    "name" : "laundry",
+    "price" : 50.0
+  }, {
+    "id" : 20,
+    "name" : "massage",
+    "price" : 500.0
+  }, {
+    "id" : 21,
+    "name" : "laundry",
+    "price" : 50.0
+  }, {
+    "id" : 22,
+    "name" : "massage",
+    "price" : 500.0
+  }, {
+    "id" : 23,
+    "name" : "laundry",
+    "price" : 50.0
+  }, {
+    "id" : 24,
+    "name" : "massage",
+    "price" : 500.0
+  }, {
+    "id" : 25,
+    "name" : "laundry",
+    "price" : 50.0
+  }, {
+    "id" : 26,
+    "name" : "massage",
+    "price" : 500.0
+  }, {
+    "id" : 27,
+    "name" : "laundry",
+    "price" : 50.0
+  }, {
+    "id" : 28,
+    "name" : "massage",
+    "price" : 500.0
+  } ]
 }

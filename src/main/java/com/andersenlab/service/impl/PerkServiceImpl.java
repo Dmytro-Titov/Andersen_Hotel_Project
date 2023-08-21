@@ -1,6 +1,8 @@
 package com.andersenlab.service.impl;
 
+import com.andersenlab.dao.ClientDao;
 import com.andersenlab.dao.PerkDao;
+import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.exceptions.IdDoesNotExistException;
 import com.andersenlab.factory.HotelFactory;
@@ -49,17 +51,12 @@ public class PerkServiceImpl implements PerkService {
     }
 
     @Override
-    public List<Perk> getSorted(PerkSortType type) {
-        return switch (type) {
-            case ID -> getAll();
-            case NAME -> sortBy(Perk::getName);
-            case PRICE -> sortBy(Perk::getPrice);
-        };
-    }
-
-    private List<Perk> sortBy(Function<Perk, Comparable> extractor) {
-        return getAll().stream()
-                .sorted(Comparator.comparing(extractor))
-                .toList();
+    public List<Perk> getSorted(String type) {
+        return perkDao.getSortedBy(
+                switch (type.toLowerCase()) {
+                    case "name" -> PerkDao.PerkSortType.NAME;
+                    case "price" -> PerkDao.PerkSortType.PRICE;
+                    default -> PerkDao.PerkSortType.ID;
+                });
     }
 }

@@ -14,4 +14,10 @@ public interface PerkDao {
     Optional<Perk> update(Perk perk);
 
     boolean remove(long id);
+
+    List<Perk> getSortedBy(PerkSortType type);
+
+    enum PerkSortType {
+        ID, NAME, PRICE
+    }
 }

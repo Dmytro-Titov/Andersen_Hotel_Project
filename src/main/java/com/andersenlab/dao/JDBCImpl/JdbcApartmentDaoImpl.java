@@ -1,16 +1,20 @@
 package com.andersenlab.dao.JDBCImpl;
 
-import com.andersenlab.config.Config;
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.dao.conection.ConnectionPool;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.factory.HotelFactory;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class JdbcApartmentDaoImpl implements ApartmentDao {
     private final ConnectionPool connectionPool;
@@ -54,7 +58,7 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
                     .prepareStatement("SELECT * FROM Apartment");
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 Apartment apartment = new Apartment();
                 apartment.setId(resultSet.getLong("apartment_id"));
                 apartment.setCapacity(resultSet.getInt("capacity"));
@@ -160,5 +164,22 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
         }
 
         return answer != 0;
+    }
+
+
+    @Override
+    public List<Apartment> getSortedBy(ApartmentSortType type) {
+        return switch (type) {
+            case ID -> sortBy(Apartment::getId);
+            case PRICE -> sortBy(Apartment::getPrice);
+            case CAPACITY -> sortBy(Apartment::getCapacity);
+            case STATUS -> sortBy(Apartment::getStatus);
+        };
+    }
+
+    private List<Apartment> sortBy(Function<Apartment, Comparable> extractor) {
+        return getAll().stream()
+                .sorted(Comparator.comparing(extractor))
+                .toList();
     }
 }

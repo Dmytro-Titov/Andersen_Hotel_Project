@@ -5,8 +5,10 @@ import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class OnDiskPerkDaoImpl implements PerkDao {
     private final OnDiskJsonHandler onDiskJsonHandler;
@@ -65,5 +67,20 @@ public class OnDiskPerkDaoImpl implements PerkDao {
 
         onDiskJsonHandler.save(stateEntity);
         return answer;
+    }
+
+    @Override
+    public List<Perk> getSortedBy(PerkSortType type) {
+        return switch (type) {
+            case ID -> sortBy(Perk::getId);
+            case NAME -> sortBy(Perk::getName);
+            case PRICE -> sortBy(Perk::getPrice);
+        };
+    }
+
+    private List<Perk> sortBy(Function<Perk, Comparable> extractor) {
+        return getAll().stream()
+                .sorted(Comparator.comparing(extractor))
+                .toList();
     }
 }

@@ -6,7 +6,7 @@ public class ConfigData {
 
     private ApartmentConfig apartment;
 
-    private SaveOptionConfig saveOption;
+    private SaveOption saveOption;
 
     private PostgresDB postgresDatabase;
 
@@ -29,11 +29,11 @@ public class ConfigData {
         this.apartment = apartment;
     }
 
-    public SaveOptionConfig getSaveOption() {
+    public SaveOption getSaveOption() {
         return saveOption;
     }
 
-    public void setSaveOption(SaveOptionConfig saveOption) {
+    public void setSaveOption(SaveOption saveOption) {
         this.saveOption = saveOption;
     }
 
@@ -82,31 +82,6 @@ public class ConfigData {
 
         public void setAllowApartmentStatusChange(boolean allowApartmentStatusChange) {
             this.allowApartmentStatusChange = allowApartmentStatusChange;
-        }
-    }
-
-    public static class SaveOptionConfig {
-
-        private boolean saveOnDisk;
-        private boolean saveJdbc;
-
-        public SaveOptionConfig() {
-        }
-
-        public boolean isSaveOnDisk() {
-            return saveOnDisk;
-        }
-
-        public boolean isSaveJdbc() {
-            return saveJdbc;
-        }
-
-        public void setSaveOnDisk(boolean saveOnDisk) {
-            this.saveOnDisk = saveOnDisk;
-        }
-
-        public void setSaveJdbc(boolean saveJdbc) {
-            this.saveJdbc = saveJdbc;
         }
     }
 
