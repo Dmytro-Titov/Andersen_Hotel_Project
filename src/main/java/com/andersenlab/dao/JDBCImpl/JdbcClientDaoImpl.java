@@ -290,24 +290,27 @@ public class JdbcClientDaoImpl implements ClientDao {
     @Override
     public List<Client> getSortedBy(ClientSortType type) {
         return switch (type) {
-            case ID -> sortBy(Client::getId);
-            case CHECK_OUT_DATE -> sortByCheckOutDate();
-            case NAME -> sortBy(Client::getName);
-            case STATUS -> sortBy(Client::getStatus);
+            case ID -> sortBy("client_id");
+            case CHECK_OUT_DATE -> sortBy("checkout");
+            case NAME -> sortBy("name");
+            case STATUS -> sortBy("status");
         };
     }
 
-    private List<Client> sortBy(Function<Client, Comparable> extractor) {
-        return getAll().stream()
-                .sorted(Comparator.comparing(extractor))
-                .toList();
-    }
+    private List<Client> sortBy(String fieldName) {
+        String query = "SELECT * FROM client ORDER BY " + fieldName;
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
-    private List<Client> sortByCheckOutDate() {
-        return getAll().stream()
-                .filter(client -> client.getStatus() != ClientStatus.NEW)
-                .sorted(Comparator.comparing(Client::getCheckOutDate))
-                .toList();
+            List<Client> clients = new ArrayList<>();
+            while(resultSet.next()) {
+                clients.add(setClientFields(resultSet));
+            }
+            return clients;
+        } catch (SQLException e) {
+            throw new RuntimeException("Filed to sort Clients");
+        }
     }
 
     private int getClientLastId() {

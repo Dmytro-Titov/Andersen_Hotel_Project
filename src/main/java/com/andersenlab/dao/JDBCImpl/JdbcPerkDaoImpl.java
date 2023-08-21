@@ -123,18 +123,27 @@ public class JdbcPerkDaoImpl implements PerkDao {
     @Override
     public List<Perk> getSortedBy(PerkSortType type) {
         return switch (type) {
-            case ID -> sortBy(Perk::getId);
-            case NAME -> sortBy(Perk::getName);
-            case PRICE -> sortBy(Perk::getPrice);
+            case ID -> sortBy("perk_id");
+            case NAME -> sortBy("name");
+            case PRICE -> sortBy("price");
         };
     }
 
-    private List<Perk> sortBy(Function<Perk, Comparable> extractor) {
-        return getAll().stream()
-                .sorted(Comparator.comparing(extractor))
-                .toList();
-    }
+    private List<Perk> sortBy(String fieldName) {
+            String query = "SELECT * FROM perk ORDER BY " + fieldName;
+            try (Connection connection = connectionPool.getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(query);
+                 ResultSet resultSet = preparedStatement.executeQuery()) {
 
+                List<Perk> perks = new ArrayList<>();
+                while(resultSet.next()) {
+                    perks.add(setPerkFields(resultSet));
+                }
+                return perks;
+            } catch (SQLException e) {
+                throw new RuntimeException("Filed to sort Perks");
+            }
+        }
     private int getPerkLastId() {
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement();
