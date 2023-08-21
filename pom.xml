@@ -28,6 +28,9 @@
         <maven-surefire-plugin>3.1.2</maven-surefire-plugin>
         <postgresql>42.6.0</postgresql>
         <tomcat.version>10.1.12</tomcat.version>
+        <HikariCP>5.0.1</HikariCP>
+        <liquibase>4.23.1</liquibase>
+        <hibernate>6.2.7.Final</hibernate>
     </properties>
 
     <build>
@@ -175,22 +178,22 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>5.0.1</version>
+            <version>${HikariCP}</version>
         </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>4.23.1</version>
+            <version>${liquibase}</version>
         </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-maven-plugin</artifactId>
-            <version>4.23.1</version>
+            <version>${liquibase}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>6.2.7.Final</version>
+            <version>${hibernate}</version>
         </dependency>
     </dependencies>
 </project>

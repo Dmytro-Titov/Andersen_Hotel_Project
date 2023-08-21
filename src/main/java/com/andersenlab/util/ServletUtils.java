@@ -1,8 +1,5 @@
 package com.andersenlab.util;
 
-import com.andersenlab.config.Config;
-import com.andersenlab.factory.HotelFactory;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 

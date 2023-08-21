@@ -13,10 +13,8 @@ import com.andersenlab.factory.HotelFactory;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 public class JdbcClientDaoImpl implements ClientDao {
 
@@ -30,7 +28,6 @@ public class JdbcClientDaoImpl implements ClientDao {
         this.apartmentDao = new JdbcApartmentDaoImpl(hotelFactory);
         lastID = getClientLastId();
     }
-
 
     @Override
     public Optional<Client> getById(long id) {
@@ -48,63 +45,6 @@ public class JdbcClientDaoImpl implements ClientDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Filed to get Client by the ID!");
-        }
-    }
-
-    private Client setClientFields(ResultSet resultSet) throws SQLException {
-        Client client = new Client();
-        client.setId(resultSet.getLong("client_id"));
-        client.setName(resultSet.getString("name"));
-
-        Timestamp checkinTimestamp = resultSet.getTimestamp("checkin");
-        if (checkinTimestamp != null) {
-            LocalDateTime checkinDateTime = checkinTimestamp.toLocalDateTime();
-            client.setCheckInDate(checkinDateTime);
-        }
-
-        Timestamp checkoutTimestamp = resultSet.getTimestamp("checkout");
-        if (checkoutTimestamp != null) {
-            LocalDateTime checkoutDateTime = checkoutTimestamp.toLocalDateTime();
-            client.setCheckOutDate(checkoutDateTime);
-        }
-
-        long apartmentId = resultSet.getLong("apartment_id");
-        client.setApartment(apartmentDao.getById(apartmentId).orElse(null));
-
-        int statusValue = resultSet.getInt("status");
-        switch (statusValue) {
-            case 0 -> client.setStatus(ClientStatus.NEW);
-            case 1 -> client.setStatus(ClientStatus.CHECKED_IN);
-            case 2 -> client.setStatus(ClientStatus.CHECKED_OUT);
-        }
-
-        List<Perk> perks = getPerksForClient(client.getId());
-        client.setPerks(perks);
-
-        client.setStayCost(resultSet.getDouble("staycost"));
-        client.setQuantityOfPeople(resultSet.getInt("quantityofpeople"));
-        return client;
-    }
-
-    private List<Perk> getPerksForClient(long clientId) {
-        List<Perk> perks = new ArrayList<>();
-        try (Connection connection = connectionPool.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT p.* FROM Perk p " +
-                    "INNER JOIN Client_Perk cp ON p.perk_id = cp.perk_id " +
-                    "WHERE cp.client_id = ?");
-            preparedStatement.setLong(1, clientId);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                Perk perk = new Perk();
-                perk.setId(resultSet.getLong("perk_id"));
-                perk.setName(resultSet.getString("name"));
-                perk.setPrice(resultSet.getDouble("price"));
-                perks.add(perk);
-            }
-            return perks;
-        } catch (SQLException e) {
-            throw new RuntimeException("Filed to get Perks of the Client!");
         }
     }
 
@@ -167,7 +107,6 @@ public class JdbcClientDaoImpl implements ClientDao {
         }
     }
 
-
     @Override
     public Optional<Client> update(Client client) {
         List<Perk> perkListFromDB = getPerksForClient(client.getId());
@@ -198,11 +137,118 @@ public class JdbcClientDaoImpl implements ClientDao {
         }
     }
 
+    @Override
+    public boolean remove(long id) {
+        try (Connection connection = connectionPool.getConnection()) {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("DELETE FROM Client WHERE client_id=?");
+            preparedStatement.setLong(1, id);
+            return preparedStatement.executeUpdate() != 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Filed to remove the Client!");
+        }
+    }
+
+    @Override
+    public List<Client> getSortedBy(ClientSortType type) {
+        return switch (type) {
+            case ID -> sortBy("client_id");
+            case CHECK_OUT_DATE -> sortBy("checkout");
+            case NAME -> sortBy("name");
+            case STATUS -> sortBy("status");
+        };
+    }
+
+    private List<Client> sortBy(String fieldName) {
+        String query = "SELECT * FROM client ORDER BY " + fieldName;
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            List<Client> clients = new ArrayList<>();
+            while (resultSet.next()) {
+                clients.add(setClientFields(resultSet));
+            }
+            return clients;
+        } catch (SQLException e) {
+            throw new RuntimeException("Filed to sort Clients");
+        }
+    }
+
+    private int getClientLastId() {
+        try (Connection connection = connectionPool.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT MAX(client_id) FROM client")) {
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            } else {
+                return 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Client setClientFields(ResultSet resultSet) throws SQLException {
+        Client client = new Client();
+        client.setId(resultSet.getLong("client_id"));
+        client.setName(resultSet.getString("name"));
+
+        Timestamp checkinTimestamp = resultSet.getTimestamp("checkin");
+        if (checkinTimestamp != null) {
+            LocalDateTime checkinDateTime = checkinTimestamp.toLocalDateTime();
+            client.setCheckInDate(checkinDateTime);
+        }
+        Timestamp checkoutTimestamp = resultSet.getTimestamp("checkout");
+        if (checkoutTimestamp != null) {
+            LocalDateTime checkoutDateTime = checkoutTimestamp.toLocalDateTime();
+            client.setCheckOutDate(checkoutDateTime);
+        }
+        long apartmentId = resultSet.getLong("apartment_id");
+        client.setApartment(apartmentDao.getById(apartmentId).orElse(null));
+
+        int statusValue = resultSet.getInt("status");
+        switch (statusValue) {
+            case 0 -> client.setStatus(ClientStatus.NEW);
+            case 1 -> client.setStatus(ClientStatus.CHECKED_IN);
+            case 2 -> client.setStatus(ClientStatus.CHECKED_OUT);
+        }
+        List<Perk> perks = getPerksForClient(client.getId());
+        client.setPerks(perks);
+
+        client.setStayCost(resultSet.getDouble("staycost"));
+        client.setQuantityOfPeople(resultSet.getInt("quantityofpeople"));
+        return client;
+    }
+
+    private List<Perk> getPerksForClient(long clientId) {
+        List<Perk> perks = new ArrayList<>();
+        try (Connection connection = connectionPool.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT p.* FROM Perk p " +
+                    "INNER JOIN Client_Perk cp ON p.perk_id = cp.perk_id " +
+                    "WHERE cp.client_id = ?");
+            preparedStatement.setLong(1, clientId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Perk perk = new Perk();
+                perk.setId(resultSet.getLong("perk_id"));
+                perk.setName(resultSet.getString("name"));
+                perk.setPrice(resultSet.getDouble("price"));
+                perks.add(perk);
+            }
+            return perks;
+        } catch (SQLException e) {
+            throw new RuntimeException("Filed to get Perks of the Client!");
+        }
+    }
+
     private Optional<Client> updateClientWithoutPerks(Client client) {
         try (Connection connection = connectionPool.getConnection()) {
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement(
-                    "UPDATE Client SET name=?, checkin=?, checkout=?, apartment_id=?, status=?, staycost=?, quantityofpeople=?" +
+                    "UPDATE Client SET name=?, checkin=?, checkout=?, apartment_id=?, status=?, staycost=?, " +
+                            "quantityofpeople=?" +
                             " WHERE client_id=?");
 
             preparedStatement.setString(1, client.getName());
@@ -214,7 +260,6 @@ public class JdbcClientDaoImpl implements ClientDao {
             } else {
                 preparedStatement.setNull(2, Types.TIMESTAMP);
             }
-
             LocalDateTime checkoutDateTime = client.getCheckOutDate();
             if (checkoutDateTime != null) {
                 Timestamp checkoutTimestamp = Timestamp.valueOf(checkoutDateTime);
@@ -222,17 +267,15 @@ public class JdbcClientDaoImpl implements ClientDao {
             } else {
                 preparedStatement.setNull(3, Types.TIMESTAMP);
             }
-
             Apartment apartment = client.getApartment();
             if (apartment != null) {
                 preparedStatement.setLong(4, apartment.getId());
             } else {
                 preparedStatement.setNull(4, Types.BIGINT);
             }
-
             if (client.getStatus().equals(ClientStatus.CHECKED_OUT)) {
                 removeAllPerksById(client.getId(), connection);
-                setApartmentSatusAvailableAfterCheckout(client.getId(), connection);
+                setApartmentStatusAvailableAfterCheckout(client.getId(), connection);
             }
             preparedStatement.setInt(5, client.getStatus().ordinal());
 
@@ -262,7 +305,7 @@ public class JdbcClientDaoImpl implements ClientDao {
         }
     }
 
-    private boolean setApartmentSatusAvailableAfterCheckout(long id, Connection connection) {
+    private boolean setApartmentStatusAvailableAfterCheckout(long id, Connection connection) {
         try {
             PreparedStatement preparedStatement = connection.
                     prepareStatement("UPDATE apartment SET status = 1 FROM apartment ap JOIN client c " +
@@ -273,60 +316,4 @@ public class JdbcClientDaoImpl implements ClientDao {
             throw new RuntimeException("Failed to change Apartment status after checkout!");
         }
     }
-
-    @Override
-    public boolean remove(long id) {
-
-        try (Connection connection = connectionPool.getConnection()) {
-            PreparedStatement preparedStatement = connection
-                    .prepareStatement("DELETE FROM Client WHERE client_id=?");
-            preparedStatement.setLong(1, id);
-            return preparedStatement.executeUpdate() != 0;
-        } catch (SQLException e) {
-            throw new RuntimeException("Filed to remove the Client!");
-        }
-    }
-
-    @Override
-    public List<Client> getSortedBy(ClientSortType type) {
-        return switch (type) {
-            case ID -> sortBy("client_id");
-            case CHECK_OUT_DATE -> sortBy("checkout");
-            case NAME -> sortBy("name");
-            case STATUS -> sortBy("status");
-        };
-    }
-
-    private List<Client> sortBy(String fieldName) {
-        String query = "SELECT * FROM client ORDER BY " + fieldName;
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-
-            List<Client> clients = new ArrayList<>();
-            while(resultSet.next()) {
-                clients.add(setClientFields(resultSet));
-            }
-            return clients;
-        } catch (SQLException e) {
-            throw new RuntimeException("Filed to sort Clients");
-        }
-    }
-
-    private int getClientLastId() {
-        try (Connection connection = connectionPool.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT MAX(client_id) FROM client")) {
-
-            if (resultSet.next()) {
-                return resultSet.getInt(1);
-            } else {
-                return 0;
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }

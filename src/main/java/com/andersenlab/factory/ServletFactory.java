@@ -1,7 +1,6 @@
 package com.andersenlab.factory;
 
 import com.andersenlab.config.Config;
-import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
 import com.andersenlab.service.PerkService;

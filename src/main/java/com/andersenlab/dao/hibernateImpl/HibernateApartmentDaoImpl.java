@@ -70,16 +70,17 @@ public class HibernateApartmentDaoImpl implements ApartmentDao {
     public List<Apartment> getSortedBy(ApartmentSortType type) {
         return switch (type) {
             case ID -> getAll();
-            case PRICE -> sortBy("FROM Apartment ORDER BY price");
-            case CAPACITY -> sortBy("FROM Apartment ORDER BY capacity");
-            case STATUS -> sortBy("FROM Apartment ORDER BY status");
+            case PRICE -> sortBy("price");
+            case CAPACITY -> sortBy("capacity");
+            case STATUS -> sortBy("status");
         };
     }
 
-    private List<Apartment> sortBy(String query) {
+    private List<Apartment> sortBy(String parameter) {
+        String getAllQuery = "FROM Apartment ORDER BY " + parameter;
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-            List<Apartment> apartments = session.createQuery(query).getResultList();
+            List<Apartment> apartments = session.createQuery(getAllQuery).getResultList();
             session.getTransaction().commit();
             return apartments;
         }

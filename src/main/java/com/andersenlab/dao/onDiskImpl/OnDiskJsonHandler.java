@@ -4,17 +4,16 @@ import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.IdGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class OnDiskJsonHandler {
     private final String pathJson;
+
     public OnDiskJsonHandler(HotelFactory hotelFactory) {
         pathJson = hotelFactory.getConfig().getConfigData().getDatabase().getPath();
     }
-
 
     public void save(StateEntity stateEntity) {
         ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
@@ -28,12 +27,11 @@ public final class OnDiskJsonHandler {
                 stateEntity.getPerksList().size());
     }
 
-
     public StateEntity load() {
         StateEntity stateEntity = new StateEntity();
         if (checkIfExistsJson()) {
             ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
-            try  {
+            try {
                 var reader = Files.newBufferedReader(Path.of(pathJson));
                 stateEntity = objectMapper.readValue(reader, StateEntity.class);
             } catch (IOException e) {
@@ -47,8 +45,7 @@ public final class OnDiskJsonHandler {
         return stateEntity;
     }
 
-
     public boolean checkIfExistsJson() {
-        return  new File(pathJson).exists();
+        return new File(pathJson).exists();
     }
 }

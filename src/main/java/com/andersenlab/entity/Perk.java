@@ -1,6 +1,5 @@
 package com.andersenlab.entity;
 
-
 import jakarta.persistence.*;
 import java.util.Objects;
 

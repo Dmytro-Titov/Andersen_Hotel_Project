@@ -14,7 +14,7 @@ import java.io.File;
 
 public class AdministratorAppTomcatLauncher {
     public static final String WEBAPP_DIR = "src/main/webapp/";
-    public static final String PORT = "8080";
+    public static final Integer PORT = 8080;
     public static final String TARGET_CLASSES = "target/tomcat";
     public static final String CONTEXT_PATH = "/";
 
@@ -22,7 +22,7 @@ public class AdministratorAppTomcatLauncher {
         Tomcat tomcat = new Tomcat();
 
         Connector connector = new Connector();
-        connector.setPort(Integer.parseInt(PORT));
+        connector.setPort(PORT);
 
         tomcat.setConnector(connector);
         tomcat.setBaseDir(new File(TARGET_CLASSES).getAbsolutePath());

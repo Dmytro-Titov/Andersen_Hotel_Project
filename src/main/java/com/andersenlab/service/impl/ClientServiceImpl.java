@@ -47,7 +47,8 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Client update(Client client) {
         return clientDao.update(client)
-                .orElseThrow(() -> new IdDoesNotExistException("Client with this id doesn't exist. Id: " + client.getId()));
+                .orElseThrow(() -> new IdDoesNotExistException("Client with this id doesn't exist. Id: "
+                        + client.getId()));
     }
 
     @Override
@@ -120,7 +121,8 @@ public class ClientServiceImpl implements ClientService {
             apartmentService.update(apartment);
             return stayCost;
         } else {
-            throw new ClientIsNotCheckedInException("This client isn't checked-in in any apartment yet! Id: " + client.getId());
+            throw new ClientIsNotCheckedInException("This client isn't checked-in in any apartment yet! Id: "
+                    + client.getId());
         }
     }
 
