@@ -3,7 +3,10 @@ package com.andersenlab.dao.JDBCImpl;
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.dao.ClientDao;
 import com.andersenlab.dao.conection.ConnectionPool;
-import com.andersenlab.entity.*;
+import com.andersenlab.entity.Apartment;
+import com.andersenlab.entity.Client;
+import com.andersenlab.entity.ClientStatus;
+import com.andersenlab.entity.Perk;
 import com.andersenlab.exceptions.InappropriateValueException;
 import com.andersenlab.factory.HotelFactory;
 
@@ -14,16 +17,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class JdbcClientDaoImpl implements ClientDao {
 
     private final ConnectionPool connectionPool;
     private final ApartmentDao apartmentDao;
 
+    private long lastID;
+
     public JdbcClientDaoImpl(HotelFactory hotelFactory) {
         this.connectionPool = new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
         this.apartmentDao = new JdbcApartmentDaoImpl(hotelFactory);
+        lastID = getClientLastId();
     }
 
 
@@ -31,8 +36,8 @@ public class JdbcClientDaoImpl implements ClientDao {
     public Optional<Client> getById(long id) {
 
         try (Connection connection = connectionPool.getConnection();
-            PreparedStatement preparedStatement = connection
-                    .prepareStatement("SELECT * FROM Client WHERE client_id = ?")) {
+             PreparedStatement preparedStatement = connection
+                     .prepareStatement("SELECT * FROM Client WHERE client_id = ?")) {
 
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -107,9 +112,9 @@ public class JdbcClientDaoImpl implements ClientDao {
     public List<Client> getAll() {
         List<Client> clients = new ArrayList<>();
         try (Connection connection = connectionPool.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM Client");
-            ResultSet resultSet = preparedStatement.executeQuery()) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT * FROM Client");
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
                 clients.add(setClientFields(resultSet));
@@ -123,9 +128,9 @@ public class JdbcClientDaoImpl implements ClientDao {
     @Override
     public Client save(Client client) {
         try (Connection connection = connectionPool.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement
-                    ("INSERT INTO client (name, checkin, checkout, apartment_id, " +
-                            "status, staycost, quantityofpeople) VALUES (?,?,?,?,?,?,?)")) {
+             PreparedStatement preparedStatement = connection.prepareStatement
+                     ("INSERT INTO client (name, checkin, checkout, apartment_id, " +
+                             "status, staycost, quantityofpeople) VALUES (?,?,?,?,?,?,?)")) {
 
             preparedStatement.setString(1, client.getName());
 
@@ -154,6 +159,8 @@ public class JdbcClientDaoImpl implements ClientDao {
             preparedStatement.setInt(7, client.getQuantityOfPeople());
 
             preparedStatement.executeUpdate();
+            client.setId(++lastID);
+
             return client;
         } catch (SQLException e) {
             throw new RuntimeException("Filed to add a Client");
@@ -176,8 +183,8 @@ public class JdbcClientDaoImpl implements ClientDao {
                 throw new InappropriateValueException("Perk was already served to this client!");
             } else {
                 try (Connection connection = connectionPool.getConnection();
-                    PreparedStatement preparedStatement = connection.prepareStatement(
-                            "INSERT INTO client_perk (client_id, perk_id) VALUES (?, ?)")) {
+                     PreparedStatement preparedStatement = connection.prepareStatement(
+                             "INSERT INTO client_perk (client_id, perk_id) VALUES (?, ?)")) {
 
                     preparedStatement.setLong(1, client.getId());
                     preparedStatement.setLong(2, addedPerk.getId());
@@ -305,4 +312,21 @@ public class JdbcClientDaoImpl implements ClientDao {
             throw new RuntimeException("Filed to sort Clients");
         }
     }
+
+    private int getClientLastId() {
+        try (Connection connection = connectionPool.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT MAX(client_id) FROM client")) {
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            } else {
+                return 0;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

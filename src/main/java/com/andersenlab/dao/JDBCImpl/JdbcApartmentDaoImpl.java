@@ -6,10 +6,7 @@ import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.factory.HotelFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -19,8 +16,11 @@ import java.util.function.Function;
 public class JdbcApartmentDaoImpl implements ApartmentDao {
     private final ConnectionPool connectionPool;
 
+    private long lastID;
+
     public JdbcApartmentDaoImpl(HotelFactory hotelFactory) {
         this.connectionPool = new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
+        lastID = getApartmentLastId();
     }
 
     @Override
@@ -81,10 +81,12 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
             preparedStatement.setDouble(2, apartment.getPrice());
             preparedStatement.setInt(3, apartment.getStatus().ordinal());
             preparedStatement.executeUpdate();
+
+            apartment.setId(++lastID);
+            return apartment;
         } catch (SQLException e) {
             throw new RuntimeException("Failed to save the Apartment!");
         }
-        return apartment;
     }
 
     @Override
@@ -150,6 +152,22 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
                 return apartments;
         } catch (SQLException e) {
             throw new RuntimeException("Filed to sort Apartments");
+        }
+    }
+
+    private int getApartmentLastId() {
+        try (Connection connection = connectionPool.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT MAX(apartment_id) FROM apartment")) {
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            } else {
+                return 0;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

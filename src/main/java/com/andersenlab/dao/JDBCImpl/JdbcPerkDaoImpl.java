@@ -2,7 +2,6 @@ package com.andersenlab.dao.JDBCImpl;
 
 import com.andersenlab.dao.PerkDao;
 import com.andersenlab.dao.conection.ConnectionPool;
-import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
 
@@ -16,8 +15,11 @@ import java.util.function.Function;
 public class JdbcPerkDaoImpl implements PerkDao {
     private final ConnectionPool connectionPool;
 
+    private long lastID;
+
     public JdbcPerkDaoImpl(HotelFactory hotelFactory) {
         this.connectionPool = new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
+        lastID = getPerkLastId();
     }
 
     @Override
@@ -72,6 +74,8 @@ public class JdbcPerkDaoImpl implements PerkDao {
             preparedStatement.setString(1, String.valueOf(perk.getName()));
             preparedStatement.setDouble(2, perk.getPrice());
             preparedStatement.executeUpdate();
+
+            perk.setId(++lastID);
             return perk;
         } catch (SQLException e) {
             throw new RuntimeException("Filed to save the Perk!");
@@ -140,4 +144,19 @@ public class JdbcPerkDaoImpl implements PerkDao {
                 throw new RuntimeException("Filed to sort Perks");
             }
         }
+    private int getPerkLastId() {
+        try (Connection connection = connectionPool.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT MAX(perk_id) FROM perk")) {
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            } else {
+                return 0;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
