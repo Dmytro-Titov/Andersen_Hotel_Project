@@ -1,4 +1,4 @@
-package com.andersenlab.config;
+package com.andersenlab.util;
 
 import com.andersenlab.servlet.apartment.ApartmentByIdServlet;
 import com.andersenlab.servlet.apartment.ApartmentChangeStatusByIdServlet;

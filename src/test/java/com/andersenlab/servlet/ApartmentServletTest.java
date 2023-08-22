@@ -1,7 +1,7 @@
 package com.andersenlab.servlet;
 
 import com.andersenlab.config.Config;
-import com.andersenlab.config.StartServlet;
+import com.andersenlab.util.StartServlet;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.factory.HotelFactory;
