@@ -1,7 +1,7 @@
 package com.andersenlab.entity;
 
-
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -29,8 +29,8 @@ public class Client {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "client_perk",
-            joinColumns = @JoinColumn (name = "client_id"),
-            inverseJoinColumns = @JoinColumn (name = "perk_id")
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "perk_id")
     )
     private List<Perk> perks;
     @Column(name = "staycost")

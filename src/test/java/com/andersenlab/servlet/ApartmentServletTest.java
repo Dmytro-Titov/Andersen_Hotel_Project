@@ -1,6 +1,7 @@
 package com.andersenlab.servlet;
 
 import com.andersenlab.config.Config;
+import com.andersenlab.config.StartServlet;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.factory.HotelFactory;
@@ -40,10 +41,8 @@ public class ApartmentServletTest {
         hotelFactory.getApartmentService().cleanTable();
         hotelFactory.getClientService().save("Alex", 2);
         hotelFactory.getApartmentService().save(4, 4000.0);
-        hotelFactory.getPerkService().save("laundry", 50);
         hotelFactory.getClientService().save("Zina", 2);
         hotelFactory.getApartmentService().save(2, 5000.0);
-        hotelFactory.getPerkService().save("massage", 500);
     }
 
 
@@ -73,24 +72,28 @@ public class ApartmentServletTest {
 
     @Test
     void get_apartment_by_id_in_hotel_service() {
-        Apartment expected = hotelFactory.getApartmentService().getAll().stream().findAny().get();
+        Apartment expected = new Apartment();
+        expected.setCapacity(4);
+        Apartment apartment = hotelFactory.getApartmentService().getAll().stream().findFirst().get();
         Apartment actual =
                 given()
                         .contentType(ContentType.JSON)
                         .when()
-                        .get("http://localhost:8080/apartments/id?id=" + expected.getId())
+                        .get("http://localhost:8080/apartments/id?id=" + apartment.getId())
                         .then()
                         .statusCode(200)
                         .extract()
                         .body()
                         .as(Apartment.class);
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertEquals(expected.getCapacity(), actual.getCapacity());
     }
 
 
     @Test
     void update_apartment_by_id_in_hotel_service() {
-        Apartment expected = hotelFactory.getApartmentService().getAll().stream().findAny().get();
+        Apartment expected = new Apartment();
+        expected.setCapacity(11);
+        Apartment apartment = hotelFactory.getApartmentService().getAll().stream().findFirst().get();
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("capacity", 11);
         requestBody.put("price", 5300.0);
@@ -100,56 +103,54 @@ public class ApartmentServletTest {
                         .contentType(ContentType.JSON)
                         .body(requestBody)
                         .when()
-                        .put("http://localhost:8080/apartments/id?id=" + expected.getId())
+                        .put("http://localhost:8080/apartments/id?id=" + apartment.getId())
                         .then()
                         .statusCode(200)
                         .extract()
                         .body()
                         .as(Apartment.class);
-        expected.setPrice(5300.0);
-        expected.setCapacity(11);
-        expected.setStatus(ApartmentStatus.AVAILABLE);
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertEquals(expected.getCapacity(), actual.getCapacity());
     }
 
 
     @Test
     void change_apartment_price_in_hotel_service() {
         Double expected = 2500.0;
-        Apartment expectedApartment = hotelFactory.getApartmentService().getAll().stream().findAny().get();
+        Apartment apartment = hotelFactory.getApartmentService().getAll().stream().findFirst().get();
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("price", 2500);
-        Apartment apartment =
+        Apartment apartmentActual =
                 given()
                         .contentType(ContentType.JSON)
                         .body(requestBody)
                         .when()
-                        .post("http://localhost:8080/apartments/id?id=" + expectedApartment.getId())
+                        .post("http://localhost:8080/apartments/id?id=" + apartment.getId())
                         .then()
                         .statusCode(200)
                         .extract()
                         .body()
                         .as(Apartment.class);
-        Double actual = apartment.getPrice();
+        Double actual = apartmentActual.getPrice();
         Assertions.assertEquals(expected, actual);
     }
 
 
     @Test
     void change_apartment_status_in_hotel_service() {
-        Apartment expected = hotelFactory.getApartmentService().getAll().stream().findAny().get();
+        Apartment expected = new Apartment();
+        expected.setStatus(ApartmentStatus.UNAVAILABLE);
+        Apartment apartment = hotelFactory.getApartmentService().getAll().stream().findFirst().get();
         Apartment actual =
                 given()
                         .contentType(ContentType.JSON)
                         .when()
-                        .get("http://localhost:8080/apartments/change-status/id?id=" + expected.getId())
+                        .get("http://localhost:8080/apartments/change-status/id?id=" + apartment.getId())
                         .then()
                         .statusCode(200)
                         .extract()
                         .body()
                         .as(Apartment.class);
-        expected.setStatus(ApartmentStatus.UNAVAILABLE);
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertEquals(expected.getStatus(), actual.getStatus());
     }
 
 

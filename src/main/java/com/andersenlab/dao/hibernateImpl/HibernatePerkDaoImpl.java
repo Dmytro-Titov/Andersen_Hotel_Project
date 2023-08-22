@@ -70,15 +70,16 @@ public class HibernatePerkDaoImpl implements PerkDao {
     public List<Perk> getSortedBy(PerkSortType type) {
         return switch (type) {
             case ID -> getAll();
-            case NAME -> sortBy("FROM Perk ORDER BY name");
-            case PRICE -> sortBy("FROM Perk ORDER BY price");
+            case NAME -> sortBy("name");
+            case PRICE -> sortBy("price");
         };
     }
 
-    private List<Perk> sortBy(String query) {
+    private List<Perk> sortBy(String parameter) {
+        String getAllQuery = "FROM Perk ORDER BY " + parameter;
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-            List<Perk> perks = session.createQuery(query).getResultList();
+            List<Perk> perks = session.createQuery(getAllQuery).getResultList();
             session.getTransaction().commit();
             return perks;
         }

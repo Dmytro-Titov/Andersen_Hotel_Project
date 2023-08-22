@@ -1,6 +1,5 @@
-package com.andersenlab.servlet;
+package com.andersenlab.config;
 
-import com.andersenlab.AdministratorAppTomcatLauncher;
 import com.andersenlab.servlet.apartment.ApartmentByIdServlet;
 import com.andersenlab.servlet.apartment.ApartmentChangeStatusByIdServlet;
 import com.andersenlab.servlet.apartment.ApartmentsServlet;
@@ -15,15 +14,15 @@ import java.io.File;
 
 public class StartServlet {
     public static final String WEBAPP_DIR = "src/main/webapp/";
-    public static final String PORT = "8080";
+    public static final Integer PORT = 8080;
     public static final String TARGET_CLASSES = "target/tomcat";
     public static final String CONTEXT_PATH = "/";
 
 
-    protected static Tomcat getTomcat(){
+    public static Tomcat getTomcat(){
         Tomcat tomcat = new Tomcat();
         Connector connector = new Connector();
-        connector.setPort(Integer.parseInt(PORT));
+        connector.setPort(PORT);
         tomcat.setConnector(connector);
         tomcat.setBaseDir(new File(TARGET_CLASSES).getAbsolutePath());
         Context context = tomcat.addWebapp(CONTEXT_PATH, new File(WEBAPP_DIR).getAbsolutePath());
@@ -66,4 +65,5 @@ public class StartServlet {
         tomcat.addServlet("", "ClientStayCostByIdServlet", new ClientStayCostByIdServlet());
         context.addServletMappingDecoded("/clients/stay-cost/id", "ClientStayCostByIdServlet");
     }
+
 }

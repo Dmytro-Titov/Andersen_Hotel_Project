@@ -13,8 +13,8 @@
   "clientsList" : [ {
     "id" : 1,
     "name" : "Alex",
-    "checkOutDate" : [ 2023, 8, 27, 15, 41, 53, 971612900 ],
-    "checkInDate" : [ 2023, 8, 22, 15, 41, 53, 971612900 ],
+    "checkOutDate" : [ 2023, 8, 27, 19, 53, 58, 20256600 ],
+    "checkInDate" : [ 2023, 8, 22, 19, 53, 58, 20256600 ],
     "status" : "CHECKED_IN",
     "apartment" : {
       "id" : 1,

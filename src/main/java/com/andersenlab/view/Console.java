@@ -52,14 +52,10 @@ public class Console {
                     case "perk" -> executeCommand(commandArray, CommandType.PERK);
                     default -> throw new UnknownCommandException(commandArray[0]);
                 }
-            } catch (UnknownCommandException |
-                     ConfigurationRestrictionException |
-                     IdDoesNotExistException |
-                     InappropriateValueException |
-                     InnerLogicException e) {
-                ConsolePrinter.printCustomError(e.getMessage());
             } catch (CommandSyntaxException e) {
                 ConsolePrinter.printSyntaxError();
+            } catch (HotelException e) {
+                ConsolePrinter.printCustomError(e.getMessage());
             } catch (NumberFormatException e) {
                 ConsolePrinter.printInvalidArgument(e.getMessage());
             }

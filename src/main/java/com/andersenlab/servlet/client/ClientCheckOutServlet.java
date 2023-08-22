@@ -1,7 +1,7 @@
 package com.andersenlab.servlet.client;
 
+import com.andersenlab.exceptions.HotelException;
 import com.andersenlab.exceptions.IdDoesNotExistException;
-import com.andersenlab.exceptions.InnerLogicException;
 import com.andersenlab.service.ClientService;
 import com.andersenlab.factory.ServletFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +31,7 @@ public class ClientCheckOutServlet extends HttpServlet {
             objectMapper.writeValue(resp.getWriter(), stayCost);
         } catch (IdDoesNotExistException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        } catch (InnerLogicException e) {
+        } catch (HotelException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }

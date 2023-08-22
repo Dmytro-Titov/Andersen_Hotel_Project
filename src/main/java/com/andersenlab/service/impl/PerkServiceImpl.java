@@ -1,8 +1,6 @@
 package com.andersenlab.service.impl;
 
-import com.andersenlab.dao.ClientDao;
 import com.andersenlab.dao.PerkDao;
-import com.andersenlab.entity.Client;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.exceptions.IdDoesNotExistException;
 import com.andersenlab.factory.HotelFactory;
@@ -10,9 +8,7 @@ import com.andersenlab.service.PerkService;
 import com.andersenlab.util.EntityValidityCheck;
 import com.andersenlab.util.IdGenerator;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
 
 public class PerkServiceImpl implements PerkService {
     private final PerkDao perkDao;

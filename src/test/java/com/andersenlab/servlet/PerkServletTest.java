@@ -1,6 +1,7 @@
 package com.andersenlab.servlet;
 
 import com.andersenlab.config.Config;
+import com.andersenlab.config.StartServlet;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.ConfigHandler;
@@ -36,11 +37,7 @@ public class PerkServletTest {
         config.setConfigData(ConfigHandler.createConfig("src/main/resources/config/config-dev.yaml"));
         hotelFactory = new HotelFactory(config);
         hotelFactory.getPerkService().cleanTable();
-        hotelFactory.getClientService().save("Alex", 2);
-        hotelFactory.getApartmentService().save(4, 4000.0);
         hotelFactory.getPerkService().save("laundry", 50);
-        hotelFactory.getClientService().save("Zina", 2);
-        hotelFactory.getApartmentService().save(2, 5000.0);
         hotelFactory.getPerkService().save("massage", 500);
     }
 
@@ -71,12 +68,14 @@ public class PerkServletTest {
 
     @Test
     void get_perk_by_id_in_hotel_service() {
-        Perk expected = hotelFactory.getPerkService().getAll().stream().findAny().get();
+        Perk expected = new Perk();
+        expected.setName("laundry");
+        Perk perk = hotelFactory.getPerkService().getAll().stream().findFirst().get();
         Perk actual =
                 given()
                         .contentType(ContentType.JSON)
                         .when()
-                        .get("http://localhost:8080/perks/id?id=" + expected.getId())
+                        .get("http://localhost:8080/perks/id?id=" + perk.getId())
                         .then()
                         .statusCode(200)
                         .extract()
@@ -88,9 +87,11 @@ public class PerkServletTest {
 
     @Test
     void update_perk_by_id_in_hotel_service() {
-        Perk expected = hotelFactory.getPerkService().getAll().stream().findAny().get();
+        Perk expected = new Perk();
+        expected.setName("Test");
+        Perk perk = hotelFactory.getPerkService().getAll().stream().findFirst().get();
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", expected.getId());
+        requestBody.put("id", 1);
         requestBody.put("name", "Test");
         requestBody.put("price", 10);
         Perk actual =
@@ -98,36 +99,34 @@ public class PerkServletTest {
                         .contentType(ContentType.JSON)
                         .body(requestBody)
                         .when()
-                        .put("http://localhost:8080/perks/id?id=" + expected.getId())
+                        .put("http://localhost:8080/perks/id?id=" + perk.getId())
                         .then()
                         .statusCode(200)
                         .extract()
                         .body()
                         .as(Perk.class);
-        expected.setName("Test");
-        expected.setPrice(10);
         Assertions.assertEquals(expected.getName(), actual.getName());
     }
 
 
     @Test
     void change_perk_price_in_hotel_service() {
-        Perk expectedPerk = hotelFactory.getPerkService().getAll().stream().findAny().get();
         Double expected = 200.0;
+        Perk perk = hotelFactory.getPerkService().getAll().stream().findAny().get();
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("price", 200);
-        Perk perk =
+        Perk perkActual =
                 given()
                         .contentType(ContentType.JSON)
                         .body(requestBody)
                         .when()
-                        .post("http://localhost:8080/perks/id?id=" + expectedPerk.getId())
+                        .post("http://localhost:8080/perks/id?id=" + perk.getId())
                         .then()
                         .statusCode(200)
                         .extract()
                         .body()
                         .as(Perk.class);
-        Double actual = perk.getPrice();
+        Double actual = perkActual.getPrice();
         Assertions.assertEquals(expected, actual);
     }
 

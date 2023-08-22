@@ -24,9 +24,4 @@ public class ConnectionPool {
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
-
-    public void closeAllConnections() {
-        dataSource.close();
-    }
-
 }

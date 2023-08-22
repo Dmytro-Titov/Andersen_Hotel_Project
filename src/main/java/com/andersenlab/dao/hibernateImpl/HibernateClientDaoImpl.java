@@ -29,9 +29,13 @@ public class HibernateClientDaoImpl implements ClientDao {
     public List<Client> getAll() {
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-            List<Client> apartments = session.createQuery("FROM Client ORDER BY id").getResultList();
+            List<Client> clients = session.createQuery("FROM Client c " +
+                            "LEFT JOIN FETCH c.apartment a " +
+                            "LEFT JOIN FETCH c.perks p " +
+                            "ORDER BY c.id")
+                    .getResultList();
             session.getTransaction().commit();
-            return apartments;
+            return clients;
         }
     }
 
@@ -70,16 +74,17 @@ public class HibernateClientDaoImpl implements ClientDao {
     public List<Client> getSortedBy(ClientSortType type) {
         return switch (type) {
             case ID -> getAll();
-            case NAME -> sortBy("FROM Client ORDER BY name");
-            case CHECK_OUT_DATE -> sortBy("FROM Apartment ORDER BY checkOutDate");
-            case STATUS -> sortBy("FROM Apartment ORDER BY status");
+            case NAME -> sortBy("c.name");
+            case CHECK_OUT_DATE -> sortBy("c.checkOutDate");
+            case STATUS -> sortBy("c.status");
         };
     }
 
-    private List<Client> sortBy(String query) {
+    private List<Client> sortBy(String parameter) {
+        String getAllQuery = "FROM Client c LEFT JOIN FETCH c.apartment a LEFT JOIN FETCH c.perks p ORDER BY " + parameter;
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-            List<Client> clients = session.createQuery(query).getResultList();
+            List<Client> clients = session.createQuery(getAllQuery).getResultList();
             session.getTransaction().commit();
             return clients;
         }

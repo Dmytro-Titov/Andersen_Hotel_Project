@@ -6,7 +6,8 @@ import com.andersenlab.dao.onDiskImpl.OnDiskApartmentDaoImpl;
 import com.andersenlab.dao.onDiskImpl.OnDiskClientDaoImpl;
 import com.andersenlab.dao.onDiskImpl.OnDiskPerkDaoImpl;
 import com.andersenlab.entity.*;
-import com.andersenlab.exceptions.InnerLogicException;
+import com.andersenlab.exceptions.ClientAlreadyCheckedInException;
+import com.andersenlab.exceptions.NoAvailableApartmentsException;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.ConfigHandler;
 import com.andersenlab.util.IdGenerator;
@@ -162,10 +163,10 @@ public class ClientServiceTest {
         Client client = clientService.save("Dmytro", 20);
         long clientID = client.getId();
 
-        assertThrows(InnerLogicException.class, () -> {
+        assertThrows(NoAvailableApartmentsException.class, () -> {
             clientService.checkInAnyFreeApartment(clientID, 8);
         });
-        assertThrows(InnerLogicException.class, () -> {
+        assertThrows(NoAvailableApartmentsException.class, () -> {
             clientService.checkInApartment(clientID, 18, 1);
         });
     }
@@ -179,10 +180,10 @@ public class ClientServiceTest {
         long clientID = client.getId();
 
 
-        assertThrows(InnerLogicException.class, () -> {
+        assertThrows(ClientAlreadyCheckedInException.class, () -> {
             clientService.checkInApartment(clientID, 1, 1);
         });
-        assertThrows(InnerLogicException.class, () -> {
+        assertThrows(ClientAlreadyCheckedInException.class, () -> {
             clientService.checkInAnyFreeApartment(clientID, 1);
         });
     }

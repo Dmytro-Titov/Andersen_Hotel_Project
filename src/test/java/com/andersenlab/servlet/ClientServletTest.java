@@ -2,6 +2,7 @@ package com.andersenlab.servlet;
 
 
 import com.andersenlab.config.Config;
+import com.andersenlab.config.StartServlet;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.ClientStatus;
@@ -78,12 +79,15 @@ public class ClientServletTest {
 
     @Test
     void get_client_by_id_from_hotel_service() {
-        Client expected = hotelFactory.getClientService().getAll().stream().findAny().get();
+        Client expected = new Client();
+        expected.setName("Alex");
+        Client client = hotelFactory.getClientService().getAll().stream().findFirst().get();
         Client actual =
                 given()
                         .contentType(ContentType.JSON)
                         .when()
-                        .get("http://localhost:8080/clients/id?id=" + expected.getId())
+                        .get("http://localhost:8080/clients/id?id="
+                                + client.getId())
                         .then()
                         .statusCode(200)
                         .extract()
@@ -95,7 +99,10 @@ public class ClientServletTest {
 
     @Test
     void update_client_by_id_in_hotel_service() {
-        Client expected = hotelFactory.getClientService().getAll().stream().findAny().get();
+        Client expected = new Client();
+        expected.setName("Test");
+        expected.setStatus(ClientStatus.CHECKED_IN);
+        Client client = hotelFactory.getClientService().getAll().stream().findFirst().get();
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("name", "Test");
         requestBody.put("status", 1);
@@ -104,14 +111,13 @@ public class ClientServletTest {
                         .contentType(ContentType.JSON)
                         .body(requestBody)
                         .when()
-                        .put("http://localhost:8080/clients/id?id=" + expected.getId())
+                        .put("http://localhost:8080/clients/id?id="
+                                + client.getId())
                         .then()
                         .statusCode(200)
                         .extract()
                         .body()
                         .as(Client.class);
-        expected.setName("Test");
-        expected.setStatus(ClientStatus.CHECKED_IN);
         Assertions.assertEquals(expected.getName(), actual.getName());
     }
 
@@ -119,14 +125,14 @@ public class ClientServletTest {
     @Test
     void get_stay_coast_for_client_in_hotel_service() {
         Double expected = 20000.0;
-        Client expectedClient = hotelFactory.getClientService().getAll().stream().findFirst().get();
-        Apartment expectedApartment = hotelFactory.getApartmentService().getAll().stream().findFirst().get();
-        hotelFactory.getClientService().checkInApartment(expectedClient.getId(), 5, expectedApartment.getId());
+        Client client = hotelFactory.getClientService().getAll().stream().findFirst().get();
+        Apartment apartment = hotelFactory.getApartmentService().getAll().stream().findFirst().get();
+        hotelFactory.getClientService().checkInApartment(client.getId(), 5, apartment.getId());
         Double actual =
                 given()
                         .contentType(ContentType.JSON)
                         .when()
-                        .get("http://localhost:8080/clients/stay-cost/id?id=" + expectedClient.getId())
+                        .get("http://localhost:8080/clients/stay-cost/id?id=" + client.getId())
                         .then()
                         .statusCode(200)
                         .extract()
@@ -138,16 +144,18 @@ public class ClientServletTest {
 
     @Test
     void add_perk_to_client_in_hotel_service() {
-        Client expectedClient = hotelFactory.getClientService().getAll().stream().findFirst().get();
-        Apartment expectedApartment = hotelFactory.getApartmentService().getAll().stream().findFirst().get();
-        hotelFactory.getClientService().checkInApartment(expectedClient.getId(), 5, expectedApartment.getId());
-        Perk expected = hotelFactory.getPerkService().getAll().stream().findFirst().get();
+        Perk expected = new Perk();
+        expected.setName("laundry");
+        Client client = hotelFactory.getClientService().getAll().stream().findFirst().get();
+        Apartment apartment = hotelFactory.getApartmentService().getAll().stream().findFirst().get();
+        hotelFactory.getClientService().checkInApartment(client.getId(), 5, apartment.getId());
+        Perk perk = hotelFactory.getPerkService().getAll().stream().findFirst().get();
         Perk actual =
                 given()
                         .contentType(ContentType.JSON)
                         .when()
-                        .post("http://localhost:8080/clients/perks?clientId=" + expectedClient.getId() +
-                                "&perkId=" + expected.getId())
+                        .post("http://localhost:8080/clients/perks?clientId=" + client.getId() +
+                                "&perkId=" + perk.getId())
                         .then()
                         .statusCode(200)
                         .extract()
@@ -159,17 +167,17 @@ public class ClientServletTest {
 
     @Test
     void get_perks_for_client_in_hotel_service() {
-        Client expectedClient = hotelFactory.getClientService().getAll().stream().findFirst().get();
-        Apartment expectedApartment = hotelFactory.getApartmentService().getAll().stream().findFirst().get();
-        Perk expectedPerk = hotelFactory.getPerkService().getAll().stream().findFirst().get();
-        hotelFactory.getClientService().checkInApartment(expectedClient.getId(), 5, expectedApartment.getId());
-        hotelFactory.getClientService().addPerk(expectedClient.getId(), expectedPerk.id);
         Integer expected = 1;
+        Client client = hotelFactory.getClientService().getAll().stream().findFirst().get();
+        Apartment apartment = hotelFactory.getApartmentService().getAll().stream().findFirst().get();
+        Perk perk = hotelFactory.getPerkService().getAll().stream().findFirst().get();
+        hotelFactory.getClientService().checkInApartment(client.getId(), 5, apartment.getId());
+        hotelFactory.getClientService().addPerk(client.getId(), perk.id);
         List actual =
                 given()
                         .contentType(ContentType.JSON)
                         .when()
-                        .get("http://localhost:8080/clients/perks?clientId=" + expectedClient.getId())
+                        .get("http://localhost:8080/clients/perks?clientId=" + client.getId())
                         .then()
                         .statusCode(200)
                         .extract()
@@ -182,31 +190,35 @@ public class ClientServletTest {
 
     @Test
     void check_in_apartments_in_hotel_service() {
-        Client expectedClient = hotelFactory.getClientService().getAll().stream().findFirst().get();
-        Apartment expectedApartment = hotelFactory.getApartmentService().getAll().stream().findFirst().get();
+        Client expected = new Client();
+        expected.setName("Alex");
+        Client client = hotelFactory.getClientService().getAll().stream().findFirst().get();
+        Apartment apartment = hotelFactory.getApartmentService().getAll().stream().findFirst().get();
         Client actual =
                 given()
                         .contentType(ContentType.JSON)
                         .when()
-                        .get("http://localhost:8080/clients/checkin?clientId=" + expectedClient.getId() +
-                                "&duration=5&apartmentId=" + expectedApartment.getId())
+                        .get("http://localhost:8080/clients/checkin?clientId=" + client.getId() +
+                                "&duration=5&apartmentId=" + apartment.getId())
                         .then()
                         .statusCode(200)
                         .extract()
                         .body()
                         .as(Client.class);
-        Assertions.assertEquals(expectedClient.getName(), actual.getName());
+        Assertions.assertEquals(expected.getName(), actual.getName());
     }
 
 
     @Test
     void check_in_any_free_apartments_in_hotel_service() {
-        Client expected = hotelFactory.getClientService().getAll().stream().findFirst().get();
+        Client expected = new Client();
+        expected.setName("Alex");
+        Client client = hotelFactory.getClientService().getAll().stream().findFirst().get();
         Client actual =
                 given()
                         .contentType(ContentType.JSON)
                         .when()
-                        .get("http://localhost:8080/clients/checkin?clientId=" + expected.getId() + "&duration=5")
+                        .get("http://localhost:8080/clients/checkin?clientId=" + client.getId() + "&duration=5")
                         .then()
                         .statusCode(200)
                         .extract()
@@ -218,15 +230,15 @@ public class ClientServletTest {
 
     @Test
     void check_out_apartments_in_hotel_service() {
-        Client expectedClient = hotelFactory.getClientService().getAll().stream().findFirst().get();
-        Apartment expectedApartment = hotelFactory.getApartmentService().getAll().stream().findFirst().get();
-        hotelFactory.getClientService().checkInApartment(expectedClient.getId(), 5, expectedApartment.getId());
         Double expected = 20000.0;
+        Client client = hotelFactory.getClientService().getAll().stream().findFirst().get();
+        Apartment apartment = hotelFactory.getApartmentService().getAll().stream().findFirst().get();
+        hotelFactory.getClientService().checkInApartment(client.getId(), 5, apartment.getId());
         Double actual =
                 given()
                         .contentType(ContentType.JSON)
                         .when()
-                        .get("http://localhost:8080/clients/checkout?clientId=" + expectedClient.getId())
+                        .get("http://localhost:8080/clients/checkout?clientId=" + client.getId())
                         .then()
                         .statusCode(200)
                         .extract()
@@ -283,7 +295,8 @@ public class ClientServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(List.class);
+                .as(new TypeRef<List<Client>>() {
+                });
         Integer actual = clients.size();
         Assertions.assertEquals(expected, actual);
     }
@@ -312,14 +325,14 @@ public class ClientServletTest {
         Integer expected = 2;
         List<Client> clients = hotelFactory.getClientService().getAll();
         List<Apartment> apartments = hotelFactory.getApartmentService().getAll();
-        Client expectedClient1 = clients.stream().findFirst().get();
-        Apartment expectedApartment1 = apartments.stream().findFirst().get();
+        Client client1 = clients.stream().findFirst().get();
+        Apartment apartment1 = apartments.stream().findFirst().get();
         Collections.reverse(clients);
         Collections.reverse(apartments);
-        Client expectedClient2 = clients.stream().findFirst().get();
-        Apartment expectedApartment2 = apartments.stream().distinct().findFirst().get();
-        hotelFactory.getClientService().checkInApartment(expectedClient1.getId(), 5, expectedApartment1.getId());
-        hotelFactory.getClientService().checkInApartment(expectedClient2.getId(), 1, expectedApartment2.getId());
+        Client client2 = clients.stream().findFirst().get();
+        Apartment apartment2 = apartments.stream().distinct().findFirst().get();
+        hotelFactory.getClientService().checkInApartment(client1.getId(), 5, apartment1.getId());
+        hotelFactory.getClientService().checkInApartment(client2.getId(), 1, apartment2.getId());
         List expectedClients = given()
                 .contentType(ContentType.JSON)
                 .when()
