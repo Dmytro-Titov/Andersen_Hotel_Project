@@ -297,4 +297,14 @@ public class JdbcClientDaoImpl implements ClientDao {
                 .sorted(Comparator.comparing(Client::getCheckOutDate))
                 .toList();
     }
+
+    @Override
+    public void cleanTable() {
+        try {
+            Connection connection = connectionPool.getConnection();
+            connection.prepareStatement("DELETE * FROM Client").executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

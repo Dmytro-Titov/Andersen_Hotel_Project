@@ -99,4 +99,13 @@ public class HibernateClientDaoImpl implements ClientDao {
         session.delete(client);
         session.getTransaction().commit();
     }
+
+    @Override
+    public void cleanTable() {
+        try (Session session = sessionFactory.getCurrentSession()) {
+            session.beginTransaction();
+            session.createQuery("DELETE FROM Client").executeUpdate();
+            session.getTransaction().commit();
+        }
+    }
 }

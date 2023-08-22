@@ -2,6 +2,7 @@ package com.andersenlab.dao.inMemoryImpl;
 
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.entity.Apartment;
+import org.hibernate.Session;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -84,5 +85,12 @@ public class InMemoryApartmentDaoImpl implements ApartmentDao {
         return getAll().stream()
                 .sorted(Comparator.comparing(extractor))
                 .toList();
+    }
+
+    @Override
+    public void cleanTable() {
+        for (Apartment apartment : apartments) {
+            apartments.remove(apartment);
+        }
     }
 }

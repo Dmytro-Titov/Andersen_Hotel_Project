@@ -1,6 +1,7 @@
 package com.andersenlab.dao.inMemoryImpl;
 
 import com.andersenlab.dao.PerkDao;
+import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Perk;
 
 import java.util.ArrayList;
@@ -65,5 +66,12 @@ public class InMemoryPerkDaoImpl implements PerkDao {
         return getAll().stream()
                 .sorted(Comparator.comparing(extractor))
                 .toList();
+    }
+
+    @Override
+    public void cleanTable() {
+        for (Perk perk : perks) {
+            perks.remove(perk);
+        }
     }
 }

@@ -155,4 +155,9 @@ public class ClientServiceImpl implements ClientService {
                     default -> ClientDao.ClientSortType.ID;
                 });
     }
+
+    @Override
+    public void cleanTable() {
+        clientDao.cleanTable();
+    }
 }

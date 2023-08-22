@@ -92,4 +92,13 @@ public class OnDiskClientDaoImpl implements ClientDao {
                 .sorted(Comparator.comparing(Client::getCheckOutDate))
                 .toList();
     }
+
+    @Override
+    public void cleanTable() {
+        var stateEntity = onDiskJsonHandler.load();
+        var clients= stateEntity.getClientsList();
+        var copy = new ArrayList<>(clients);
+        copy.removeAll(clients);
+        onDiskJsonHandler.save(stateEntity.addClientList(copy));
+    }
 }

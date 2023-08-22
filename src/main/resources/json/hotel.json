@@ -1,24 +1,29 @@
 {
   "apartmentsList" : [ {
     "id" : 1,
-    "capacity" : 4,
-    "price" : 4000.0,
-    "status" : "AVAILABLE"
-  }, {
-    "id" : 2,
     "capacity" : 2,
     "price" : 4000.0,
+    "status" : "UNAVAILABLE"
+  }, {
+    "id" : 2,
+    "capacity" : 4,
+    "price" : 8000.0,
     "status" : "AVAILABLE"
   } ],
   "clientsList" : [ {
     "id" : 1,
     "name" : "Alex",
-    "checkOutDate" : null,
-    "checkInDate" : null,
-    "status" : "NEW",
-    "apartment" : null,
+    "checkOutDate" : [ 2023, 8, 27, 15, 41, 53, 971612900 ],
+    "checkInDate" : [ 2023, 8, 22, 15, 41, 53, 971612900 ],
+    "status" : "CHECKED_IN",
+    "apartment" : {
+      "id" : 1,
+      "capacity" : 2,
+      "price" : 4000.0,
+      "status" : "UNAVAILABLE"
+    },
     "perks" : [ ],
-    "stayCost" : 0.0,
+    "stayCost" : 20000.0,
     "quantityOfPeople" : 2
   }, {
     "id" : 2,
@@ -33,7 +38,7 @@
   } ],
   "perksList" : [ {
     "id" : 1,
-    "name" : "loundry",
+    "name" : "laundry",
     "price" : 50.0
   }, {
     "id" : 2,

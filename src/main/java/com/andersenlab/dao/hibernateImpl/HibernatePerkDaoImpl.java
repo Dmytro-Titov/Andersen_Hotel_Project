@@ -95,4 +95,13 @@ public class HibernatePerkDaoImpl implements PerkDao {
         session.delete(perk);
         session.getTransaction().commit();
     }
+
+    @Override
+    public void cleanTable() {
+        try (Session session = sessionFactory.getCurrentSession()) {
+            session.beginTransaction();
+            session.createQuery("DELETE FROM Perk").executeUpdate();
+            session.getTransaction().commit();
+        }
+    }
 }

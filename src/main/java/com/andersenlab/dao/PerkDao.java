@@ -20,4 +20,6 @@ public interface PerkDao {
     enum PerkSortType {
         ID, NAME, PRICE
     }
+
+    void cleanTable();
 }

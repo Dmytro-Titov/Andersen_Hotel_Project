@@ -59,4 +59,9 @@ public class PerkServiceImpl implements PerkService {
                     default -> PerkDao.PerkSortType.ID;
                 });
     }
+
+    @Override
+    public void cleanTable() {
+        perkDao.cleanTable();
+    }
 }

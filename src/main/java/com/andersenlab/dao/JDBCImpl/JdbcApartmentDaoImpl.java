@@ -5,6 +5,7 @@ import com.andersenlab.dao.conection.ConnectionPool;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.factory.HotelFactory;
+import org.hibernate.Session;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -181,5 +182,16 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
         return getAll().stream()
                 .sorted(Comparator.comparing(extractor))
                 .toList();
+    }
+
+    @Override
+    public void cleanTable() {
+        try {
+            Connection connection = connectionPool.getConnection();
+            connection.prepareStatement("DELETE * FROM Apartment").executeUpdate();
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -20,4 +20,5 @@ public interface ApartmentService {
 
     List<Apartment> getSorted(String type);
 
+    void cleanTable();
 }

@@ -29,4 +29,5 @@ public interface ClientService {
 
     List<Client> getSorted(String type);
 
+    void cleanTable();
 }

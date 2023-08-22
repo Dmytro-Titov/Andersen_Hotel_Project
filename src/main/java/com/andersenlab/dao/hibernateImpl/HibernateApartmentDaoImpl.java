@@ -101,4 +101,13 @@ public class HibernateApartmentDaoImpl implements ApartmentDao {
         session.delete(apartment);
         session.getTransaction().commit();
     }
+
+    @Override
+    public void cleanTable() {
+        try (Session session = sessionFactory.getCurrentSession()) {
+            session.beginTransaction();
+            session.createQuery("DELETE FROM Apartment").executeUpdate();
+            session.getTransaction().commit();
+        }
+    }
 }

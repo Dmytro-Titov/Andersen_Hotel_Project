@@ -1,6 +1,7 @@
 package com.andersenlab.dao.inMemoryImpl;
 
 import com.andersenlab.dao.ClientDao;
+import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.ClientStatus;
 
@@ -73,5 +74,12 @@ public class InMemoryClientDaoImpl implements ClientDao {
                 .filter(client -> client.getStatus() != ClientStatus.NEW)
                 .sorted(Comparator.comparing(Client::getCheckOutDate))
                 .toList();
+    }
+
+    @Override
+    public void cleanTable() {
+        for (Client client : clients) {
+            clients.remove(client);
+        }
     }
 }
