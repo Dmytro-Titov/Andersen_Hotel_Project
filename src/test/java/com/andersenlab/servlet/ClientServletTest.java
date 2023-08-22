@@ -173,7 +173,7 @@ public class ClientServletTest {
         Perk perk = hotelFactory.getPerkService().getAll().stream().findFirst().get();
         hotelFactory.getClientService().checkInApartment(client.getId(), 5, apartment.getId());
         hotelFactory.getClientService().addPerk(client.getId(), perk.id);
-        List actual =
+        List<Perk> actual =
                 given()
                         .contentType(ContentType.JSON)
                         .when()
@@ -251,7 +251,7 @@ public class ClientServletTest {
     @Test
     void look_all_clients_from_hotel_service() {
         Integer expected = 2;
-        List clients = given()
+        List<Client> clients = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("http://localhost:8080/clients")
@@ -259,7 +259,7 @@ public class ClientServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(new TypeRef<List<Client>>() {
+                .as(new TypeRef<>() {
                 });
         Integer actual = clients.size();
         Assertions.assertEquals(expected, actual);
@@ -269,7 +269,7 @@ public class ClientServletTest {
     @Test
     void look_all_sorted_clients_by_name_from_hotel_service() {
         Integer expected = 2;
-        List clients = given()
+        List<Client> clients = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("http://localhost:8080/clients?type=name")
@@ -277,7 +277,7 @@ public class ClientServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(new TypeRef<List<Client>>() {
+                .as(new TypeRef<>() {
                 });
         Integer actual = clients.size();
         Assertions.assertEquals(expected, actual);
@@ -287,7 +287,7 @@ public class ClientServletTest {
     @Test
     void look_all_sorted_clients_by_status_from_hotel_service() {
         Integer expected = 2;
-        List clients = given()
+        List<Client> clients = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("http://localhost:8080/clients?type=status")
@@ -295,7 +295,7 @@ public class ClientServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(new TypeRef<List<Client>>() {
+                .as(new TypeRef<>() {
                 });
         Integer actual = clients.size();
         Assertions.assertEquals(expected, actual);
@@ -305,7 +305,7 @@ public class ClientServletTest {
     @Test
     void look_all_sorted_clients_by_id_from_hotel_service() {
         Integer expected = 2;
-        List clients = given()
+        List<Client> clients = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("http://localhost:8080/clients?type=id")
@@ -313,7 +313,7 @@ public class ClientServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(new TypeRef<List<Client>>() {
+                .as(new TypeRef<>() {
                 });
         Integer actual = clients.size();
         Assertions.assertEquals(expected, actual);
@@ -333,7 +333,7 @@ public class ClientServletTest {
         Apartment apartment2 = apartments.stream().distinct().findFirst().get();
         hotelFactory.getClientService().checkInApartment(client1.getId(), 5, apartment1.getId());
         hotelFactory.getClientService().checkInApartment(client2.getId(), 1, apartment2.getId());
-        List expectedClients = given()
+        List<Client> expectedClients = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("http://localhost:8080/clients?type=check_out_date")
@@ -341,7 +341,7 @@ public class ClientServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(new TypeRef<List<Client>>() {
+                .as(new TypeRef<>() {
                 });
         Integer actual = expectedClients.size();
         Assertions.assertEquals(expected, actual);

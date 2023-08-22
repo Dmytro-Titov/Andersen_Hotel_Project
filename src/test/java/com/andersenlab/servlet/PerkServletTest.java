@@ -134,7 +134,7 @@ public class PerkServletTest {
     @Test
     void look_all_perks_in_hotel_service() {
         Integer expected = 2;
-        List perks = given()
+        List<Perk> perks = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("http://localhost:8080/perks")
@@ -142,7 +142,7 @@ public class PerkServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(new TypeRef<List<Perk>>() {
+                .as(new TypeRef<>() {
                 });
         Integer actual = perks.size();
         Assertions.assertEquals(expected, actual);
@@ -154,7 +154,7 @@ public class PerkServletTest {
     @Test
     void look_all_sorted_perks_by_id_in_hotel_service() {
         Integer expected = 2;
-        List perks = given()
+        List<Perk> perks = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("http://localhost:8080/perks?type=id")
@@ -162,7 +162,7 @@ public class PerkServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(new TypeRef<List<Perk>>() {
+                .as(new TypeRef<>() {
                 });
         Integer actual = perks.size();
         Assertions.assertEquals(expected, actual);
@@ -172,7 +172,7 @@ public class PerkServletTest {
     @Test
     void look_all_sorted_perks_by_name_in_hotel_service() {
         Integer expected = 2;
-        List perks = given()
+        List<Perk> perks = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("http://localhost:8080/perks?type=name")
@@ -180,7 +180,7 @@ public class PerkServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(new TypeRef<List<Perk>>() {
+                .as(new TypeRef<>() {
                 });
         Integer actual = perks.size();
         Assertions.assertEquals(expected, actual);
@@ -189,7 +189,7 @@ public class PerkServletTest {
     @Test
     void look_all_sorted_perks_by_price_in_hotel_service() {
         Integer expected = 2;
-        List perks = given()
+        List<Perk> perks = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("http://localhost:8080/perks?type=price")
@@ -197,7 +197,7 @@ public class PerkServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(new TypeRef<List<Perk>>() {
+                .as(new TypeRef<>() {
                 });
         Integer actual = perks.size();
         Assertions.assertEquals(expected, actual);

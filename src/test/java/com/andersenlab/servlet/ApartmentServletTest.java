@@ -157,7 +157,7 @@ public class ApartmentServletTest {
     @Test
     void look_all_apartments_in_hotel_service() {
         Integer expected = 2;
-        List apartments = given()
+        List<Apartment> apartments = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("http://localhost:8080/apartments")
@@ -165,7 +165,7 @@ public class ApartmentServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(new TypeRef<List<Apartment>>() {
+                .as(new TypeRef<>() {
                 });
         Integer actual = apartments.size();
         Assertions.assertEquals(expected, actual);
@@ -175,7 +175,7 @@ public class ApartmentServletTest {
     @Test
     void look_all_sorted_apartments_by_id_in_hotel_service() {
         Integer expected = 2;
-        List apartments = given()
+        List<Apartment> apartments = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("http://localhost:8080/apartments?type=id")
@@ -183,7 +183,7 @@ public class ApartmentServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(new TypeRef<List<Apartment>>() {
+                .as(new TypeRef<>() {
                 });
         Integer actual = apartments.size();
         Assertions.assertEquals(expected, actual);
@@ -193,7 +193,7 @@ public class ApartmentServletTest {
     @Test
     void look_all_sorted_apartments_by_price_in_hotel_service() {
         Integer expected = 2;
-        List apartments = given()
+        List<Apartment> apartments = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("http://localhost:8080/apartments?type=price")
@@ -201,7 +201,7 @@ public class ApartmentServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(new TypeRef<List<Apartment>>() {
+                .as(new TypeRef<>() {
                 });
         Integer actual = apartments.size();
         Assertions.assertEquals(expected, actual);
@@ -211,7 +211,7 @@ public class ApartmentServletTest {
     @Test
     void look_all_sorted_apartments_by_capacity_in_hotel_service() {
         Integer expected = 2;
-        List apartments = given()
+        List<Apartment> apartments = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("http://localhost:8080/apartments?type=capacity")
@@ -219,7 +219,7 @@ public class ApartmentServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(new TypeRef<List<Apartment>>() {
+                .as(new TypeRef<>() {
                 });
         Integer actual = apartments.size();
         Assertions.assertEquals(expected, actual);
@@ -229,7 +229,7 @@ public class ApartmentServletTest {
     @Test
     void look_all_sorted_apartments_by_status_in_hotel_service() {
         Integer expected = 2;
-        List apartments = given()
+        List<Apartment> apartments = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("http://localhost:8080/apartments?type=status")
@@ -237,7 +237,7 @@ public class ApartmentServletTest {
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(new TypeRef<List<Apartment>>() {
+                .as(new TypeRef<>() {
                 });
         Integer actual = apartments.size();
         Assertions.assertEquals(expected, actual);
