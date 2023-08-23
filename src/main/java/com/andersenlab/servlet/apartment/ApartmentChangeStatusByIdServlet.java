@@ -20,7 +20,7 @@ public class ApartmentChangeStatusByIdServlet extends HttpServlet {
     private ApartmentService apartmentService = ServletFactory.INSTANCE.getApartmentService();
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    //EXAMPLE: http://localhost:8080/apartments/id?id=3 for changeStatus()
+    //EXAMPLE: http://localhost:8080/apartments/change-status/id=3 for changeStatus()
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");

@@ -20,7 +20,9 @@ import com.andersenlab.service.*;
 import com.andersenlab.service.impl.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.springframework.stereotype.Component;
 
+@Component
 public class HotelFactory {
 
     private final ClientService clientService;
