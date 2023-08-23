@@ -2,13 +2,12 @@ package com.andersenlab.servlet;
 
 import com.andersenlab.cleandb.CleanApartmentTable;
 import com.andersenlab.cleandb.CleanClientTable;
-import com.andersenlab.cleandb.CleanPerkTable;
 import com.andersenlab.config.Config;
-import com.andersenlab.util.StartServlet;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.ConfigHandler;
+import com.andersenlab.util.StartServlet;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import org.apache.catalina.LifecycleException;
@@ -23,7 +22,7 @@ import static io.restassured.RestAssured.given;
 
 public class ApartmentServletTest {
 
-    private HotelFactory hotelFactory;
+    private static HotelFactory hotelFactory;
 
     @BeforeAll
     static void start() {
@@ -32,14 +31,14 @@ public class ApartmentServletTest {
         } catch (LifecycleException e) {
             System.out.println(e.getMessage());
         }
+        Config config = new Config();
+        config.setConfigData(ConfigHandler.createConfig("src/main/resources/config/config-dev.yaml"));
+        hotelFactory = new HotelFactory(config);
     }
 
 
     @BeforeEach
     void setup() {
-        Config config = new Config();
-        config.setConfigData(ConfigHandler.createConfig("src/main/resources/config/config-dev.yaml"));
-        hotelFactory = new HotelFactory(config);
         CleanClientTable cleanClientTable = new CleanClientTable(hotelFactory);
         CleanApartmentTable cleanApartmentTable = new CleanApartmentTable(hotelFactory);
         cleanClientTable.cleanTable();

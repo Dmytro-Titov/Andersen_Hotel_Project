@@ -19,7 +19,7 @@ import static io.restassured.RestAssured.given;
 
 public class PerkServletTest {
 
-    private HotelFactory hotelFactory;
+    private static HotelFactory hotelFactory;
 
 
     @BeforeAll
@@ -29,14 +29,14 @@ public class PerkServletTest {
         } catch (LifecycleException e) {
             System.out.println(e.getMessage());
         }
+        Config config = new Config();
+        config.setConfigData(ConfigHandler.createConfig("src/main/resources/config/config-dev.yaml"));
+        hotelFactory = new HotelFactory(config);
     }
 
 
     @BeforeEach
     void setup() {
-        Config config = new Config();
-        config.setConfigData(ConfigHandler.createConfig("src/main/resources/config/config-dev.yaml"));
-        hotelFactory = new HotelFactory(config);
         CleanPerkTable cleanPerkTable = new CleanPerkTable(hotelFactory);
         cleanPerkTable.cleanTable();
         hotelFactory.getPerkService().save("laundry", 50);
@@ -205,6 +205,4 @@ public class PerkServletTest {
         Integer actual = perks.size();
         Assertions.assertEquals(expected, actual);
     }
-
-
 }

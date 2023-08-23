@@ -29,11 +29,12 @@ public class CleanApartmentTable {
             Configuration configuration = new Configuration().addAnnotatedClass(Perk.class)
                     .addAnnotatedClass(Apartment.class).addAnnotatedClass(Client.class);
             SessionFactory sessionFactory = configuration.buildSessionFactory();
-            try (Session session = sessionFactory.getCurrentSession()) {
+            Session session = sessionFactory.getCurrentSession();
                 session.beginTransaction();
                 session.createQuery("DELETE FROM Apartment").executeUpdate();
                 session.getTransaction().commit();
-            }
+                session.close();
+
         } else if (hotelFactory.getConfig().getConfigData().getSaveOption() == SaveOption.DISK) {
             OnDiskJsonHandler onDiskJsonHandler = new OnDiskJsonHandler(hotelFactory);
             var stateEntity = onDiskJsonHandler.load();

@@ -15,6 +15,6 @@ saveOption: HIBERNATE
 
 postgresDatabase:
   username: "postgres"
-  password: "123"
+  password: "postgres"
   url: "jdbc:postgresql://localhost:5432/db_hotel_Andersen"
   pool: 30

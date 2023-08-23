@@ -26,7 +26,7 @@ import static io.restassured.RestAssured.given;
 
 public class ClientServletTest {
 
-    private HotelFactory hotelFactory;
+    private static HotelFactory hotelFactory;
 
 
     @BeforeAll
@@ -36,14 +36,14 @@ public class ClientServletTest {
         } catch (LifecycleException e) {
             System.out.println(e.getMessage());
         }
+        Config config = new Config();
+        config.setConfigData(ConfigHandler.createConfig("src/main/resources/config/config-dev.yaml"));
+        hotelFactory = new HotelFactory(config);
     }
 
 
     @BeforeEach
     void setup() {
-        Config config = new Config();
-        config.setConfigData(ConfigHandler.createConfig("src/main/resources/config/config-dev.yaml"));
-        hotelFactory = new HotelFactory(config);
         CleanClientTable cleanClientTable = new CleanClientTable(hotelFactory);
         CleanApartmentTable cleanApartmentTable = new CleanApartmentTable(hotelFactory);
         CleanPerkTable cleanPerkTable = new CleanPerkTable(hotelFactory);
