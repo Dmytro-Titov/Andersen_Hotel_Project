@@ -21,6 +21,4 @@ public interface ApartmentDao {
     enum ApartmentSortType {
         ID, PRICE, CAPACITY, STATUS
     }
-
-    void cleanTable();
 }

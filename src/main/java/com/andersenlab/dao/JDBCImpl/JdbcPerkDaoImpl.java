@@ -157,14 +157,4 @@ public class JdbcPerkDaoImpl implements PerkDao {
             preparedStatement.executeUpdate();
         }
     }
-
-    @Override
-    public void cleanTable() {
-        try {
-            Connection connection = connectionPool.getConnection();
-            connection.prepareStatement("DELETE * FROM Perk").executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

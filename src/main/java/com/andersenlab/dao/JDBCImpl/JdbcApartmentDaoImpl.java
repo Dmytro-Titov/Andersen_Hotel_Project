@@ -169,15 +169,4 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
             preparedStatement.executeUpdate();
         }
     }
-
-    @Override
-    public void cleanTable() {
-        try {
-            Connection connection = connectionPool.getConnection();
-            connection.prepareStatement("DELETE * FROM Apartment").executeUpdate();
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

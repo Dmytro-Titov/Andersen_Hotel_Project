@@ -74,11 +74,4 @@ public class InMemoryApartmentDaoImpl implements ApartmentDao {
             existingApartment.setStatus(updatedApartment.getStatus());
         }
     }
-
-    @Override
-    public void cleanTable() {
-        for (Apartment apartment : apartments) {
-            apartments.remove(apartment);
-        }
-    }
 }

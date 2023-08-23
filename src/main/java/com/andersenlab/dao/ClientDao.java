@@ -19,6 +19,4 @@ public interface ClientDao {
     enum ClientSortType {
         ID, NAME, CHECK_OUT_DATE, STATUS
     }
-
-    void cleanTable();
 }

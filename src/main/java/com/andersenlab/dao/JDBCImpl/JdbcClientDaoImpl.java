@@ -316,13 +316,4 @@ public class JdbcClientDaoImpl implements ClientDao {
             throw new RuntimeException("Failed to change Apartment status after checkout!");
         }
     }
-    @Override
-    public void cleanTable() {
-        try {
-            Connection connection = connectionPool.getConnection();
-            connection.prepareStatement("DELETE * FROM Client").executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

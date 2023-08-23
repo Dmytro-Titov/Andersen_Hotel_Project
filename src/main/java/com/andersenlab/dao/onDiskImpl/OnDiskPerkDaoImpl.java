@@ -84,13 +84,4 @@ public class OnDiskPerkDaoImpl implements PerkDao {
                 .sorted(Comparator.comparing(extractor))
                 .toList();
     }
-
-    @Override
-    public void cleanTable() {
-        var stateEntity = onDiskJsonHandler.load();
-        var perks= stateEntity.getPerksList();
-        var copy = new ArrayList<>(perks);
-        copy.removeAll(perks);
-        onDiskJsonHandler.save(stateEntity.addPerkList(copy));
-    }
 }

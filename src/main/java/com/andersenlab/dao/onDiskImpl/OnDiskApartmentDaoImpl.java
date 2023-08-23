@@ -90,13 +90,4 @@ public class OnDiskApartmentDaoImpl implements ApartmentDao {
                 .sorted(Comparator.comparing(extractor))
                 .toList();
     }
-
-    @Override
-    public void cleanTable() {
-        var stateEntity = onDiskJsonHandler.load();
-        var apartments = stateEntity.getApartmentsList();
-        var copy = new ArrayList<>(apartments);
-        copy.removeAll(apartments);
-        onDiskJsonHandler.save(stateEntity.addApartmentList(copy));
-    }
 }

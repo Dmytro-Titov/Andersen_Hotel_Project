@@ -16,6 +16,4 @@ public interface PerkService {
     List<Perk> getAll();
 
     List<Perk> getSorted(String type);
-
-    void cleanTable();
 }

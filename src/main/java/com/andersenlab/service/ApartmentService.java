@@ -19,6 +19,4 @@ public interface ApartmentService {
     Apartment changeStatus(long id);
 
     List<Apartment> getSorted(String type);
-
-    void cleanTable();
 }

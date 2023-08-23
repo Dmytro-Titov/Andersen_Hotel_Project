@@ -67,11 +67,4 @@ public class InMemoryPerkDaoImpl implements PerkDao {
                 .sorted(Comparator.comparing(extractor))
                 .toList();
     }
-
-    @Override
-    public void cleanTable() {
-        for (Perk perk : perks) {
-            perks.remove(perk);
-        }
-    }
 }

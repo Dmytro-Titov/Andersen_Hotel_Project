@@ -76,9 +76,4 @@ public class ApartmentServiceImpl implements ApartmentService {
                     default -> ApartmentDao.ApartmentSortType.ID;
                 });
     }
-
-    @Override
-    public void cleanTable() {
-        apartmentDao.cleanTable();
-    }
 }

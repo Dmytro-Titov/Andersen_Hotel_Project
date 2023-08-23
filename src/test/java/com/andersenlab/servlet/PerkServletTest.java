@@ -1,10 +1,11 @@
 package com.andersenlab.servlet;
 
+import com.andersenlab.cleandb.CleanPerkTable;
 import com.andersenlab.config.Config;
-import com.andersenlab.util.StartServlet;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.ConfigHandler;
+import com.andersenlab.util.StartServlet;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import org.apache.catalina.LifecycleException;
@@ -36,7 +37,8 @@ public class PerkServletTest {
         Config config = new Config();
         config.setConfigData(ConfigHandler.createConfig("src/main/resources/config/config-dev.yaml"));
         hotelFactory = new HotelFactory(config);
-        hotelFactory.getPerkService().cleanTable();
+        CleanPerkTable cleanPerkTable = new CleanPerkTable(hotelFactory);
+        cleanPerkTable.cleanTable();
         hotelFactory.getPerkService().save("laundry", 50);
         hotelFactory.getPerkService().save("massage", 500);
     }
@@ -186,6 +188,7 @@ public class PerkServletTest {
         Assertions.assertEquals(expected, actual);
     }
 
+
     @Test
     void look_all_sorted_perks_by_price_in_hotel_service() {
         Integer expected = 2;
@@ -202,4 +205,6 @@ public class PerkServletTest {
         Integer actual = perks.size();
         Assertions.assertEquals(expected, actual);
     }
+
+
 }

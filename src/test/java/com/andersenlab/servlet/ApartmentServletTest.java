@@ -1,5 +1,8 @@
 package com.andersenlab.servlet;
 
+import com.andersenlab.cleandb.CleanApartmentTable;
+import com.andersenlab.cleandb.CleanClientTable;
+import com.andersenlab.cleandb.CleanPerkTable;
 import com.andersenlab.config.Config;
 import com.andersenlab.util.StartServlet;
 import com.andersenlab.entity.Apartment;
@@ -37,8 +40,10 @@ public class ApartmentServletTest {
         Config config = new Config();
         config.setConfigData(ConfigHandler.createConfig("src/main/resources/config/config-dev.yaml"));
         hotelFactory = new HotelFactory(config);
-        hotelFactory.getClientService().cleanTable();
-        hotelFactory.getApartmentService().cleanTable();
+        CleanClientTable cleanClientTable = new CleanClientTable(hotelFactory);
+        CleanApartmentTable cleanApartmentTable = new CleanApartmentTable(hotelFactory);
+        cleanClientTable.cleanTable();
+        cleanApartmentTable.cleanTable();
         hotelFactory.getClientService().save("Alex", 2);
         hotelFactory.getApartmentService().save(4, 4000.0);
         hotelFactory.getClientService().save("Zina", 2);

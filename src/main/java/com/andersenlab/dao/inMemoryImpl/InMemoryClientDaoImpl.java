@@ -75,11 +75,4 @@ public class InMemoryClientDaoImpl implements ClientDao {
                 .sorted(Comparator.comparing(Client::getCheckOutDate))
                 .toList();
     }
-
-    @Override
-    public void cleanTable() {
-        for (Client client : clients) {
-            clients.remove(client);
-        }
-    }
 }
