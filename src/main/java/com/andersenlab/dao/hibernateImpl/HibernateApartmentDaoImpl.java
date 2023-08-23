@@ -2,66 +2,67 @@ package com.andersenlab.dao.hibernateImpl;
 
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.entity.Apartment;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 
 import java.util.List;
 import java.util.Optional;
 
 public class HibernateApartmentDaoImpl implements ApartmentDao {
-    private final SessionFactory sessionFactory;
+    private final EntityManagerFactory entityManagerFactory;
 
-    public HibernateApartmentDaoImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public HibernateApartmentDaoImpl(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     @Override
     public Optional<Apartment> getById(long id) {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            Apartment apartment = session.get(Apartment.class, id);
-            session.getTransaction().commit();
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            Apartment apartment = entityManager.find(Apartment.class, id);
+            entityManager.getTransaction().commit();
             return Optional.ofNullable(apartment);
         }
     }
 
     @Override
     public List<Apartment> getAll() {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            List<Apartment> apartments = session.createQuery("FROM Apartment ORDER BY id").getResultList();
-            session.getTransaction().commit();
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            List<Apartment> apartments = entityManager.createQuery("FROM Apartment ORDER BY id").getResultList();
+            entityManager.getTransaction().commit();
             return apartments;
         }
     }
 
     @Override
     public Apartment save(Apartment apartment) {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            session.save(apartment);
-            session.getTransaction().commit();
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            apartment.setId(0);
+            entityManager.persist(apartment);
+            entityManager.getTransaction().commit();
             return apartment;
         }
     }
 
     @Override
     public Optional<Apartment> update(Apartment apartment) {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            Optional<Apartment> existingApartment = Optional.ofNullable(session.get(Apartment.class, apartment.getId()));
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            Optional<Apartment> existingApartment = Optional.ofNullable(entityManager.find(Apartment.class, apartment.getId()));
             existingApartment.ifPresent(apt -> updateApartmentFields(apt, apartment));
-            session.getTransaction().commit();
+            entityManager.getTransaction().commit();
             return existingApartment;
         }
     }
 
     @Override
     public boolean remove(long id) {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            Optional<Apartment> existingApartment = Optional.ofNullable(session.get(Apartment.class, id));
-            existingApartment.ifPresent(apartment -> deleteApartment(apartment, session));
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            Optional<Apartment> existingApartment = Optional.ofNullable(entityManager.find(Apartment.class, id));
+            existingApartment.ifPresent(apartment -> deleteApartment(apartment, entityManager));
             return existingApartment.isPresent();
         }
     }
@@ -78,10 +79,10 @@ public class HibernateApartmentDaoImpl implements ApartmentDao {
 
     private List<Apartment> sortBy(String parameter) {
         String getAllQuery = "FROM Apartment ORDER BY " + parameter;
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            List<Apartment> apartments = session.createQuery(getAllQuery).getResultList();
-            session.getTransaction().commit();
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            List<Apartment> apartments = entityManager.createQuery(getAllQuery).getResultList();
+            entityManager.getTransaction().commit();
             return apartments;
         }
     }
@@ -98,8 +99,8 @@ public class HibernateApartmentDaoImpl implements ApartmentDao {
         }
     }
 
-    private void deleteApartment(Apartment apartment, Session session) {
-        session.delete(apartment);
-        session.getTransaction().commit();
+    private void deleteApartment(Apartment apartment, EntityManager entityManager) {
+        entityManager.remove(apartment);
+        entityManager.getTransaction().commit();
     }
 }
