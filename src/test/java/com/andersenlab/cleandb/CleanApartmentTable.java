@@ -4,12 +4,10 @@ import com.andersenlab.config.SaveOption;
 import com.andersenlab.dao.conection.ConnectionPool;
 import com.andersenlab.dao.onDiskImpl.OnDiskJsonHandler;
 import com.andersenlab.entity.Apartment;
-import com.andersenlab.entity.Client;
-import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -26,15 +24,13 @@ public class CleanApartmentTable {
 
     public void cleanTable() {
         if (hotelFactory.getConfig().getConfigData().getSaveOption() == SaveOption.HIBERNATE) {
-            Configuration configuration = new Configuration().addAnnotatedClass(Perk.class)
-                    .addAnnotatedClass(Apartment.class).addAnnotatedClass(Client.class);
-            SessionFactory sessionFactory = configuration.buildSessionFactory();
-            Session session = sessionFactory.getCurrentSession();
-                session.beginTransaction();
-                session.createQuery("DELETE FROM Apartment").executeUpdate();
-                session.getTransaction().commit();
-                session.close();
-
+            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hotel");
+            try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+                entityManager.getTransaction().begin();
+                List<Apartment> apartments = entityManager.createQuery("FROM Apartment ORDER BY id").getResultList();
+                apartments.forEach(entityManager::remove);
+                entityManager.getTransaction().commit();
+            }
         } else if (hotelFactory.getConfig().getConfigData().getSaveOption() == SaveOption.DISK) {
             OnDiskJsonHandler onDiskJsonHandler = new OnDiskJsonHandler(hotelFactory);
             var stateEntity = onDiskJsonHandler.load();
