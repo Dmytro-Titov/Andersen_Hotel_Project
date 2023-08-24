@@ -4,7 +4,7 @@ import com.andersenlab.entity.Apartment;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ApartmentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +14,6 @@ import java.util.List;
 @RequestMapping("/apartments")
 public class ApartmentController extends BaseController{
     private final ApartmentService apartmentService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public ApartmentController(HotelFactory hotelFactory) {
         this.apartmentService = hotelFactory.getApartmentService();
@@ -30,9 +29,8 @@ public class ApartmentController extends BaseController{
         return ResponseEntity.ofNullable(apartmentService.getAll());
     }
 
-    @PostMapping
-    public ResponseEntity<Apartment> save(@RequestBody String body) throws JsonProcessingException {
-        Apartment apartment = objectMapper.readValue(body, Apartment.class);
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Apartment> save(@RequestBody Apartment apartment) throws JsonProcessingException {
         return ResponseEntity.ofNullable(apartmentService.save(apartment.getCapacity(), apartment.getPrice()));
     }
 
@@ -41,16 +39,16 @@ public class ApartmentController extends BaseController{
         return ResponseEntity.ofNullable(apartmentService.getSorted(type));
     }
 
-    @PutMapping("/id")
-    public ResponseEntity<Apartment> update(@RequestParam long id, @RequestBody String body) throws JsonProcessingException {
-        Apartment apartment = objectMapper.readValue(body, Apartment.class);
+    @PutMapping(value = "/id", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Apartment> update(@RequestParam long id, @RequestBody Apartment apartment)
+            throws JsonProcessingException {
         apartment.setId(id);
         return ResponseEntity.ok(apartmentService.update(apartment));
     }
 
-    @PostMapping("/id")
-    public ResponseEntity<Apartment> changePrice(@RequestParam long id, @RequestBody String body) throws JsonProcessingException {
-        Apartment apartment = objectMapper.readValue(body, Apartment.class);
+    @PostMapping(value = "/id", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Apartment> changePrice(@RequestParam long id, @RequestBody Apartment apartment)
+            throws JsonProcessingException {
         return ResponseEntity.ok(apartmentService.changePrice(id, apartment.getPrice()));
     }
 
