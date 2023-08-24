@@ -5,7 +5,7 @@ import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.ClientService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("/clients")
 public class ClientController extends BaseController{
     private final ClientService clientService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public ClientController(HotelFactory hotelFactory) {
         this.clientService = hotelFactory.getClientService();
@@ -36,15 +35,13 @@ public class ClientController extends BaseController{
         return ResponseEntity.ofNullable(clientService.getSorted(type));
     }
 
-    @PostMapping
-    public ResponseEntity<Client> save(@RequestBody String body) throws JsonProcessingException {
-        Client client = objectMapper.readValue(body, Client.class);
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Client> save(@RequestBody Client client) throws JsonProcessingException {
         return ResponseEntity.ofNullable(clientService.save(client.getName(), client.getQuantityOfPeople()));
     }
 
-    @PutMapping("/id")
-    public ResponseEntity<Client> update(@RequestParam long id, @RequestBody String body) throws JsonProcessingException {
-        Client client = objectMapper.readValue(body, Client.class);
+    @PutMapping(value = "/id", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Client> update(@RequestParam long id, @RequestBody Client client) throws JsonProcessingException {
         client.setId(id);
         return ResponseEntity.ok(clientService.update(client));
     }

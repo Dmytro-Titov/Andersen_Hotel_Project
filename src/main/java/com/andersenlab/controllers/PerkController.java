@@ -4,7 +4,7 @@ import com.andersenlab.entity.Perk;
 import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.service.PerkService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +14,6 @@ import java.util.List;
 @RequestMapping("/perks")
 public class PerkController extends BaseController{
     private final PerkService perkService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public PerkController(HotelFactory hotelFactory) {
         this.perkService = hotelFactory.getPerkService();
@@ -35,22 +34,19 @@ public class PerkController extends BaseController{
         return ResponseEntity.ofNullable(perkService.getSorted(type));
     }
 
-    @PostMapping
-    public ResponseEntity<Perk> save(@RequestBody String body) throws JsonProcessingException {
-        Perk perk = objectMapper.readValue(body, Perk.class);
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Perk> save(@RequestBody Perk perk) throws JsonProcessingException {
         return ResponseEntity.ofNullable(perkService.save(perk.getName(), perk.getPrice()));
     }
 
-    @PutMapping("/id")
-    public ResponseEntity<Perk> update(@RequestParam long id, @RequestBody String body) throws JsonProcessingException {
-        Perk perk = objectMapper.readValue(body, Perk.class);
+    @PutMapping(value = "/id", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Perk> update(@RequestParam long id, @RequestBody Perk perk) throws JsonProcessingException {
         perk.setId(id);
         return ResponseEntity.ok(perkService.update(perk));
     }
 
-    @PostMapping("/id")
-    public ResponseEntity<Perk> changePrice(@RequestParam long id, @RequestBody String body) throws JsonProcessingException {
-        Perk perk = objectMapper.readValue(body, Perk.class);
+    @PostMapping(value = "/id", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Perk> changePrice(@RequestParam long id, @RequestBody Perk perk) throws JsonProcessingException {
         return ResponseEntity.ok(perkService.changePrice(id, perk.getPrice()));
     }
 }
