@@ -31,8 +31,7 @@ public class ApartmentServletTest {
         } catch (LifecycleException e) {
             System.out.println(e.getMessage());
         }
-        Config config = new Config();
-        config.setConfigData(ConfigHandler.createConfig("src/main/resources/config/config-dev.yaml"));
+        Config config = new Config("src/main/resources/config/config-dev.yaml");
         hotelFactory = new HotelFactory(config);
     }
 
