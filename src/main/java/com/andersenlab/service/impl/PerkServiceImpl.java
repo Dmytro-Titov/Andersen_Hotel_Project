@@ -13,7 +13,7 @@ import java.util.List;
 public class PerkServiceImpl implements PerkService {
     private final PerkDao perkDao;
 
-    public PerkServiceImpl(PerkDao perkDao, HotelFactory hotelFactory) {
+    public PerkServiceImpl(PerkDao perkDao) {
         this.perkDao = perkDao;
     }
 

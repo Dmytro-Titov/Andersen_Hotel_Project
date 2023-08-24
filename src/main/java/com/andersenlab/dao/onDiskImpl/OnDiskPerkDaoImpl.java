@@ -15,7 +15,6 @@ public class OnDiskPerkDaoImpl implements PerkDao {
 
     public OnDiskPerkDaoImpl(OnDiskJsonHandler onDiskJsonHandler) {
         this.onDiskJsonHandler = onDiskJsonHandler;
-                //new OnDiskJsonHandler(hotelFactory);
     }
 
     @Override

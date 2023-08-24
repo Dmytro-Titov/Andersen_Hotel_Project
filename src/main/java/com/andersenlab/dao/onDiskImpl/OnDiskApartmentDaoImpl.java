@@ -2,7 +2,6 @@ package com.andersenlab.dao.onDiskImpl;
 
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.entity.Apartment;
-import com.andersenlab.factory.HotelFactory;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -15,7 +14,6 @@ public class OnDiskApartmentDaoImpl implements ApartmentDao {
 
     public OnDiskApartmentDaoImpl(OnDiskJsonHandler onDiskJsonHandler) {
         this.onDiskJsonHandler = onDiskJsonHandler;
-               // new OnDiskJsonHandler(hotelFactory);
     }
 
     @Override

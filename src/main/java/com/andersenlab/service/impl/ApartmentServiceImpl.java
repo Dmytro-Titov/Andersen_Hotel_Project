@@ -15,11 +15,11 @@ import java.util.List;
 public class ApartmentServiceImpl implements ApartmentService {
 
     private final ApartmentDao apartmentDao;
-    private final HotelFactory hotelFactory;
+    private final boolean isAllowApartmentStatusChange;
 
-    public ApartmentServiceImpl(ApartmentDao apartmentDao, HotelFactory hotelFactory) {
+    public ApartmentServiceImpl(ApartmentDao apartmentDao, boolean isAllowApartmentStatusChange) {
         this.apartmentDao = apartmentDao;
-        this.hotelFactory = hotelFactory;
+        this.isAllowApartmentStatusChange = isAllowApartmentStatusChange;
     }
 
     @Override
@@ -57,8 +57,7 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public Apartment changeStatus(long id) {
-        boolean allowStatusChange = hotelFactory.getConfig().getConfigData().getApartment().isAllowApartmentStatusChange();
-        if (!allowStatusChange) {
+        if (!isAllowApartmentStatusChange) {
             throw new ConfigurationRestrictionException("Configuration does not allow change of status");
         }
         ApartmentStatus newStatus = getById(id).getStatus() == ApartmentStatus.AVAILABLE ?

@@ -36,29 +36,27 @@ public class HotelFactory {
         onDiskJsonHandler = new OnDiskJsonHandler(config.getConfigData().getDatabase().getPath());
         switch (this.config.getConfigData().getSaveOption()) {
             case DISK -> {
-
-
-                apartmentService = new ApartmentServiceImpl(new OnDiskApartmentDaoImpl(onDiskJsonHandler), this);
-                perkService = new PerkServiceImpl(new OnDiskPerkDaoImpl(onDiskJsonHandler), this);
-                clientService = new ClientServiceImpl(new OnDiskClientDaoImpl(onDiskJsonHandler), this);
+                apartmentService = new ApartmentServiceImpl(new OnDiskApartmentDaoImpl(onDiskJsonHandler), config.getConfigData().getApartment().isAllowApartmentStatusChange());
+                perkService = new PerkServiceImpl(new OnDiskPerkDaoImpl(onDiskJsonHandler));
+                clientService = new ClientServiceImpl(new OnDiskClientDaoImpl(onDiskJsonHandler), apartmentService, perkService);
             }
             case JDBC -> {
                 ConnectionPool connectionPool = new ConnectionPool(config.getConfigData().getPostgresDatabase());
 
-                apartmentService = new ApartmentServiceImpl(new JdbcApartmentDaoImpl(connectionPool), this);
-                perkService = new PerkServiceImpl(new JdbcPerkDaoImpl(connectionPool), this);
-                clientService = new ClientServiceImpl(new JdbcClientDaoImpl(connectionPool), this);
+                apartmentService = new ApartmentServiceImpl(new JdbcApartmentDaoImpl(connectionPool), config.getConfigData().getApartment().isAllowApartmentStatusChange());
+                perkService = new PerkServiceImpl(new JdbcPerkDaoImpl(connectionPool));
+                clientService = new ClientServiceImpl(new JdbcClientDaoImpl(connectionPool),  apartmentService, perkService);
             }
             case HIBERNATE -> {
                 EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hotel");
-                apartmentService = new ApartmentServiceImpl(new HibernateApartmentDaoImpl(entityManagerFactory), this);
-                perkService = new PerkServiceImpl(new HibernatePerkDaoImpl(entityManagerFactory), this);
-                clientService = new ClientServiceImpl(new HibernateClientDaoImpl(entityManagerFactory), this);
+                apartmentService = new ApartmentServiceImpl(new HibernateApartmentDaoImpl(entityManagerFactory), config.getConfigData().getApartment().isAllowApartmentStatusChange());
+                perkService = new PerkServiceImpl(new HibernatePerkDaoImpl(entityManagerFactory));
+                clientService = new ClientServiceImpl(new HibernateClientDaoImpl(entityManagerFactory),  apartmentService, perkService);
             }
             default -> {
-                this.apartmentService = new ApartmentServiceImpl(new InMemoryApartmentDaoImpl(), this);
-                this.perkService = new PerkServiceImpl(new InMemoryPerkDaoImpl(), this);
-                this.clientService = new ClientServiceImpl(new InMemoryClientDaoImpl(), this);
+                this.apartmentService = new ApartmentServiceImpl(new InMemoryApartmentDaoImpl(), config.getConfigData().getApartment().isAllowApartmentStatusChange());
+                this.perkService = new PerkServiceImpl(new InMemoryPerkDaoImpl());
+                this.clientService = new ClientServiceImpl(new InMemoryClientDaoImpl(),  apartmentService, perkService);
             }
         }
     }

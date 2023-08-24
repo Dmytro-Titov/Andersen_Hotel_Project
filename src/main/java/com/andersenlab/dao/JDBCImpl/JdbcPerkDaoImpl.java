@@ -3,7 +3,6 @@ package com.andersenlab.dao.JDBCImpl;
 import com.andersenlab.dao.PerkDao;
 import com.andersenlab.dao.conection.ConnectionPool;
 import com.andersenlab.entity.Perk;
-import com.andersenlab.factory.HotelFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ public class JdbcPerkDaoImpl implements PerkDao {
 
     public JdbcPerkDaoImpl(ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
-               // new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
         lastID = getPerkLastId();
     }
 

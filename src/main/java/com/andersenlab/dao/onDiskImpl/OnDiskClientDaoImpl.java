@@ -3,7 +3,6 @@ package com.andersenlab.dao.onDiskImpl;
 import com.andersenlab.dao.ClientDao;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.ClientStatus;
-import com.andersenlab.factory.HotelFactory;
 
 import java.util.*;
 import java.util.function.Function;
@@ -13,7 +12,6 @@ public class OnDiskClientDaoImpl implements ClientDao {
 
     public OnDiskClientDaoImpl(OnDiskJsonHandler onDiskJsonHandler) {
         this.onDiskJsonHandler = onDiskJsonHandler;
-                //new OnDiskJsonHandler(hotelFactory);
     }
 
     @Override

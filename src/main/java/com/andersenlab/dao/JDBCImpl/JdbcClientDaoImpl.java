@@ -8,7 +8,6 @@ import com.andersenlab.entity.Client;
 import com.andersenlab.entity.ClientStatus;
 import com.andersenlab.entity.Perk;
 import com.andersenlab.exceptions.InappropriateValueException;
-import com.andersenlab.factory.HotelFactory;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -25,7 +24,6 @@ public class JdbcClientDaoImpl implements ClientDao {
 
     public JdbcClientDaoImpl(ConnectionPool connectionPool) {
         this.connectionPool =  connectionPool;
-                // new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
         this.apartmentDao = new JdbcApartmentDaoImpl(connectionPool);
         lastID = getClientLastId();
     }

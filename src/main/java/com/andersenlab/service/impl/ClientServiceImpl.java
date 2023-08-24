@@ -2,8 +2,10 @@ package com.andersenlab.service.impl;
 
 import com.andersenlab.dao.ClientDao;
 import com.andersenlab.entity.*;
-import com.andersenlab.exceptions.*;
-import com.andersenlab.factory.HotelFactory;
+import com.andersenlab.exceptions.ClientAlreadyCheckedInException;
+import com.andersenlab.exceptions.ClientIsNotCheckedInException;
+import com.andersenlab.exceptions.IdDoesNotExistException;
+import com.andersenlab.exceptions.NoAvailableApartmentsException;
 import com.andersenlab.service.ApartmentService;
 import com.andersenlab.service.ClientService;
 import com.andersenlab.service.PerkService;
@@ -21,10 +23,10 @@ public class ClientServiceImpl implements ClientService {
     private final ApartmentService apartmentService;
     private final PerkService perkService;
 
-    public ClientServiceImpl(ClientDao clientDao, HotelFactory hotelFactory) {
+    public ClientServiceImpl(ClientDao clientDao, ApartmentService apartmentService, PerkService perkService) {
         this.clientDao = clientDao;
-        apartmentService = hotelFactory.getApartmentService();
-        perkService = hotelFactory.getPerkService();
+        this.apartmentService = apartmentService;
+        this.perkService = perkService;
     }
 
     @Override

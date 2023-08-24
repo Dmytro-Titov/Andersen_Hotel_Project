@@ -13,7 +13,6 @@ public final class OnDiskJsonHandler {
 
     public OnDiskJsonHandler(String pathJson) {
         this.pathJson = pathJson;
-        // hotelFactory.getConfig().getConfigData().getDatabase().getPath();
     }
 
     public void save(StateEntity stateEntity) {
