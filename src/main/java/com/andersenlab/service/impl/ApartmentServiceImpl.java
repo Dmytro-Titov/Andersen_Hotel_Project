@@ -1,5 +1,6 @@
 package com.andersenlab.service.impl;
 
+import com.andersenlab.config.Config;
 import com.andersenlab.dao.ApartmentDao;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
@@ -15,11 +16,11 @@ import java.util.List;
 public class ApartmentServiceImpl implements ApartmentService {
 
     private final ApartmentDao apartmentDao;
-    private final boolean isAllowApartmentStatusChange;
+    private Config config;
 
-    public ApartmentServiceImpl(ApartmentDao apartmentDao, boolean isAllowApartmentStatusChange) {
+    public ApartmentServiceImpl(ApartmentDao apartmentDao, Config config) {
         this.apartmentDao = apartmentDao;
-        this.isAllowApartmentStatusChange = isAllowApartmentStatusChange;
+        this.config = config;
     }
 
     @Override
@@ -57,7 +58,7 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public Apartment changeStatus(long id) {
-        if (!isAllowApartmentStatusChange) {
+        if (!config.getConfigData().getApartment().isAllowApartmentStatusChange()) {
             throw new ConfigurationRestrictionException("Configuration does not allow change of status");
         }
         ApartmentStatus newStatus = getById(id).getStatus() == ApartmentStatus.AVAILABLE ?

@@ -119,7 +119,7 @@ public class ApartmentServiceTest {
         assertNotEquals(statusBefore, statusAfter);
     }
 
-  /*  @Test
+    @Test
     void whenChangingStatusNotAllowed_thenExceptionShouldBeThrown() {
         int id = 2;
 
@@ -128,7 +128,7 @@ public class ApartmentServiceTest {
         assertThrows(ConfigurationRestrictionException.class, () -> {
             apartmentService.changeStatus(id);
         });
-    }*/
+    }
 
 
     @Test
