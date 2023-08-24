@@ -13,13 +13,10 @@ import com.andersenlab.dao.inMemoryImpl.InMemoryPerkDaoImpl;
 import com.andersenlab.dao.onDiskImpl.OnDiskApartmentDaoImpl;
 import com.andersenlab.dao.onDiskImpl.OnDiskClientDaoImpl;
 import com.andersenlab.dao.onDiskImpl.OnDiskPerkDaoImpl;
-import com.andersenlab.entity.Apartment;
-import com.andersenlab.entity.Client;
-import com.andersenlab.entity.Perk;
 import com.andersenlab.service.*;
 import com.andersenlab.service.impl.*;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -44,12 +41,10 @@ public class HotelFactory {
                 clientService = new ClientServiceImpl(new JdbcClientDaoImpl(this), this);
             }
             case HIBERNATE -> {
-                Configuration configuration = new Configuration().addAnnotatedClass(Perk.class)
-                        .addAnnotatedClass(Apartment.class).addAnnotatedClass(Client.class);
-                SessionFactory sessionFactory = configuration.buildSessionFactory();
-                apartmentService = new ApartmentServiceImpl(new HibernateApartmentDaoImpl(sessionFactory), this);
-                perkService = new PerkServiceImpl(new HibernatePerkDaoImpl(sessionFactory), this);
-                clientService = new ClientServiceImpl(new HibernateClientDaoImpl(sessionFactory), this);
+                EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hotel");
+                apartmentService = new ApartmentServiceImpl(new HibernateApartmentDaoImpl(entityManagerFactory), this);
+                perkService = new PerkServiceImpl(new HibernatePerkDaoImpl(entityManagerFactory), this);
+                clientService = new ClientServiceImpl(new HibernateClientDaoImpl(entityManagerFactory), this);
             }
             default -> {
                 this.apartmentService = new ApartmentServiceImpl(new InMemoryApartmentDaoImpl(), this);
