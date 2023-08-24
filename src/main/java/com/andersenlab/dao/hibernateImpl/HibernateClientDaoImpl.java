@@ -2,70 +2,74 @@ package com.andersenlab.dao.hibernateImpl;
 
 import com.andersenlab.dao.ClientDao;
 import com.andersenlab.entity.Client;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 
 import java.util.List;
 import java.util.Optional;
 
 public class HibernateClientDaoImpl implements ClientDao {
-    private final SessionFactory sessionFactory;
+    private final EntityManagerFactory entityManagerFactory;
 
-    public HibernateClientDaoImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public HibernateClientDaoImpl(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     @Override
     public Optional<Client> getById(long id) {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            Client client = session.get(Client.class, id);
-            session.getTransaction().commit();
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            Client client = entityManager.find(Client.class, id);
+            entityManager.getTransaction().commit();
             return Optional.ofNullable(client);
         }
     }
 
     @Override
     public List<Client> getAll() {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            List<Client> clients = session.createQuery("FROM Client c " +
-                            "LEFT JOIN FETCH c.apartment a " +
-                            "LEFT JOIN FETCH c.perks p " +
-                            "ORDER BY c.id")
-                    .getResultList();
-            session.getTransaction().commit();
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            List<Client> clients = entityManager.createQuery(
+                            """
+                            FROM Client c 
+                            LEFT JOIN FETCH c.apartment a 
+                            LEFT JOIN FETCH c.perks p 
+                            ORDER BY c.id
+                            """
+                    ).getResultList();
+            entityManager.getTransaction().commit();
             return clients;
         }
     }
 
     @Override
     public Client save(Client client) {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            session.save(client);
-            session.getTransaction().commit();
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            client.setId(0);
+            entityManager.persist(client);
+            entityManager.getTransaction().commit();
             return client;
         }
     }
 
     @Override
     public Optional<Client> update(Client client) {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            Optional<Client> existingClient = Optional.ofNullable(session.get(Client.class, client.getId()));
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            Optional<Client> existingClient = Optional.ofNullable(entityManager.find(Client.class, client.getId()));
             existingClient.ifPresent(clnt -> updateClientFields(clnt, client));
-            session.getTransaction().commit();
+            entityManager.getTransaction().commit();
             return existingClient;
         }
     }
 
     @Override
     public boolean remove(long id) {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            Optional<Client> existingCLient = Optional.ofNullable(session.get(Client.class, id));
-            existingCLient.ifPresent(clnt -> deleteClient(clnt, session));
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            Optional<Client> existingCLient = Optional.ofNullable(entityManager.find(Client.class, id));
+            existingCLient.ifPresent(clnt -> deleteClient(clnt, entityManager));
             return existingCLient.isPresent();
         }
     }
@@ -82,10 +86,10 @@ public class HibernateClientDaoImpl implements ClientDao {
 
     private List<Client> sortBy(String parameter) {
         String getAllQuery = "FROM Client c LEFT JOIN FETCH c.apartment a LEFT JOIN FETCH c.perks p ORDER BY " + parameter;
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            List<Client> clients = session.createQuery(getAllQuery).getResultList();
-            session.getTransaction().commit();
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            List<Client> clients = entityManager.createQuery(getAllQuery).getResultList();
+            entityManager.getTransaction().commit();
             return clients;
         }
     }
@@ -100,8 +104,8 @@ public class HibernateClientDaoImpl implements ClientDao {
         existingClient.setStayCost(updatedClient.getStayCost());
     }
 
-    private void deleteClient(Client client, Session session) {
-        session.delete(client);
-        session.getTransaction().commit();
+    private void deleteClient(Client client, EntityManager entityManager) {
+        entityManager.remove(client);
+        entityManager.getTransaction().commit();
     }
 }

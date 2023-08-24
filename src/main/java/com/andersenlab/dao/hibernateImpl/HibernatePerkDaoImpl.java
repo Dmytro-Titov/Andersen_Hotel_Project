@@ -2,66 +2,67 @@ package com.andersenlab.dao.hibernateImpl;
 
 import com.andersenlab.dao.PerkDao;
 import com.andersenlab.entity.Perk;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 
 import java.util.List;
 import java.util.Optional;
 
 public class HibernatePerkDaoImpl implements PerkDao {
-    private final SessionFactory sessionFactory;
+    private final EntityManagerFactory entityManagerFactory;
 
-    public HibernatePerkDaoImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public HibernatePerkDaoImpl(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     @Override
     public Optional<Perk> getById(long id) {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            Perk perk = session.get(Perk.class, id);
-            session.getTransaction().commit();
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            Perk perk = entityManager.find(Perk.class, id);
+            entityManager.getTransaction().commit();
             return Optional.ofNullable(perk);
         }
     }
 
     @Override
     public List<Perk> getAll() {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            List<Perk> perks = session.createQuery("FROM Perk ORDER BY id").getResultList();
-            session.getTransaction().commit();
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            List<Perk> perks = entityManager.createQuery("FROM Perk ORDER BY id").getResultList();
+            entityManager.getTransaction().commit();
             return perks;
         }
     }
 
     @Override
     public Perk save(Perk perk) {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            session.save(perk);
-            session.getTransaction().commit();
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            perk.setId(0);
+            entityManager.persist(perk);
+            entityManager.getTransaction().commit();
             return perk;
         }
     }
 
     @Override
     public Optional<Perk> update(Perk perk) {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            Optional<Perk> existingPerk = Optional.ofNullable(session.get(Perk.class, perk.getId()));
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            Optional<Perk> existingPerk = Optional.ofNullable(entityManager.find(Perk.class, perk.getId()));
             existingPerk.ifPresent(prk -> updatePerkFields(prk, perk));
-            session.getTransaction().commit();
+            entityManager.getTransaction().commit();
             return existingPerk;
         }
     }
 
     @Override
     public boolean remove(long id) {
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            Optional<Perk> existingPerk = Optional.ofNullable(session.get(Perk.class, id));
-            existingPerk.ifPresent(perk -> deletePerk(perk, session));
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            Optional<Perk> existingPerk = Optional.ofNullable(entityManager.find(Perk.class, id));
+            existingPerk.ifPresent(perk -> deletePerk(perk, entityManager));
             return existingPerk.isPresent();
         }
     }
@@ -77,10 +78,10 @@ public class HibernatePerkDaoImpl implements PerkDao {
 
     private List<Perk> sortBy(String parameter) {
         String getAllQuery = "FROM Perk ORDER BY " + parameter;
-        try (Session session = sessionFactory.getCurrentSession()) {
-            session.beginTransaction();
-            List<Perk> perks = session.createQuery(getAllQuery).getResultList();
-            session.getTransaction().commit();
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            List<Perk> perks = entityManager.createQuery(getAllQuery).getResultList();
+            entityManager.getTransaction().commit();
             return perks;
         }
     }
@@ -92,8 +93,8 @@ public class HibernatePerkDaoImpl implements PerkDao {
         existingPerk.setPrice(updatedPerk.getPrice());
     }
 
-    private void deletePerk(Perk perk, Session session) {
-        session.delete(perk);
-        session.getTransaction().commit();
+    private void deletePerk(Perk perk, EntityManager entityManager) {
+        entityManager.remove(perk);
+        entityManager.getTransaction().commit();
     }
 }
