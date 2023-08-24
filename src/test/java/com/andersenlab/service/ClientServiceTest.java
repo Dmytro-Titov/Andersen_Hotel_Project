@@ -29,8 +29,7 @@ public class ClientServiceTest {
     @BeforeEach
     public void setup() {
         IdGenerator.cancelGenerateId();
-        Config config = new Config();
-        config.setConfigData(ConfigHandler.createConfig("src/test/resources/config/config-test.yaml"));
+        Config config = new Config("src/test/resources/config/config-test.yaml");
         hotelFactory = new HotelFactory(config);
         clientService = hotelFactory.getClientService();
         ApartmentService apartmentService = hotelFactory.getApartmentService();

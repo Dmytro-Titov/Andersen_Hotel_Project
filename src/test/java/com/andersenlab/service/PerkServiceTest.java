@@ -25,8 +25,7 @@ public class PerkServiceTest {
     @BeforeEach
     void setup() {
         IdGenerator.cancelGenerateId();
-        Config config = new Config();
-        config.setConfigData(ConfigHandler.createConfig("src/test/resources/config/config-test.yaml"));
+        Config config = new Config("src/test/resources/config/config-test.yaml");
         hotelFactory = new HotelFactory(config);
         perkService = hotelFactory.getPerkService();
         perkService.save("massage", 300);
