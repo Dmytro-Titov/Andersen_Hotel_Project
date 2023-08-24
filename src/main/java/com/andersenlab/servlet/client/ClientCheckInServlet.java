@@ -44,9 +44,7 @@ public class ClientCheckInServlet extends HttpServlet {
                     Integer.parseInt(duration));
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
-            System.out.println("1 - " + client);
             objectMapper.writeValue(resp.getWriter(), client);
-            System.out.println("2 - " + client);
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } catch (IdDoesNotExistException e) {

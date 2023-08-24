@@ -5,6 +5,7 @@ import com.andersenlab.dao.conection.ConnectionPool;
 import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.ApartmentStatus;
 import com.andersenlab.factory.HotelFactory;
+import org.hibernate.Session;
 
 import java.sql.*;
 import java.util.ArrayList;

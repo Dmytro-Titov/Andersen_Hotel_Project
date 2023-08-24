@@ -27,6 +27,8 @@
         <maven-jar-plugin>3.2.0</maven-jar-plugin>
         <maven-surefire-plugin>3.1.2</maven-surefire-plugin>
         <postgresql>42.6.0</postgresql>
+        <rest-assured>5.3.1</rest-assured>
+        <junit>4.13.1</junit>
         <tomcat.version>10.1.12</tomcat.version>
         <HikariCP>5.0.1</HikariCP>
         <liquibase>4.23.1</liquibase>
@@ -178,6 +180,18 @@
             <version>${HikariCP}</version>
         </dependency>
         <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${rest-assured}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>${liquibase}</version>
@@ -191,6 +205,12 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.220</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

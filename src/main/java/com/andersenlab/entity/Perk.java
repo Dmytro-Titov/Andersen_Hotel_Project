@@ -9,7 +9,7 @@ public class Perk {
     @Id
     @Column(name = "perk_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    public long id;
     @Column(name = "name")
     public String name;
     @Column(name = "price")
