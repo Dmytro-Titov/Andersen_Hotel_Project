@@ -1,6 +1,7 @@
 package com.andersenlab.dao.inMemoryImpl;
 
 import com.andersenlab.dao.ClientDao;
+import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Client;
 import com.andersenlab.entity.ClientStatus;
 

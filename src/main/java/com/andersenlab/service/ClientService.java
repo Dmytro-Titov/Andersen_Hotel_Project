@@ -28,5 +28,4 @@ public interface ClientService {
     List<Perk> getAllPerks(long clientId);
 
     List<Client> getSorted(String type);
-
 }

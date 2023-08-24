@@ -1,6 +1,7 @@
 package com.andersenlab.dao.inMemoryImpl;
 
 import com.andersenlab.dao.PerkDao;
+import com.andersenlab.entity.Apartment;
 import com.andersenlab.entity.Perk;
 
 import java.util.ArrayList;

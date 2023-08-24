@@ -11,7 +11,7 @@ apartment:
 # - JDBC: save data in DB via JDBC;
 # - HIBERNATE: save data in DB via Hibernate.
 # By default, it will be saved in memory
-saveOption: JDBC
+saveOption: HIBERNATE
 
 postgresDatabase:
   username: "postgres"

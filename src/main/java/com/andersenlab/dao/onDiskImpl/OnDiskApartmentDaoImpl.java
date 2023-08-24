@@ -12,6 +12,7 @@ import java.util.function.Function;
 
 public class OnDiskApartmentDaoImpl implements ApartmentDao {
     private final OnDiskJsonHandler onDiskJsonHandler;
+
     public OnDiskApartmentDaoImpl(HotelFactory hotelFactory) {
         this.onDiskJsonHandler = new OnDiskJsonHandler(hotelFactory);
     }
@@ -43,7 +44,7 @@ public class OnDiskApartmentDaoImpl implements ApartmentDao {
     @Override
     public Optional<Apartment> update(Apartment apartment) {
         var stateEntity = onDiskJsonHandler.load();
-        var existingApartment= stateEntity.getApartmentsList()
+        var existingApartment = stateEntity.getApartmentsList()
                 .stream()
                 .filter(apartment1 -> apartment1.getId() == apartment.getId())
                 .findFirst();
@@ -67,7 +68,7 @@ public class OnDiskApartmentDaoImpl implements ApartmentDao {
     @Override
     public boolean remove(long id) {
         var entityState = onDiskJsonHandler.load();
-        var answer =  entityState.getApartmentsList()
+        var answer = entityState.getApartmentsList()
                 .removeIf(apartment -> apartment.getId() == id);
 
         onDiskJsonHandler.save(entityState);
