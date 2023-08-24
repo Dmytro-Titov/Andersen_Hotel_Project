@@ -1,18 +1,19 @@
 package com.andersenlab.dao.onDiskImpl;
 
-import com.andersenlab.factory.HotelFactory;
 import com.andersenlab.util.IdGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class OnDiskJsonHandler {
     private final String pathJson;
 
-    public OnDiskJsonHandler(HotelFactory hotelFactory) {
-        pathJson = hotelFactory.getConfig().getConfigData().getDatabase().getPath();
+    public OnDiskJsonHandler(String pathJson) {
+        this.pathJson = pathJson;
+        // hotelFactory.getConfig().getConfigData().getDatabase().getPath();
     }
 
     public void save(StateEntity stateEntity) {

@@ -13,7 +13,7 @@ public class AdministratorApp {
         Config config = new Config();
         config.setConfigData(configData);
         HotelFactory hotelFactory = new HotelFactory(config);
-        OnDiskJsonHandler onDiskJsonHandler = new OnDiskJsonHandler(hotelFactory);
+        OnDiskJsonHandler onDiskJsonHandler = new OnDiskJsonHandler(config.getConfigData().getDatabase().getPath());
 
         onDiskJsonHandler.load();
         new Console(hotelFactory).start();

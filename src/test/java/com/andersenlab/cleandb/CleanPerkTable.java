@@ -32,7 +32,7 @@ public class CleanPerkTable {
                 entityManager.getTransaction().commit();
             }
         } else if (hotelFactory.getConfig().getConfigData().getSaveOption() == SaveOption.DISK) {
-            OnDiskJsonHandler onDiskJsonHandler = new OnDiskJsonHandler(hotelFactory);
+            OnDiskJsonHandler onDiskJsonHandler = new OnDiskJsonHandler(hotelFactory.getConfig().getConfigData().getDatabase().getPath());
             var stateEntity = onDiskJsonHandler.load();
             var perks = stateEntity.getPerksList();
             var copy = new ArrayList<>(perks);

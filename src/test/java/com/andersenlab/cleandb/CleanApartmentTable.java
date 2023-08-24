@@ -32,7 +32,7 @@ public class CleanApartmentTable {
                 entityManager.getTransaction().commit();
             }
         } else if (hotelFactory.getConfig().getConfigData().getSaveOption() == SaveOption.DISK) {
-            OnDiskJsonHandler onDiskJsonHandler = new OnDiskJsonHandler(hotelFactory);
+            OnDiskJsonHandler onDiskJsonHandler = new OnDiskJsonHandler(hotelFactory.getConfig().getConfigData().getDatabase().getPath());
             var stateEntity = onDiskJsonHandler.load();
             var apartments = stateEntity.getApartmentsList();
             var copy = new ArrayList<>(apartments);

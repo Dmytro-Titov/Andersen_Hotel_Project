@@ -50,11 +50,11 @@ public class ClientServiceTest {
     @AfterEach
     public void teardown() {
         if (this.hotelFactory.getConfig().getConfigData().getSaveOption() == SaveOption.DISK) {
-            OnDiskClientDaoImpl onDiskClientDao = new OnDiskClientDaoImpl(hotelFactory);
+            OnDiskClientDaoImpl onDiskClientDao = new OnDiskClientDaoImpl(hotelFactory.getOnDiskJsonHandler());
             clientService.getAll().forEach(client -> onDiskClientDao.remove(client.getId()));
-            OnDiskApartmentDaoImpl onDiskApartmentDao = new OnDiskApartmentDaoImpl(hotelFactory);
+            OnDiskApartmentDaoImpl onDiskApartmentDao = new OnDiskApartmentDaoImpl(hotelFactory.getOnDiskJsonHandler());
             hotelFactory.getApartmentService().getAll().forEach(apartment -> onDiskApartmentDao.remove(apartment.getId()));
-            OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory);
+            OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory.getOnDiskJsonHandler());
             hotelFactory.getPerkService().getAll().forEach(perk -> onDiskPerkDao.remove(perk.getId()));
         }
     }

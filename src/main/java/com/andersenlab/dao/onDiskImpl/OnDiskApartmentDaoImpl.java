@@ -13,8 +13,9 @@ import java.util.function.Function;
 public class OnDiskApartmentDaoImpl implements ApartmentDao {
     private final OnDiskJsonHandler onDiskJsonHandler;
 
-    public OnDiskApartmentDaoImpl(HotelFactory hotelFactory) {
-        this.onDiskJsonHandler = new OnDiskJsonHandler(hotelFactory);
+    public OnDiskApartmentDaoImpl(OnDiskJsonHandler onDiskJsonHandler) {
+        this.onDiskJsonHandler = onDiskJsonHandler;
+               // new OnDiskJsonHandler(hotelFactory);
     }
 
     @Override

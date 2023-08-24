@@ -14,8 +14,9 @@ public class JdbcPerkDaoImpl implements PerkDao {
     private final ConnectionPool connectionPool;
     private long lastID;
 
-    public JdbcPerkDaoImpl(HotelFactory hotelFactory) {
-        this.connectionPool = new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
+    public JdbcPerkDaoImpl(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
+               // new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
         lastID = getPerkLastId();
     }
 

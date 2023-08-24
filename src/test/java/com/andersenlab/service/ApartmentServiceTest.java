@@ -40,7 +40,7 @@ public class ApartmentServiceTest {
     @AfterEach
     void teardown() {
         if (this.hotelFactory.getConfig().getConfigData().getSaveOption() == SaveOption.DISK) {
-            OnDiskApartmentDaoImpl onDiskApartmentDao = new OnDiskApartmentDaoImpl(hotelFactory);
+            OnDiskApartmentDaoImpl onDiskApartmentDao = new OnDiskApartmentDaoImpl(hotelFactory.getOnDiskJsonHandler());
             apartmentService.getAll().forEach(apartment -> onDiskApartmentDao.remove(apartment.getId()));
         }
     }

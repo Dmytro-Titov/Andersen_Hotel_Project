@@ -17,8 +17,9 @@ public class JdbcApartmentDaoImpl implements ApartmentDao {
 
     private long lastID;
 
-    public JdbcApartmentDaoImpl(HotelFactory hotelFactory) {
-        this.connectionPool = new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
+    public JdbcApartmentDaoImpl(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
+               // new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
         lastID = getApartmentLastId();
     }
 

@@ -11,8 +11,9 @@ import java.util.function.Function;
 public class OnDiskClientDaoImpl implements ClientDao {
     private final OnDiskJsonHandler onDiskJsonHandler;
 
-    public OnDiskClientDaoImpl(HotelFactory hotelFactory) {
-        this.onDiskJsonHandler = new OnDiskJsonHandler(hotelFactory);
+    public OnDiskClientDaoImpl(OnDiskJsonHandler onDiskJsonHandler) {
+        this.onDiskJsonHandler = onDiskJsonHandler;
+                //new OnDiskJsonHandler(hotelFactory);
     }
 
     @Override

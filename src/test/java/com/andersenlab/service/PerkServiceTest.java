@@ -37,7 +37,7 @@ public class PerkServiceTest {
     @AfterEach
     void teardown() {
         if (this.hotelFactory.getConfig().getConfigData().getSaveOption() == SaveOption.DISK) {
-                OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory);
+                OnDiskPerkDaoImpl onDiskPerkDao = new OnDiskPerkDaoImpl(hotelFactory.getOnDiskJsonHandler());
                 perkService.getAll().forEach(perk -> onDiskPerkDao.remove(perk.getId()));
         }
     }

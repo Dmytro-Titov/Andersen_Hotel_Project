@@ -23,9 +23,10 @@ public class JdbcClientDaoImpl implements ClientDao {
 
     private long lastID;
 
-    public JdbcClientDaoImpl(HotelFactory hotelFactory) {
-        this.connectionPool = new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
-        this.apartmentDao = new JdbcApartmentDaoImpl(hotelFactory);
+    public JdbcClientDaoImpl(ConnectionPool connectionPool) {
+        this.connectionPool =  connectionPool;
+                // new ConnectionPool(hotelFactory.getConfig().getConfigData().getPostgresDatabase());
+        this.apartmentDao = new JdbcApartmentDaoImpl(connectionPool);
         lastID = getClientLastId();
     }
 
